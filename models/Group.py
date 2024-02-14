@@ -11,3 +11,4 @@ class Group(Base):
     users = relationship("GroupUsers", back_populates="group")
     watchList = relationship("WatchList", back_populates="group")
     viewList = relationship("ViewList", back_populates="group")
+    

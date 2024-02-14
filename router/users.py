@@ -9,7 +9,8 @@ from models.User import User
 
 
 router = APIRouter(
-    prefix="/user"
+    prefix="/user",
+    tags=["Users"]
 )
 
 @router.post('/create')
