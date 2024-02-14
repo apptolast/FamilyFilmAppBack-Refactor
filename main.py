@@ -1,8 +1,9 @@
 from fastapi import FastAPI
-from router import users,group
+from router import genres, groups, users
 
 app = FastAPI()
 
 app.include_router(users.router)
-app.include_router(group.router)
+app.include_router(groups.router)
+app.include_router(genres.router)
 
