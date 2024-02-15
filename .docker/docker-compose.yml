@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: ../  # El contexto debe ser la raíz del directorio del proyecto
+      dockerfile: .docker/Dockerfile
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    volumes:
+      - .:/code
+    ports:
+      - "9900:9900"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:ASdfrewq6677!!@db/dbname
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dbname
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+
+
+networks:
+  default:
