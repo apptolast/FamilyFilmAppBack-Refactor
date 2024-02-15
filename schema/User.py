@@ -11,7 +11,6 @@ class userCreate(BaseModel):
     
 
 class userLogin(userCreate):
-    
     @validator("firebase_uuid")
     def hash_password(cls, firebase_uuid):
         return firebase_uuid

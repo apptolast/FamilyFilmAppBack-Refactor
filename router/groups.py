@@ -4,16 +4,15 @@ from schema.Group import GroupCreate
 from config.db import session
 from models.Group import Group
 
+
 router = APIRouter(
     prefix="/group",
     tags=["Groups"]
 )
 
-
-
 @router.post("/create", status_code=status.HTTP_201_CREATED)
 async def create_group(group: GroupCreate):
-    db_group = Group(**dict(group))
+    db_group = Group(name= group.name, users = [],watchList = [], viewList = [])
     session.add(db_group)
     session.commit()
 
@@ -36,3 +35,5 @@ async def edit_group(group:GroupCreate,id:int):
         return 'error'
      session.commit()
      return session.query(Group).filter(Group.id == id).first()
+
+

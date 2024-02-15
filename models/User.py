@@ -11,4 +11,4 @@ class User(Base):
     firebase_uuid = Column(String)
     role = Column(Enum("USER", "ADMIN", name="roleenum"), default="USER")
 
-    groups = relationship("GroupUsers", back_populates="user")
+    groups = Column(list)
