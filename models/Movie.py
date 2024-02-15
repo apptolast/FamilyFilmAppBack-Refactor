@@ -16,6 +16,6 @@ class Movie(Base):
     vote_average = Column(Float)
     vote_count = Column(Integer)
 
-    genres = relationship("GenreMovie", back_populates="movie")
-    watchLists = relationship("WatchList", back_populates="movie")
-    viewLists = relationship("ViewList", back_populates="movie")
+    genres = Column(list)
+    watchLists = Column(list)
+    viewLists = Column(list)
