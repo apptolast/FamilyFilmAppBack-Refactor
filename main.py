@@ -1,9 +1,14 @@
 from fastapi import FastAPI
-from router import genres, groups, users
+from router import users, groups, genres
 
 app = FastAPI()
 
-app.include_router(users.router)
-app.include_router(groups.router)
-app.include_router(genres.router)
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
+app.include_router(users)
+app.include_router(groups)
+app.include_router(genres)
 

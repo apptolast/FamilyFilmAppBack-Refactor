@@ -1,14 +1,16 @@
-from sqlalchemy import Column, Integer, String, Enum
+from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, Table, create_engine
 from sqlalchemy.orm import relationship
-from .base import Base
+from models.base import Base
+from models.RoleEnum import role_enum
+
+
 
 
 class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(String, unique=True)
     firebase_uuid = Column(String)
-    role = Column(Enum("USER", "ADMIN", name="roleenum"), default="USER")
+    role = Column(role_enum, default='USER')
 
-    groups = Column(list)
+    groups = relationship('GroupUser', back_populates='user')

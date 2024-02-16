@@ -7,10 +7,10 @@ class MovieCreate(BaseModel):
     genre_ids: list[int]
     language: str
     synopsis: str
-    image: str | None = None
-    release_date: str | None = None
-    vote_average: float | None = None
-    vote_count: int | None = None
+    image: str 
+    release_date: str 
+    vote_average: float 
+    vote_count: int 
 
     @validator("genre_ids")
     def at_least_one_genre(cls, v):
@@ -27,7 +27,7 @@ class ShowMovie(BaseModel):
     genre_ids: list[int]
     language: str
     synopsis: str
-    image: str | None = None
-    release_date: str | None = None
-    vote_average: float | None = None
-    vote_count: int | None = None
+    image: str 
+    release_date: str 
+    vote_average: float 
+    vote_count: int 
