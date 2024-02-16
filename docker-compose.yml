@@ -2,8 +2,8 @@ version: '3.8'
 services:
   web:
     build:
-      context: ../  # El contexto debe ser la raíz del directorio del proyecto
-      dockerfile: .docker/Dockerfile
+      context: .  # El contexto es la raíz del directorio del proyecto
+      dockerfile: Dockerfile  # Actualizado para referenciar el Dockerfile en la raíz
     command: uvicorn main:app --host 0.0.0.0 --reload
     volumes:
       - .:/code
@@ -12,21 +12,21 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgresql://postgres:ASdfrewq6677!!@db/dbname
+      DATABASE_URL: postgresql://postgres:ASdfrewq6677!!@db/postgres
   db:
     image: postgres
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: dbname
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ASdfrewq6677!!
+      POSTGRES_DB: postgres
     ports:
       - "5432:5432"
+      - "5433:5433"
     volumes:
       - db-data:/var/lib/postgresql/data
 
 volumes:
   db-data:
-
 
 networks:
   default:

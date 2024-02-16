@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from router import genres, groups, users
+from router import users, groups, genres
 
 app = FastAPI()
 
