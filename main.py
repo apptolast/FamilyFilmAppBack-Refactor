@@ -8,7 +8,7 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
-app.include_router(users.router)
-app.include_router(groups.router)
-app.include_router(genres.router)
+app.include_router(users)
+app.include_router(groups)
+app.include_router(genres)
 
