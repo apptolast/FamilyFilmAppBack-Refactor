@@ -1,13 +1,12 @@
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from .base import Base
+from models.base import Base
+
 
 class WatchList(Base):
-    __tablename__ = "watch_lists"
+    __tablename__ = 'watch_lists'
+    group_id = Column(Integer, ForeignKey('groups.id'), primary_key=True)
+    movie_id = Column(Integer, ForeignKey('movies.id'), primary_key=True)
 
-    group_id = Column(Integer, ForeignKey("groups.id"), primary_key=True)
-    movie_id = Column(Integer, ForeignKey("movies.id"), primary_key=True)
-
-    group = relationship("Group", back_populates="watchList")
-    movie = relationship("Movie", back_populates="watchLists")
-    
+    group = relationship('Group', back_populates='watchList')
+    movie = relationship('Movie', back_populates='watchLists')

@@ -1,14 +1,13 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, Table, create_engine
 from sqlalchemy.orm import relationship
-from .base import Base
+from models.base import Base
+
 
 class Group(Base):
-    __tablename__ = "groups"
-
-    id = Column(Integer, primary_key=True, index=True)
+    __tablename__ = 'groups'
+    id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
 
-    users = relationship("GroupUsers", back_populates="group")
-    watchList = relationship("WatchList", back_populates="group")
-    viewList = relationship("ViewList", back_populates="group")
-    
+    users = relationship('GroupUser', back_populates='group')
+    watchList = relationship('WatchList', back_populates='group')
+    viewList = relationship('ViewList', back_populates='group')

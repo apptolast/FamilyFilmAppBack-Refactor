@@ -1,4 +1,5 @@
 from .base import Base
+from .RoleEnum import role_enum
 from .Genre import Genre, GenreMovie
 from .Group import Group
 from .GroupUser import GroupUsers
