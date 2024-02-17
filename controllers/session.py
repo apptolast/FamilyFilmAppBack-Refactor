@@ -11,4 +11,11 @@ def add_to_db(item):
         session.rollback()
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-        
+
+def delete_to_db(item):
+    try:
+        session.delete(item)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

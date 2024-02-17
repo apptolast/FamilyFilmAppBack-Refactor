@@ -8,5 +8,5 @@ class GroupUser(Base):
     user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
     group_id = Column(Integer, ForeignKey('groups.id'), primary_key=True)
 
-    user = relationship('User', back_populates='groups')
-    group = relationship('Group', back_populates='users')
+    user = relationship('User', back_populates='groups',cascade="all, delete")
+    group = relationship('Group', back_populates='users',cascade="all, delete")

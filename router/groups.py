@@ -1,13 +1,13 @@
 from fastapi import APIRouter,status,Depends
 from sqlalchemy.exc import IntegrityError
 from models.GroupUser import GroupUser
-from schema.Group import GroupCreate
+from schema.Group import GroupCreate,AddUser
 from config.db import session
 from models.Group import Group
 from controllers.users import auth_user
 from models.User import User
 from controllers.groups import get_group_all, get_group_by_id
-from controllers.session import add_to_db
+from controllers.session import add_to_db,delete_to_db
 
 router = APIRouter(
     prefix="/group",
@@ -20,8 +20,8 @@ async def create_group(group: GroupCreate,me = Depends(auth_user)):
     add_to_db(db_group)
     db_groupUser = GroupUser(user_id = me.id, group_id = get_group_all()[-1].id)
     add_to_db(db_groupUser)
-
-    return {"status": "success", "data": f"{db_group.name} and {db_groupUser.user_id}"}
+    user = session.query(User).filter(User.id == me.id).first()
+    return {"status": "success", "data": f"{db_group.name} and {db_groupUser.user_id} and {[group.group.name for group in user.groups]}"}
 
 @router.get('/all')
 async def get_groups(me = Depends(auth_user)):
@@ -44,3 +44,13 @@ async def edit_group(group:GroupCreate,id:int,me = Depends(auth_user)):
     return get_group_by_id(id)
 
 
+@router.patch('/adduser/{id:int}')
+async def add_user_to_group(user:AddUser,id:int,me = Depends(auth_user)):
+     group = get_group_by_id(id)
+     add_to_db(group.users.append(GroupUser(user_id=session.query(User).filter(User.email == user.email).first().id, group_id=group.id)))
+     return get_group_by_id(id).users
+     
+
+@router.delete('/delete/{id:int}')
+async def delete_group(id, me = Depends(auth_user)):
+     delete_to_db(get_group_by_id(id))
