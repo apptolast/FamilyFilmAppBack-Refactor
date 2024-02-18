@@ -3,41 +3,29 @@ from sqlalchemy.exc import IntegrityError
 from schema.Genre import GenreCreate
 from config.db import session
 from models.Genre import Genre
-
-
+from controllers.genre import genre_filter, get_all_genres, get_genre_by_id
+from controllers.session import add_to_db
+from controllers.moviesapi import api,url_genre
 
 router = APIRouter(
     prefix="/Genre",
     tags=["Genres"]
 )
 
+@router.post("/dowloadgenre", status_code=status.HTTP_201_CREATED)
+async def create_genre():
+    json_response = api(url_genre)
 
+    for genre in json_response['genres']:
+        if genre_filter(genre['name']) == None:
+            add_to_db(Genre(id=genre['id'], name=genre['name']))
 
-@router.post("/create", status_code=status.HTTP_201_CREATED)
-async def create_genre(genre: GenreCreate):
-    try:
-        db_group = Genre(name = genre.name)
-        session.add(db_group)
-    except IntegrityError:
-        session.rollback()
-        return "error"
-    session.commit()
-    return genre
+    return get_all_genres()
 
 @router.get('/all')
 async def get_genres():
-    return session.query(Genre).all()
+    return get_all_genres()
 
 @router.get('/{id:int}')
 async def get_genre(id:int):
-        return session.query(Genre).filter(Genre.id == id).first()
-
-@router.patch('/edit/{id:int}')
-async def edit_genre(genre:GenreCreate,id:int):
-     try:
-        session.query(Genre).filter(Genre.id == id).update(dict(genre), synchronize_session=False)
-     except IntegrityError:
-        session.rollback()
-        return 'error'
-     session.commit()
-     return session.query(Genre).filter(Genre.id == id).first()
+        return get_genre_by_id(id)

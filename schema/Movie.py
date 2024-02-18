@@ -31,3 +31,8 @@ class ShowMovie(BaseModel):
     release_date: str 
     vote_average: float 
     vote_count: int 
+
+class movieData(BaseModel):
+    group_id:int
+    movie_id:int
+    movie:ShowMovie
