@@ -6,7 +6,7 @@ from config.db import session
 from models.Group import Group
 from controllers.users import auth_user
 from models.User import User
-from controllers.groups import get_group_all, get_group_by_id
+from controllers.groups import create_gruopdata_id, get_group_all, get_group_by_id
 from controllers.session import add_to_db,delete_to_db
 from schema.Movie import ShowMovie, movieData
 
@@ -29,6 +29,8 @@ async def create_group(group: GroupCreate,me = Depends(auth_user)):
         "firebaseUuid":"",
         "role": me.role,
     }
+
+
     return GroupData(
         id=group_id, 
         name=group.name,  
@@ -42,7 +44,7 @@ async def get_groups(me = Depends(auth_user)):
 
 @router.get('/{id:int}')
 async def get_group(id:int,me = Depends(auth_user)):
-        return get_group_by_id(id)
+        return create_gruopdata_id(id)
 
 @router.patch('/edit/{id:int}')
 async def edit_group(group:GroupCreate,id:int,me = Depends(auth_user)):
