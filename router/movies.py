@@ -24,7 +24,7 @@ async def create_genre(movie: MovieCreate):
         return "error"
     session.commit()
 
-    return {"status": "success", "data":Movie(**dict(movie)) }
+    return Movie(**dict(movie))
 
 @router.get('/all')
 async def get_movies():
