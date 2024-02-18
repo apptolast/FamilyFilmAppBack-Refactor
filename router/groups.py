@@ -52,4 +52,6 @@ async def add_user_to_group(user:AddUser,id:int,me = Depends(auth_user)):
 
 @router.delete('/delete/{id:int}')
 async def delete_group(id, me = Depends(auth_user)):
-     delete_to_db(get_group_by_id(id))
+    group_rip = GruopData_id(id)
+    delete_to_db(get_group_by_id(id))
+    return group_rip
