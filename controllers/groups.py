@@ -5,13 +5,14 @@ from schema.Group import GroupData
 from schema.Movie import ShowMovie, movieData
 from models.WatchList import WatchList
 from models.ViewList import ViewList
+
 def get_group_by_id(id:int):
     return session.query(Group).filter(Group.id == id).first()
 
 def get_group_all():
     return session.query(Group).all()
 
-def create_gruopdata_id(id:int):
+def GruopData_id(id:int):
     group = get_group_by_id(id)
     
     user_owner = session.query(GroupUser).filter((GroupUser.group_id == group.id)).first().user_id
@@ -32,3 +33,7 @@ def create_gruopdata_id(id:int):
         viewlist=vls,
         users=[{"userId": user.id, "email": user.email, "firebaseUuid": "", "role": user.role} for user in users]
     )
+
+def GroupData_all():
+    groups = get_group_all()
+    return[GruopData_id(group.id) for group in groups]

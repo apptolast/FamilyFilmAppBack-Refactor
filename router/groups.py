@@ -6,7 +6,7 @@ from config.db import session
 from models.Group import Group
 from controllers.users import auth_user
 from models.User import User
-from controllers.groups import create_gruopdata_id, get_group_all, get_group_by_id
+from controllers.groups import GruopData_id, get_group_all, get_group_by_id,GroupData_all
 from controllers.session import add_to_db,delete_to_db
 from schema.Movie import ShowMovie, movieData
 
@@ -17,34 +17,18 @@ router = APIRouter(
 
 @router.post("/create", status_code=status.HTTP_201_CREATED, response_model= GroupData )
 async def create_group(group: GroupCreate,me = Depends(auth_user)):
-    db_group = Group(name= group.name)
-    add_to_db(db_group)
-    group_id = get_group_all()[-1].id
-    db_groupUser = GroupUser(user_id = me.id, group_id =group_id)
+    add_to_db(Group(name= group.name))
+    db_groupUser = GroupUser(user_id = me.id, group_id =get_group_all()[-1].id)
     add_to_db(db_groupUser)
-    user = session.query(User).filter(User.id == me.id).first()
-    me_dict = {
-        "userId": me.id,
-        "email": me.email,
-        "firebaseUuid":"",
-        "role": me.role,
-    }
-
-
-    return GroupData(
-        id=group_id, 
-        name=group.name,  
-        user_owner_id=me.id,
-        users= [me_dict]
-    )
+    return GruopData_id(get_group_all()[-1].id)
 
 @router.get('/all')
 async def get_groups(me = Depends(auth_user)):
-    return get_group_all()
+    return GroupData_all()
 
 @router.get('/{id:int}')
 async def get_group(id:int,me = Depends(auth_user)):
-        return create_gruopdata_id(id)
+        return GruopData_id(id)
 
 @router.patch('/edit/{id:int}')
 async def edit_group(group:GroupCreate,id:int,me = Depends(auth_user)):
