@@ -45,9 +45,10 @@ async def edit_group(group:GroupCreate,id:int,me = Depends(auth_user)):
 @router.patch('/adduser/{id:int}')
 async def add_user_to_group(user:AddUser,id:int,me = Depends(auth_user)):
      group = get_group_by_id(id)
-     add_to_db(group.users.append(GroupUser(user_id=session.query(User).filter(User.email == user.email).first().id, group_id=group.id)))
+     user_real = session.query(User).filter(User.email == user.email).first()
+     add_to_db(GroupUser(user_id= user_real.id, group_id=group.id))
      return GruopData_id(id)
-     
+    
 
 @router.delete('/delete/{id:int}')
 async def delete_group(id, me = Depends(auth_user)):
