@@ -1,4 +1,4 @@
-from fastapi import APIRouter,status,Depends
+from fastapi import APIRouter, HTTPException,status,Depends
 from models import WatchList, ViewList
 from models.GroupUser import GroupUser
 from schema.Group import GroupCreate,AddUser,GroupData
@@ -32,22 +32,21 @@ async def get_group(id:int,me = Depends(auth_user)):
 
 @router.patch('/edit/{id:int}')
 async def edit_group(group:GroupCreate,id:int,me = Depends(auth_user)):
-    
-    if session.query(GroupUser).filter((GroupUser.user_id == me.id) & (GroupUser.group_id == id)).first() == None:
-         return "No"
-    try:
-        session.query(Group).filter(Group.id == id).update(dict(group))
-        session.commit()
-    except Exception as e:
-        return e 
-    return get_group_by_id(id)
-
-
+    if GruopData_id(id).user_owner_id == me.id:
+        try:
+            session.query(Group).filter(Group.id == id).update(dict(group))
+            session.commit()
+        except Exception as e:
+            return e 
+        return GruopData_id(id)
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not admin")
+        
+   
 @router.patch('/adduser/{id:int}')
 async def add_user_to_group(user:AddUser,id:int,me = Depends(auth_user)):
      group = get_group_by_id(id)
      add_to_db(group.users.append(GroupUser(user_id=session.query(User).filter(User.email == user.email).first().id, group_id=group.id)))
-     return get_group_by_id(id).users
+     return GruopData_id(id)
      
 
 @router.delete('/delete/{id:int}')
