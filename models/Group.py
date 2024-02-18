@@ -8,6 +8,6 @@ class Group(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
 
-    users = relationship('GroupUser', back_populates='group')
-    watchList = relationship('WatchList', back_populates='group')
-    viewList = relationship('ViewList', back_populates='group')
+    users = relationship('GroupUser', back_populates='group',cascade="all, delete")
+    watchList = relationship('WatchList', back_populates='group',cascade="all, delete")
+    viewList = relationship('ViewList', back_populates='group',cascade="all, delete")
