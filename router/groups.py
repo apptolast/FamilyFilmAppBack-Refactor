@@ -41,15 +41,20 @@ async def edit_group(group:GroupCreate,id:int,me = Depends(auth_user)):
         return GruopData_id(id)
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not admin")
         
-   
 @router.patch('/adduser/{id:int}')
 async def add_user_to_group(user:AddUser,id:int,me = Depends(auth_user)):
      group = get_group_by_id(id)
      user_real = session.query(User).filter(User.email == user.email).first()
      add_to_db(GroupUser(user_id= user_real.id, group_id=group.id))
      return GruopData_id(id)
-    
 
+@router.patch('/deleteuser/{id:int}')
+async def add_user_to_group(user:AddUser,id:int,me = Depends(auth_user)):
+     group = get_group_by_id(id)
+     user_real = session.query(User).filter(User.email == user.email).first()
+     delete_to_db(session.query(GroupUser).filter_by(user_id=user_real.id, group_id=group.id).first())
+     return GruopData_id(id)
+    
 @router.delete('/delete/{id:int}')
 async def delete_group(id, me = Depends(auth_user)):
     group_rip = GruopData_id(id)
