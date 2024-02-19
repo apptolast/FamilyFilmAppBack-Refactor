@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, validator
 from  controllers.users import pwd_context
-from typing import Optional
+from typing import Optional,List
 
 
 class User(BaseModel):
@@ -23,8 +23,8 @@ class userLogin(userCreate):
         return firebase_uuid
 
 
-class UsersData(BaseModel):
+class UserData(BaseModel):
     userId:int
-    groupId:int
+    groupId: List[int] = []
     user:User
 
