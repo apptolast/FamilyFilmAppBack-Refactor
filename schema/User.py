@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, validator
 from  controllers.users import pwd_context
-from typing import Optional
+from typing import Optional,List
 
 
 class User(BaseModel):
@@ -16,6 +16,7 @@ class userCreate(BaseModel):
     @validator("firebase_uuid")
     def hash_password(cls, firebase_uuid):
         return pwd_context.hash(firebase_uuid)
+    
 
 class userLogin(userCreate):
     @validator("firebase_uuid")
@@ -23,8 +24,8 @@ class userLogin(userCreate):
         return firebase_uuid
 
 
-class UsersData(BaseModel):
+class UserData(BaseModel):
     userId:int
-    groupId:int
+    groupId: List[int] = []
     user:User
 
