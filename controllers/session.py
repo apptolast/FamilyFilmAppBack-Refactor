@@ -19,3 +19,8 @@ def delete_to_db(item):
     except Exception as e:
         session.rollback()
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+def check_column(column,model):
+    if column not in model.__table__.columns:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid column name: {column}")
