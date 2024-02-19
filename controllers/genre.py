@@ -1,9 +1,11 @@
 from config.db import session
 from models.Genre import Genre
+from sqlalchemy import text
 
 
-def genre_filter(name):
-    return session.query(Genre).filter(Genre.name == name).first()
+def genre_filter(idiom,name):
+    return session.query(Genre).filter(text(f"genres.name->>'{idiom}' = :name")).params(name=name).first()
+
 
 def get_all_genres():
     return session.query(Genre).all()

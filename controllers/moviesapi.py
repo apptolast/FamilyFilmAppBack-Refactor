@@ -4,7 +4,7 @@ import os
 
 load_dotenv()
 
-url_genre="https://api.themoviedb.org/3/genre/movie/list?language=en"
+url_genre="https://api.themoviedb.org/3/genre/movie/list?language="
 
 def api(url):
     return requests.get(url, headers={
