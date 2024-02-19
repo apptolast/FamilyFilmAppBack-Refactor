@@ -26,18 +26,11 @@ async def create_genre(idiom):
     
     return get_all_genres()
 
-@router.get('/all')
-async def get_genres():
-    return get_all_genres()
+@router.get('/all/{idiom:str}')
+async def get_genres(idiom:str):
+    return get_all_genres(idiom)
 
-@router.get('/{id:int}')
+@router.get('/{id:int}/{idiom:str}')
 async def get_genre(id:int):
         return get_genre_by_id(id)
 
-@router.get('/all')
-async def get_genres():
-    return get_all_genres()
-
-@router.get('/{id:int}')
-async def get_genre(id:int):
-        return get_genre_by_id(id)
