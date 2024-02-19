@@ -12,7 +12,7 @@ router = APIRouter(
     tags=["Genres"]
 )
 
-@router.post("/dowloadgenre/{idiom:str}", status_code=201)
+@router.post("/dowloadgenre/{idiom:str}", status_code=201,response_model=List[ShowGenre])
 async def create_genre(idiom):
     json_response = api(f'{url_genre}{idiom}')
 

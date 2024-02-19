@@ -19,7 +19,7 @@ async def create_user(user:userCreate):
     return create_userdata(user_instance)
 
 
-@router.get('/all',response_model=List[UserData], status_code=200)
+@router.get('/all',response_model=List[UserData],status_code=200)
 async def get_users():
     return [create_userdata(user_instance) for user_instance in get_all_users()]
 
@@ -34,7 +34,6 @@ async def login_user(user:userLogin):
      user_validate = validate_user(user.email,user.firebase_uuid)
      return create_token(user_validate)
 
-
-@router.get('/me')
+@router.get('/me',status_code=200,response_model=UserData)
 async def me(user = Depends(auth_user)):
-    return user
+    return create_userdata(user)

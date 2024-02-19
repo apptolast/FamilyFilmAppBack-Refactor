@@ -30,7 +30,7 @@ async def get_groups():
 async def get_group(id:int,me = Depends(auth_user)):
         return GroupData_id(id)
 
-@router.patch('/edit/{id:int}')
+@router.patch('/edit/{id:int}',response_model=GroupData, status_code=201)
 async def edit_group(group:GroupCreate,id:int,me = Depends(auth_user)):
     if GroupData_id(id).user_owner_id == me.id:
         try:
@@ -41,21 +41,21 @@ async def edit_group(group:GroupCreate,id:int,me = Depends(auth_user)):
         return GroupData_id(id)
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not admin")
         
-@router.patch('/adduser/{id:int}',status_code=200)
+@router.patch('/adduser/{id:int}',status_code=200,response_model=GroupData)
 async def add_user_to_group(user:AddUser,id:int,me = Depends(auth_user)):
      group = get_group_by_id(id)
      user_real = session.query(User).filter(User.email == user.email).first()
      add_to_db(GroupUser(user_id= user_real.id, group_id=group.id))
      return GroupData_id(id)
 
-@router.patch('/deleteuser/{id:int}',status_code=200)
+@router.patch('/deleteuser/{id:int}',status_code=200,response_model=GroupData)
 async def add_user_to_group(user:AddUser,id:int,me = Depends(auth_user)):
      group = get_group_by_id(id)
      user_real = session.query(User).filter(User.email == user.email).first()
      delete_to_db(session.query(GroupUser).filter_by(user_id=user_real.id, group_id=group.id).first())
      return GroupData_id(id)
     
-@router.delete('/delete/{id:int}',status_code=200)
+@router.delete('/delete/{id:int}',status_code=200, response_model=GroupData)
 async def delete_group(id, me = Depends(auth_user)):
     group_rip = GroupData_id(id)
     delete_to_db(get_group_by_id(id))

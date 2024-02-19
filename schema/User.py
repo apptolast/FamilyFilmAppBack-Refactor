@@ -16,6 +16,7 @@ class userCreate(BaseModel):
     @validator("firebase_uuid")
     def hash_password(cls, firebase_uuid):
         return pwd_context.hash(firebase_uuid)
+    
 
 class userLogin(userCreate):
     @validator("firebase_uuid")

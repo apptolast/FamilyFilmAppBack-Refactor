@@ -48,7 +48,7 @@ def decode(tk:str):
     return user
 
 def search_decode(user):
-    filter_user('email',user['sub'])
+    return filter_user('email',user['sub'])
 
 def auth_user(tk:str = Depends(OAuth2PasswordBearer('/login'))):
     return search_decode(decode(tk))
@@ -85,7 +85,7 @@ def create_userdata(user):
     return schema.User.UserData(
         userId=user.id,
         groupId=groups_id,
-        user={"userId": user.id,"email": user.email,"firebaseUuid": user.firebase_uuid,"role": user.role}
+        user={"userId": user.id,"email": user.email,"firebaseUuid":"","role": user.role}
     )
 
  
