@@ -1,4 +1,5 @@
 from pydantic import BaseModel
 
-class GenreCreate(BaseModel):
+class ShowGenre(BaseModel):
+    id:int
     name:str
