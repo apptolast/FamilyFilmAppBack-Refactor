@@ -1,14 +1,14 @@
 from sqlalchemy import text
-from controllers.moviesapi import api,video,adult,lenguage,page,url_movies
+from controllers.moviesapi import api,base_url_movies,video,adult
 from controllers.session import add_to_db
 from models.Movie import Movie
 from config.db import session
 
-def downloadMovie(lenguage: str, adult=True, video=True):
+def downloadMovie(lenguage: str):
 
-    for page in range(1, api(url_movies)["total_pages"] + 1):
-        for movie in api(f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={lenguage}-US&page={page}&sort_by=popularity.desc")['results']:
-            
+    for page in range(1, api(base_url_movies)["total_pages"] + 1):
+        for movie in api(f"{base_url_movies}&page={page}")['results']:
+
             existing_movie = get_movie_by_id(movie['id'],lenguage)
             if get_movie_by_id(movie['id'],lenguage):
                 existing_movie['title'][lenguage] = movie['title']
@@ -18,20 +18,20 @@ def downloadMovie(lenguage: str, adult=True, video=True):
             add_to_db(Movie(
                 id=movie['id'],
                 adult=movie['adult'],
-                title={language: movie['title']},
+                title={lenguage: movie['title']},
                 genre_ids=movie['genre_ids'],
                 language=movie['original_language'],
-                synopsis={language: movie['overview']},
+                synopsis={lenguage: movie['overview']},
                 image=movie['poster_path'],
                 release_date=movie['release_date'],
                 vote_average=movie['vote_average'],
                 vote_count=movie['vote_count']))
 
     if video:
-        return downloadMovie(language, adult, video=False)
+        return downloadMovie(lenguage, adult, video=False)
 
     elif adult:
-        return downloadMovie(language, adult=False, video=True)
+        return downloadMovie(lenguage, adult=False, video=True)
     
     return session.query(Movie).all()
 

@@ -12,7 +12,6 @@ router = APIRouter(
 @router.post("/create/{lenguage:str}", status_code=status.HTTP_201_CREATED)
 async def create_genre(lenguage:str):
    return downloadMovie(lenguage)
-   return downloadMovie(lenguage)
  
         
     
