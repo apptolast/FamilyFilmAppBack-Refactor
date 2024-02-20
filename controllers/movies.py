@@ -1,32 +1,20 @@
-from controllers.moviesapi import api,base_url_movies,adult,video
+from sqlalchemy import text
+from controllers.moviesapi import api,video,adult,lenguage,page,url_movies
 from controllers.session import add_to_db
 from models.Movie import Movie
 from config.db import session
 
-def downloadMovie(language: str):
-    # Usa la base_url_movies y agrega el parámetro de página
-    first_page_results = api(f"{base_url_movies}&page=1")
-    first_page = first_page_results['total_pages']
-    first_results = first_page_results['results']
-    
-    for movie in first_results:
-        add_to_db(Movie(
-            id=movie['id'],
-            adult=movie['adult'],
-            title={language: movie['title']},
-            genre_ids=movie['genre_ids'],
-            language=movie['original_language'],
-            synopsis={language: movie['overview']},
-            image=movie['poster_path'],
-            release_date=movie['release_date'],
-            vote_average=movie['vote_average'],
-            vote_count=movie['vote_count']))
+def downloadMovie(lenguage: str, adult=True, video=True):
 
-    for actual_page in range(2, first_page + 1):
-        # Actualiza la URL con la página actual antes de hacer la llamada a la API
-        current_page_results = api(f"{base_url_movies}&page={actual_page}")
-        
-        for movie in current_page_results['results']:
+    for page in range(1, api(url_movies)["total_pages"] + 1):
+        for movie in api(f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={lenguage}-US&page={page}&sort_by=popularity.desc")['results']:
+            
+            existing_movie = get_movie_by_id(movie['id'],lenguage)
+            if get_movie_by_id(movie['id'],lenguage):
+                existing_movie['title'][lenguage] = movie['title']
+                existing_movie['synopsis'][lenguage] = movie['overview']
+                session.commit()
+            
             add_to_db(Movie(
                 id=movie['id'],
                 adult=movie['adult'],
@@ -46,3 +34,13 @@ def downloadMovie(language: str):
         return downloadMovie(language, adult=False, video=True)
     
     return session.query(Movie).all()
+
+def get_all_movies(idiom, page=1, items_per_page=100):
+    start = (page - 1) * items_per_page
+    end = start + items_per_page
+    movies = session.query(Movie.id, text(f"movies.title->>'{idiom}'")).slice(start, end).all()
+    return [{'id': movie[0], 'title': movie[1]} for movie in movies]
+
+def get_movie_by_id(id, idiom):
+    movie = session.query(Movie.id, text(f"movies.title->>'{idiom}'")).filter(Movie.id == id).first()
+    return {'id': movie[0], 'title': movie[1]} if movie else None
