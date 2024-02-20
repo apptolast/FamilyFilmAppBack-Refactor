@@ -3,7 +3,6 @@ from schema.Movie import MovieCreate
 from config.db import session
 from models.Movie import Movie
 from controllers.session import add_to_db
-from controllers.moviesapi import url_movies,api
 from controllers.movies import downloadMovie
 
 
