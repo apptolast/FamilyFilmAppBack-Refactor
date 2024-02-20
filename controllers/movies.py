@@ -4,34 +4,34 @@ from controllers.session import add_to_db
 from models.Movie import Movie
 from config.db import session
 
-def downloadMovie(lenguage: str):
+def downloadMovie(language: str):
 
     for page in range(1, api(base_url_movies)["total_pages"] + 1):
         for movie in api(f"{base_url_movies}&page={page}")['results']:
 
-            existing_movie = get_movie_by_id(movie['id'],lenguage)
-            if get_movie_by_id(movie['id'],lenguage):
-                existing_movie['title'][lenguage] = movie['title']
-                existing_movie['synopsis'][lenguage] = movie['overview']
+            existing_movie = session.query(Movie).filter(Movie.id == movie['id']).first()
+            if existing_movie != None:
+                existing_movie.title = {**existing_movie.get('title', {}), language: movie['title']}
+                existing_movie.synopsis = {**existing_movie.get('synopsis', {}), language: movie['overview']}                
                 session.commit()
-            
+
             add_to_db(Movie(
                 id=movie['id'],
                 adult=movie['adult'],
-                title={lenguage: movie['title']},
+                title={language: movie['title']},
                 genre_ids=movie['genre_ids'],
                 language=movie['original_language'],
-                synopsis={lenguage: movie['overview']},
+                synopsis={language: movie['overview']},
                 image=movie['poster_path'],
                 release_date=movie['release_date'],
                 vote_average=movie['vote_average'],
                 vote_count=movie['vote_count']))
 
     if video:
-        return downloadMovie(lenguage, adult, video=False)
+        return downloadMovie(language, adult, video=False)
 
     elif adult:
-        return downloadMovie(lenguage, adult=False, video=True)
+        return downloadMovie(language, adult=False, video=True)
     
     return session.query(Movie).all()
 
