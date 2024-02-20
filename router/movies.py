@@ -4,7 +4,7 @@ from config.db import session
 from models.Movie import Movie
 from controllers.session import add_to_db
 from controllers.moviesapi import url_movies,api
-from controllers.movies import dowloadMovie
+from controllers.movies import downloadMovie
 
 
 router = APIRouter(
@@ -16,7 +16,7 @@ router = APIRouter(
 
 @router.post("/create/{lenguage:str}", status_code=status.HTTP_201_CREATED)
 async def create_genre(lenguage:str):
-   return dowloadMovie(lenguage)
+   return downloadMovie(lenguage)
  
         
     
