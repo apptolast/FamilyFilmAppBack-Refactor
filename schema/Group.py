@@ -15,3 +15,11 @@ class GroupData(GroupCreate):
     watchlist: Optional[List[Movie.movieData]] = []
     viewlist: Optional[List[Movie.movieData]] = []
     users: List[User.User]
+
+
+class WatchListCreate(BaseModel):
+    group_id:int
+    movie_id:int
+
+class ViewListCreate(WatchListCreate):
+    pass
