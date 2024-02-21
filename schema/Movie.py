@@ -24,7 +24,7 @@ class ShowMovie(BaseModel):
     id: int
     adult: bool = False
     title: str
-    genre_ids: list[int]
+    genres: list[str]
     language: str
     synopsis: str
     image: str 
