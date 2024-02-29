@@ -1,8 +1,12 @@
-from fastapi import APIRouter,status
-from sqlalchemy.exc import IntegrityError
-from schema.Genre import GenreCreate
-from config.db import session
+from typing import List
+from fastapi import APIRouter
+from sqlalchemy import update
+from schema.Genre import ShowGenre
 from models.Genre import Genre
+from controllers.genre import get_all_genres, get_genre_by_id
+from controllers.session import add_to_db
+from controllers.moviesapi import api,url_genre
+from config.db import session
 
 
 
@@ -11,33 +15,28 @@ router = APIRouter(
     tags=["Genres"]
 )
 
+@router.post("/dowloadgenre/{idiom:str}", status_code=201,response_model=List[ShowGenre])
+async def create_genre(idiom):
 
+    json_response = api(f'{url_genre}{idiom}')
 
-@router.post("/create", status_code=status.HTTP_201_CREATED)
-async def create_genre(genre: GenreCreate):
-    try:
-        db_group = Genre(name = genre.name)
-        session.add(db_group)
-    except IntegrityError:
-        session.rollback()
-        return "error"
-    session.commit()
-    return genre
+    for genre in json_response['genres']:
+        existing_genre = session.query(Genre).filter(Genre.id == genre['id']).first()
+        
+        if existing_genre is None:
+           add_to_db(Genre(id=genre['id'],name={f"{idiom}":genre['name']}))
+        else:
+            existing_genre.name = {**existing_genre.name, idiom: genre['name']}
+            session.commit()
+        
+    
+    return get_all_genres(idiom)
 
-@router.get('/all')
-async def get_genres():
-    return session.query(Genre).all()
+@router.get('/all/{idiom:str}',status_code=200, response_model=List[ShowGenre])
+async def get_genres(idiom:str):
+    return get_all_genres(idiom)
 
-@router.get('/{id:int}')
-async def get_genre(id:int):
-        return session.query(Genre).filter(Genre.id == id).first()
+@router.get('/{id:int}/{idiom:str}',status_code=200, response_model=ShowGenre)
+async def get_genre(id:int,idiom):
+        return get_genre_by_id(id,idiom)
 
-@router.patch('/edit/{id:int}')
-async def edit_genre(genre:GenreCreate,id:int):
-     try:
-        session.query(Genre).filter(Genre.id == id).update(dict(genre), synchronize_session=False)
-     except IntegrityError:
-        session.rollback()
-        return 'error'
-     session.commit()
-     return session.query(Genre).filter(Genre.id == id).first()
