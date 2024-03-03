@@ -15,10 +15,10 @@ async def create_genre(lenguage:str):
  
         
     
-@router.get('/all/{idiom}')
-async def get_movies(idiom:str):
-    return get_all_movies(idiom)
+@router.get('/all/{page}/{idiom}')
+async def get_movies(idiom:str,page:int):
+    return get_all_movies(idiom,page)
 
-@router.get('/{id:int}')
-async def get_movie(id:int):
-        return get_movie_by_id(id)
+@router.get('/{id:int}/{idiom}')
+async def get_movie(id:int,idiom:str):
+        return get_movie_by_id(id,idiom)

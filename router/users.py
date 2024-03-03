@@ -12,12 +12,11 @@ router = APIRouter(
     tags=["Users"]
 )
 
-@router.post('/create',response_model=UserData, status_code=201)
+@router.post('/create',response_model=UserData,status_code=201)
 async def create_user(user:userCreate):
     add_to_db(User(**dict(user)))
     user_instance = filter_user('email', user.email) 
     return create_userdata(user_instance)
-
 
 @router.get('/all',response_model=List[UserData],status_code=200)
 async def get_users():

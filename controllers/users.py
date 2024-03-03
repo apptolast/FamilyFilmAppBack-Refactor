@@ -4,7 +4,8 @@ from fastapi import HTTPException, status,Depends
 from fastapi.security import OAuth2PasswordBearer
 from config.db import session
 from controllers.session import check_column
-from controllers.groups import GroupData_all
+from models.Group import Group
+from models.GroupUser import GroupUser
 from models.User import User
 from datetime import datetime, timedelta
 import schema
@@ -75,13 +76,16 @@ def is_user(user):
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
 def create_userdata(user):
+    all_groups = session.query(Group).all()
 
-    all_groups = GroupData_all()
+    # Obtén el primer GroupUser de cada grupo
+    group_owners = [session.query(GroupUser).filter(GroupUser.group_id == group.id).order_by(GroupUser.group_id).first() for group in all_groups]
 
-    owned_groups = [group for group in all_groups if group.user_owner_id == user.id]
+    # Filtra los grupos donde el usuario es el dueño
+    owned_groups = [group for group, owner in zip(all_groups, group_owners) if owner.user_id == user.id]
 
     groups_id = [group.id for group in owned_groups]
-    
+
     return schema.User.UserData(
         userId=user.id,
         groupId=groups_id,

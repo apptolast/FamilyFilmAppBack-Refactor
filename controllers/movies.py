@@ -35,7 +35,7 @@ def downloadMovie(language: str):
     
     return session.query(Movie).all()
 
-def get_all_movies(idiom, page=1, items_per_page=100):
+def get_all_movies(idiom, page, items_per_page=100):
     start = (page - 1) * items_per_page
     end = start + items_per_page
     movies = session.query(Movie.id, text(f"movies.title->>'{idiom}'")).slice(start, end).all()
