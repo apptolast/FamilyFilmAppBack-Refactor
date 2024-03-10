@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-import router
+from .router import genres_router, groups_router, movies_router, users_router
 app = FastAPI()
 
 
@@ -7,7 +7,7 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
-app.include_router(router=router.users)
-app.include_router(router=router.groups)
-app.include_router(router=router.genres)
-app.include_router(router=router.movies)
+app.include_router(genres_router)
+app.include_router(groups_router)
+app.include_router(movies_router)
+app.include_router(users_router)
