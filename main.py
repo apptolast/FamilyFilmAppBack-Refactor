@@ -1,5 +1,9 @@
 from fastapi import FastAPI
-from .router import genres_router, groups_router, movies_router, users_router
+from router.genres import router as genres_router
+from router.groups import router as groups_router
+from router.movies import router as movies_router
+from router.users import router as users_router
+
 app = FastAPI()
 
 
