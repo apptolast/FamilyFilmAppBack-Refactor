@@ -13,14 +13,14 @@ RUN python -m venv /code/venv
 # Activar el entorno virtual para los comandos siguientes
 ENV PATH="/code/venv/bin:$PATH"
 
-# Copiar el archivo de dependencias al contenedor
-COPY ./requirements.txt /code/requirements.txt
+# Copiar todos los archivos del directorio actual al directorio /code en el contenedor
+COPY . /code/
 
 # Instalar las dependencias en el entorno virtual
 RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-# Copiar el resto del código fuente al contenedor
-COPY ./main.py /code/
+# Establecer el PYTHONPATH
+ENV PYTHONPATH=/code
 
 # Comando para ejecutar la aplicación
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9900"]
