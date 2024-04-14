@@ -4,7 +4,7 @@ from models.GroupUser import GroupUser
 from schema.Group import GroupCreate,AddUser,GroupData,WatchListCreate,ViewListCreate
 from config.db import session
 from models.Group import Group
-from controllers.users import auth_user
+from controllers.users import auth_user, filter_user
 from models.User import User
 from controllers.groups import GroupData_id, get_group_all, get_group_by_id
 from controllers.session import add_to_db,delete_to_db
@@ -23,8 +23,9 @@ async def create_group(group: GroupCreate,me = Depends(auth_user)):
     return GroupData_id(new_group.id)
 
 @router.get('/all/')
-async def get_groups():
-    return get_group_all()
+async def get_groups(me = Depends(auth_user)):
+    groups_user = filter_user('id',me.id).groups
+    return [GroupData_id(group.group_id) for group in groups_user]
 
 @router.get('/{id:int}/{idiom:str}',status_code=200,response_model=GroupData)
 async def get_group(idiom:str,id:int):

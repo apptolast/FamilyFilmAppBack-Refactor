@@ -60,6 +60,12 @@ def GroupData_id(id:int,idiom = 'en'):
         users=[{"userId": user.id, "email": user.email, "firebaseUuid": "", "role": user.role} for user in users]
     )
 
-def GroupData_all(idiom = 'en'):
+def GroupData_all(me,idiom = 'en'):
     groups = get_group_all()
-    return [GroupData_id(group.id,idiom) for group in groups]
+    groups_have = []
+    
+    for group in groups:
+        group = GroupData_id(group.id,idiom)
+        if group.users.__contains__(me.id):
+            groups_have.append(group)
+    
