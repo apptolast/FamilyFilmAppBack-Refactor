@@ -16,7 +16,7 @@ def get_group_all():
 def get_genre_names(genre_ids, idiom):
     return [session.query(Genre.name).filter(Genre.id == genre_id).first()[0][idiom] for genre_id in genre_ids]
 
-def GroupData_id(id:int,idiom:str):
+def GroupData_id(id:int,idiom = 'en'):
     group = get_group_by_id(id)
     
     user_owner = session.query(GroupUser).filter((GroupUser.group_id == group.id)).first().user_id
@@ -60,6 +60,6 @@ def GroupData_id(id:int,idiom:str):
         users=[{"userId": user.id, "email": user.email, "firebaseUuid": "", "role": user.role} for user in users]
     )
 
-def GroupData_all(idiom):
+def GroupData_all(idiom = 'en'):
     groups = get_group_all()
     return [GroupData_id(group.id,idiom) for group in groups]
