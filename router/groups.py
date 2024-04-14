@@ -14,17 +14,17 @@ router = APIRouter(
     tags=["Groups"]
 )
 
-@router.post("/create/{idiom:str}", status_code=201,response_model= GroupData,)
-async def create_group(idiom:str,group: GroupCreate,me = Depends(auth_user)):
+@router.post("/create/", status_code=201,response_model= GroupData,)
+async def create_group(group: GroupCreate,me = Depends(auth_user)):
     new_group = Group(name= group.name)
     add_to_db(new_group)
     db_groupUser = GroupUser(user_id = me.id, group_id =new_group.id)
     add_to_db(db_groupUser)
-    return GroupData_id(new_group.id,idiom)
+    return GroupData_id(new_group.id)
 
-@router.get('/all/{idiom:str}')
-async def get_groups(idiom:str):
-    return [GroupData_id(group.id, idiom) for group in get_group_all()]
+@router.get('/all/')
+async def get_groups():
+    return get_group_all()
 
 @router.get('/{id:int}/{idiom:str}',status_code=200,response_model=GroupData)
 async def get_group(idiom:str,id:int):
