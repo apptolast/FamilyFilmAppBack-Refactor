@@ -1,5 +1,5 @@
 from fastapi import APIRouter,status
-from controllers.movies import downloadMovie, get_all_movies, get_movie_by_id, movie_with_genre
+from controllers.movies import downloadMovie, get_all_movies, get_movie_by_id
 
 
 router = APIRouter(
@@ -14,9 +14,9 @@ async def create_genre(lenguage:str,page:int):
    return downloadMovie(lenguage,page)
  
 
-@router.get("/{genre}/{idiom}/{page}/")
-async def get_movie_with_genre(genre:str,page:int,idiom:str):
-     return movie_with_genre(genre,page,idiom)
+# @router.get("/{genre}/{idiom}/{page}/")
+# async def get_movie_with_genre(genre:str,page:int,idiom:str):
+#      return movie_with_genre(genre,page,idiom)
     
 @router.get('/all/{idiom}/{page}')
 async def get_movies(idiom:str,page:int):
