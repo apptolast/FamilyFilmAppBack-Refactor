@@ -10,14 +10,9 @@ router = APIRouter(
 
 
 @router.post("/create/{lenguage:str}/{page:int}", status_code=status.HTTP_201_CREATED)
-async def create_genre(lenguage:str,page:int):
+async def create_movie(lenguage:str,page:int):
    return downloadMovie(lenguage,page)
  
-
-# @router.get("/{genre}/{idiom}/{page}/")
-# async def get_movie_with_genre(genre:str,page:int,idiom:str):
-#      return movie_with_genre(genre,page,idiom)
-    
 @router.get('/all/{idiom}/{page}')
 async def get_movies(idiom:str,page:int):
     return get_all_movies(idiom,page)
