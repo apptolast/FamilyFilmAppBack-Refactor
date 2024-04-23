@@ -78,10 +78,8 @@ def is_user(user):
 def create_userdata(user):
     all_groups = session.query(Group).all()
 
-    # Obtén el primer GroupUser de cada grupo
     group_owners = [session.query(GroupUser).filter(GroupUser.group_id == group.id).order_by(GroupUser.group_id).first() for group in all_groups]
 
-    # Filtra los grupos donde el usuario es el dueño
     owned_groups = [group for group, owner in zip(all_groups, group_owners) if owner.user_id == user.id]
 
     groups_id = [group.id for group in owned_groups]
