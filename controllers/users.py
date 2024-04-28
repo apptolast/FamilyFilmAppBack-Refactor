@@ -39,15 +39,19 @@ def auth_user(request: Request):
         # Remover el prefijo "Bearer" si está presente
         if token.startswith("Bearer "):
             token = token[7:]
+
         # Verificar el token con Firebase Admin SDK
         decoded_token = firebase_auth.verify_id_token(token)
+
         new_user = userCreate(
-            email=decoded_token["email"],
-            provider=decoded_token["firebase"]["sign_in_provider"]
-        )
+             email=decoded_token["email"],
+             provider=decoded_token["firebase"]["sign_in_provider"])
+        
         if session.query(User).filter(User.email == new_user.email).first() is None:
             add_to_db(User(email=new_user.email,provider = new_user.provider,role="user"))
-        return decoded_token
+
+        return session.query(User).filter(User.email == new_user.email).first()
+    
     except Exception as e:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
