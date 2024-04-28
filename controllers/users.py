@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 import os
-from fastapi import HTTPException, Request, status,Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import HTTPException, Request, status
 from config.db import session
 from controllers.session import check_column
 from models.Group import Group
