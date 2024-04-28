@@ -1,8 +1,12 @@
 from fastapi import FastAPI
+from config.firebase import initialize_firebase
 from router.genres import router as genres_router
 from router.groups import router as groups_router
 from router.movies import router as movies_router
 from router.users import router as users_router
+
+# Init Firebase Admin SDK and get the app
+initialize_firebase()
 
 app = FastAPI()
 
