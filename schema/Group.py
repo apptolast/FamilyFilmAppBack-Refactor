@@ -6,6 +6,8 @@ from schema import Movie,User
 class GroupCreate(BaseModel):
     name:str
 
+class LoginCreate(BaseModel):
+    token:str
 class AddUser(BaseModel):
     email:EmailStr
 
