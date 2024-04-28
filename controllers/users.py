@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 import os
 from fastapi import HTTPException, Request, status
 from config.db import session
-from controllers.session import check_column
+from controllers.session import add_to_db, check_column
 from models.Group import Group
 from models.GroupUser import GroupUser
 from models.User import User
@@ -12,6 +12,8 @@ from schema.Token import Token
 from jose import jwt
 from passlib.context import CryptContext
 from firebase_admin import auth as firebase_auth
+
+from schema.User import userCreate
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -39,6 +41,12 @@ def auth_user(request: Request):
             token = token[7:]
         # Verificar el token con Firebase Admin SDK
         decoded_token = firebase_auth.verify_id_token(token)
+        new_user = userCreate(
+            email=decoded_token["email"],
+            provider=decoded_token["firebase"]["sign_in_provider"]
+        )
+        if session.query(User).filter(User.email == new_user.email).first() is None:
+            add_to_db(User(email=new_user.email,provider = new_user.provider,role="user"))
         return decoded_token
     except Exception as e:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
