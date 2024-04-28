@@ -1,7 +1,6 @@
 from dotenv import load_dotenv
 import os
-from fastapi import HTTPException, status,Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import HTTPException, Request, status
 from config.db import session
 from controllers.session import check_column
 from models.Group import Group
@@ -12,8 +11,7 @@ import schema
 from schema.Token import Token 
 from jose import jwt
 from passlib.context import CryptContext
-from firebase_admin import auth
-
+from firebase_admin import auth as firebase_auth
 
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -28,35 +26,22 @@ def create_token(user):
                  "exp":datetime.utcnow() + timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))}
     return Token(access_token =  jwt.encode(access_token,SECRET_KEY,algorithm=ALGORITHM),token_type="JWT")
 
-def validate_user(token:str):
+
+
+def auth_user(request: Request):
+    #Extract token from header
+    token = request.headers.get("Authorization")
+    if token is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     try:
-        decoded_token = auth.verify_id_token(token)
-        user = find_or_create_user(decoded_token)
-    except Exception as e :
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-    return user
-
-
-def find_or_create_user(decoded_token):
-    email = decoded_token['email']
-    provider = decoded_token['firebase']['sign_in_provider']
-    is_user = session.query(User).filter(User.email == email).first()
-    if is_user is None:
-        new_user = User(
-        email=email,
-        provider=provider,
-        role='user'
-        )
-        session.add(new_user)
-        session.commit()
-        return new_user
-    else:
-        return is_user 
-
-
-
-def auth_user(tk:str = Depends(OAuth2PasswordBearer('/login'))):
-    return validate_user(tk)
+        # Remover el prefijo "Bearer" si está presente
+        if token.startswith("Bearer "):
+            token = token[7:]
+        # Verificar el token con Firebase Admin SDK
+        decoded_token = firebase_auth.verify_id_token(token)
+        return decoded_token
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
 
 def get_all_users():
