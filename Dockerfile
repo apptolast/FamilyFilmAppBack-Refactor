@@ -1,26 +1,17 @@
-# Usar la imagen base de Python
-FROM python:3.9
+# Use the official Python image
+FROM python:3.11.8
 
-# Establecer el directorio de trabajo dentro del contenedor
+# Set the working directory in the container
 WORKDIR /code
 
-# Actualizar pip y setuptools
-RUN python -m pip install --upgrade pip setuptools
+# Copy the dependencies file to the working directory
+COPY requirements.txt .
 
-# Crear un entorno virtual en el directorio /code/venv
-RUN python -m venv /code/venv
+# Install any dependencies
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
-# Activar el entorno virtual para los comandos siguientes
-ENV PATH="/code/venv/bin:$PATH"
+# Copy the content of the local src directory to the working directory
+COPY . .
 
-# Copiar todos los archivos del directorio actual al directorio /code en el contenedor
-COPY . /code/
-
-# Instalar las dependencias en el entorno virtual
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-
-# Establecer el PYTHONPATH
-ENV PYTHONPATH=/code
-
-# Comando para ejecutar la aplicación
+# Specify the command to run on container start
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9900"]
