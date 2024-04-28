@@ -2,6 +2,7 @@ from fastapi import APIRouter,Depends
 from fastapi.security import OAuth2PasswordBearer
 from controllers.users import auth_user, create_token, validate_user,get_all_users,filter_user,create_userdata
 from controllers.session import add_to_db
+from schema.Group import LoginCreate
 from schema.User import userCreate,userLogin,UserData
 from models.User import User
 from typing import List
@@ -23,8 +24,8 @@ async def get_user(id:int):
 
 oauth = OAuth2PasswordBearer(tokenUrl="/login")
 @router.post('/login')
-async def login_user(token:str):
-     user_validate = validate_user(token=token)
+async def login_user(token: LoginCreate):
+     user_validate = validate_user(token=token.token)
      return user_validate
 
 @router.get('/me',status_code=200,response_model=UserData)
