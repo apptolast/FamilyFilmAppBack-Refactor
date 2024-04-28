@@ -41,10 +41,9 @@ def find_or_create_user(decoded_token):
     email = decoded_token['email']
     iss_chain = decoded_token['iss']
     provider = decoded_token['firebase']['sign_in_provider']
-    name_user = decoded_token['name']
+    #name_user = decoded_token['name']
     dic_prov = {
         "email":email,
-        "name":name_user,
         "provider":provider,
         "iss":iss_chain
     }
