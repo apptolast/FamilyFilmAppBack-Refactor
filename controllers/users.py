@@ -10,7 +10,7 @@ from models.User import User
 from datetime import datetime, timedelta
 import schema
 from schema.Token import Token 
-from jose import JWTError,jwt
+from jose import jwt
 from passlib.context import CryptContext
 from firebase_admin import auth
 

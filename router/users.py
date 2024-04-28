@@ -1,10 +1,8 @@
 from fastapi import APIRouter,Depends
 from fastapi.security import OAuth2PasswordBearer
-from controllers.users import auth_user, create_token, validate_user,get_all_users,filter_user,create_userdata
-from controllers.session import add_to_db
+from controllers.users import auth_user, validate_user,get_all_users,filter_user,create_userdata
 from schema.Group import LoginCreate
-from schema.User import userCreate,userLogin,UserData
-from models.User import User
+from schema.User import UserData
 from typing import List
 
 
