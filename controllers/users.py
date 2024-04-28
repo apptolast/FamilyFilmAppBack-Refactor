@@ -12,6 +12,7 @@ import schema
 from schema.Token import Token 
 from jose import JWTError,jwt
 from passlib.context import CryptContext
+from firebase_admin import auth
 
 
 load_dotenv()
@@ -27,19 +28,22 @@ def create_token(user):
                  "exp":datetime.utcnow() + timedelta(minutes=int(ACCESS_TOKEN_EXPIRE_MINUTES))}
     return Token(access_token =  jwt.encode(access_token,SECRET_KEY,algorithm=ALGORITHM),token_type="JWT")
 
-def validate_user(email,password):
+def validate_user(token:str):
     try:
-       user = session.query(User).filter(User.email == email).first()
+        decoded_token = auth.verify_id_token(token)
+        user = find_or_create_user(decoded_token)
     except Exception as e :
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
-    if not user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user incorrected, please try again in a few seconds")
-        
-    if not (pwd_context.verify(password,user.firebase_uuid)):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="password incorrected, please try again in a few seconds")
-    
     return user
+
+
+def find_or_create_user(decoded_token):
+    email = decoded_token['email']
+    iss_chain = decoded_token['iss']
+    provider = decoded_token['firebase']['sign_in_provider']
+    name_user = decoded_token['name']
+    return "Esta llegando aqui"
+
 
 def decode(tk:str):
     try:
