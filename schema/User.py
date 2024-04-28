@@ -6,22 +6,13 @@ from typing import Optional,List
 class User(BaseModel):
     userId:int
     email:EmailStr
-    firebaseUuid: Optional[str]
+    provider: Optional[str]
     role:str
 
 class userCreate(BaseModel):
     email:EmailStr
-    firebase_uuid:str
-
-    @validator("firebase_uuid")
-    def hash_password(cls, firebase_uuid):
-        return pwd_context.hash(firebase_uuid)
+    provider:str
     
-
-class userLogin(userCreate):
-    @validator("firebase_uuid")
-    def hash_password(cls, firebase_uuid):
-        return firebase_uuid
 
 
 class UserData(BaseModel):
