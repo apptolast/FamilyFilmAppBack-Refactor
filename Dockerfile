@@ -13,5 +13,8 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 # Copy the content of the local src directory to the working directory
 COPY . .
 
+# Copy the Firebase credentials file to the expected location
+COPY family-film-app-firebase-adminsdk-qr49b-762ab41ed8.json .
+
 # Specify the command to run on container start
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "9900"]
