@@ -15,7 +15,7 @@ router = APIRouter(
 )
 
 @router.post("/create/", status_code=201,response_model= GroupData,)
-async def create_group(group: GroupCreate,me = Depends(auth_user)):
+async def create_group(group: GroupCreate,me: dict = Depends(auth_user)):
     new_group = Group(name= group.name)
     add_to_db(new_group)
     db_groupUser = GroupUser(user_id = me.id, group_id =new_group.id)
@@ -23,7 +23,7 @@ async def create_group(group: GroupCreate,me = Depends(auth_user)):
     return GroupData_id(new_group.id,'en')
 
 @router.get('/all/{idiom}')
-async def get_groups(idiom:str,me = Depends(auth_user)):
+async def get_groups(idiom:str,me: dict = Depends(auth_user)):
     groups_user = filter_user('id',me.id).groups
     return [GroupData_id(group.group_id,idiom) for group in groups_user]
 
@@ -32,7 +32,7 @@ async def get_group(idiom:str,id:int):
     return GroupData_id(id,idiom)
 
 @router.patch('/edit/{id:int}/{idiom:str}',response_model=GroupData, status_code=201)
-async def edit_group(idiom:str,group:GroupCreate,id:int,me = Depends(auth_user)):
+async def edit_group(idiom:str,group:GroupCreate,id:int,me: dict = Depends(auth_user)):
     if GroupData_id(id,idiom).user_owner_id == me.id:
         try:
             session.query(Group).filter(Group.id == id).update(dict(group))
@@ -43,7 +43,7 @@ async def edit_group(idiom:str,group:GroupCreate,id:int,me = Depends(auth_user))
     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not admin")
         
 @router.patch('/adduser/{id:int}/{idiom:str}',status_code=200,response_model=GroupData)
-async def add_user_to_group(idiom:str,user:AddUser,id:int,me = Depends(auth_user)):
+async def add_user_to_group(idiom:str,user:AddUser,id:int,me: dict = Depends(auth_user)):
     user_real = session.query(User).filter(User.email == user.email).first()
     if user_real is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not exist")
@@ -55,7 +55,7 @@ async def add_user_to_group(idiom:str,user:AddUser,id:int,me = Depends(auth_user
     return GroupData_id(id,idiom)
 
 @router.patch('/deleteuser/{id:int}/{idiom:str}',status_code=200,response_model=GroupData)
-async def delete_user_from_group(user:AddUser,id:int,idiom:str,me = Depends(auth_user)):
+async def delete_user_from_group(user:AddUser,id:int,idiom:str,me: dict = Depends(auth_user)):
     user_real = session.query(User).filter(User.email == user.email).first()
     if user_real is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="user not exist")
@@ -68,7 +68,7 @@ async def delete_user_from_group(user:AddUser,id:int,idiom:str,me = Depends(auth
     return GroupData_id(id,idiom)
     
 @router.delete('/delete/{id:int}/{idiom:str}',status_code=200, response_model=GroupData)
-async def delete_group(id:int,idiom:str, me = Depends(auth_user)):
+async def delete_group(id:int,idiom:str, me: dict = Depends(auth_user)):
     group_rip = GroupData_id(id,idiom)
     delete_to_db(get_group_by_id(id))
     return group_rip
