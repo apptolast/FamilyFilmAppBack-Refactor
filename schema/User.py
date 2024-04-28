@@ -1,5 +1,4 @@
-from pydantic import BaseModel, EmailStr, validator
-from  controllers.users import pwd_context
+from pydantic import BaseModel, EmailStr
 from typing import Optional,List
 
 
