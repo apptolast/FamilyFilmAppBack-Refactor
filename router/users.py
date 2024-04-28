@@ -25,8 +25,9 @@ async def get_user(id:int):
 oauth = OAuth2PasswordBearer(tokenUrl="/login")
 @router.post('/login')
 async def login_user(token: LoginCreate):
-     user_validate = validate_user(token=token.token)
-     return user_validate
+    print(token.token)
+    user_validate = validate_user(token=token.token)
+    return user_validate
 
 @router.get('/me',status_code=200,response_model=UserData)
 async def me(user = Depends(auth_user)):
