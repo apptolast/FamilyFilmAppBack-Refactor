@@ -39,29 +39,24 @@ def validate_user(token:str):
 
 def find_or_create_user(decoded_token):
     email = decoded_token['email']
-    iss_chain = decoded_token['iss']
     provider = decoded_token['firebase']['sign_in_provider']
-    #name_user = decoded_token['name']
-    dic_prov = {
-        "email":email,
-        "provider":provider,
-        "iss":iss_chain
-    }
-    return dic_prov
+    is_user = session.query(User).filter(User.email == email).first()
+    if is_user is None:
+        new_user = User(
+        email=email,
+        provider=provider,
+        role='user'
+        )
+        session.add(new_user)
+        session.commit()
+        return new_user
+    else:
+        return is_user 
 
 
-def decode(tk:str):
-    try:
-        user = jwt.decode(tk,SECRET_KEY,ALGORITHM)
-    except JWTError:
-        raise HTTPException(status_code=401,detail="Credenciales de auth invalidas", headers={"WWW-Authenticate":"Bearer"})
-    return user
-
-def search_decode(user):
-    return filter_user('email',user['sub'])
 
 def auth_user(tk:str = Depends(OAuth2PasswordBearer('/login'))):
-    return search_decode(decode(tk))
+    return validate_user(tk)
 
 
 def get_all_users():
@@ -96,6 +91,6 @@ def create_userdata(user):
     return schema.User.UserData(
         userId=user.id,
         groupId=groups_id,
-        user={"userId": user.id,"email": user.email,"firebaseUuid":"","role": user.role}
+        user={"userId": user.id,"email": user.email,"provider":"","role": user.role}
     )
  
