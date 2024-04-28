@@ -36,7 +36,6 @@ def auth_user(request: Request):
     if token is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
     try:
-
         # Remover el prefijo "Bearer" si está presente
         if token.startswith("Bearer "):
             token = token[7:]
@@ -48,7 +47,6 @@ def auth_user(request: Request):
              email=decoded_token["email"],
              provider=decoded_token["firebase"]["sign_in_provider"])
         
-
         if session.query(User).filter(User.email == new_user.email).first() is None:
             add_to_db(User(email=new_user.email,provider = new_user.provider,role="user"))
 
