@@ -20,7 +20,7 @@ async def create_group(group: GroupCreate,me: dict = Depends(auth_user)):
     add_to_db(new_group)
     db_groupUser = GroupUser(user_id = me.id, group_id =new_group.id)
     add_to_db(db_groupUser)
-    return GroupData_id(new_group.id,'en')
+    return GroupData_id(new_group.id,'es')
 
 @router.get('/all/{idiom}')
 async def get_groups(idiom:str,me: dict = Depends(auth_user)):
