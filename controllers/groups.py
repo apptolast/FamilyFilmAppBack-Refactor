@@ -75,7 +75,7 @@ def GroupData_id(id:int,idiom):
         user_owner_id=user_owner,
         watchlist=wls,
         viewlist=vls,
-        users=[{"userId": user.id, "email": user.email, "firebaseUuid": "", "role": user.role} for user in users]
+        users=[{"userId": user.id, "email": user.email, "role": user.role} for user in users]
     )
 
 
