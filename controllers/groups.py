@@ -7,6 +7,7 @@ from schema import Group as GroupSchema
 from schema.Movie import ShowMovie, movieData
 from models.WatchList import WatchList
 from models.ViewList import ViewList
+from schema.User import User
 
 def get_group_by_id(id:int):
     return session.query(GroupModel).filter(GroupModel.id == id).first()
@@ -76,7 +77,7 @@ def GroupData_id(id:int,idiom):
         user_owner_id=user_owner,
         watchlist=wls,
         viewlist=vls,
-        users=[{"userId": user.id, "email": user.email, "role": user.role} for user in users]
+        users=[User(**user) for user in users]
     )
 
 

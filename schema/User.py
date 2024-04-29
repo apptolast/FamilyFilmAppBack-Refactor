@@ -5,12 +5,12 @@ from typing import Optional,List
 class User(BaseModel):
     userId:int
     email:EmailStr
-    provider: Optional[str]
+    firebase_uuid: Optional[str]
     role:str
 
 class userCreate(BaseModel):
     email:EmailStr
-    provider:str
+    firebase_uuid:str
     
 
 
