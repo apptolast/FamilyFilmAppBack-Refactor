@@ -50,7 +50,7 @@ def auth_user(request: Request):
         print("hola")
         
         if session.query(User).filter(User.email == new_user.email).first() is None:
-            add_to_db(User(email=new_user.email,firebase_uuid = new_user.provider,role="user"))
+            add_to_db(User(email=new_user.email,firebase_uuid = new_user.provider))
 
         return session.query(User).filter(User.email == new_user.email).first()
     
