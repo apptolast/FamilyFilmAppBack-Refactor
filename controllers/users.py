@@ -55,7 +55,7 @@ def auth_user(request: Request):
         return session.query(User).filter(User.email == new_user.email).first()
     
     except Exception as e:
-        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+        raise HTTPException(status_code=401, detail=f"Error : {e}")
 
 
 def get_all_users():
