@@ -20,7 +20,10 @@ def get_genre_names(genre_ids, idiom):
 def GroupData_id(id:int,idiom):
     group = get_group_by_id(id)
 
-    user_owner = session.query(GroupUser).filter((GroupUser.group_id == group.id)).first().user_id
+    user_owner = session.query(GroupUser).filter((GroupUser.group_id == group.id)).first()
+    
+    
+    print(user_owner)
     
     users = [group_user.user for group_user in session.query(GroupUser).filter((GroupUser.group_id == group.id)).all()]
 
