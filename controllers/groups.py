@@ -22,11 +22,9 @@ def get_genre_names(genre_ids, idiom):
 def GroupData_id(id:int,idiom):
     devolver = None
     try:
-       # This code snippet is defining a function `GroupData_id` that retrieves information about a
-       # specific group by its ID. Here is a breakdown of what the code is doing:
         group = get_group_by_id(id)
     
-        user_owner = session.query(GroupUser).filter((GroupUser.group_id == group.id)).first()
+        user_owner = session.query(GroupUser).filter((GroupUser.group_id == group.id)).first().user_id
         
         
         users = [group_user.user for group_user in session.query(GroupUser).filter((GroupUser.group_id == group.id)).all()]
