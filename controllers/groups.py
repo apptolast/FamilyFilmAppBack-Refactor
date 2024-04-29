@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from config.db import session
 from controllers.movies import get_movie_by_id
 from controllers.session import instance_to_dict
@@ -19,66 +20,74 @@ def get_genre_names(genre_ids, idiom):
     return [session.query(Genre.name).filter(Genre.id == genre_id).first()[0][idiom] for genre_id in genre_ids]
 
 def GroupData_id(id:int,idiom):
-    group = get_group_by_id(id)
-
-    user_owner = session.query(GroupUser).filter((GroupUser.group_id == group.id)).first()
+    devolver = None
+    try:
+       # This code snippet is defining a function `GroupData_id` that retrieves information about a
+       # specific group by its ID. Here is a breakdown of what the code is doing:
+        group = get_group_by_id(id)
     
-    
-    users = [group_user.user for group_user in session.query(GroupUser).filter((GroupUser.group_id == group.id)).all()]
-
-    wls_db_data = session.query(WatchList).filter(WatchList.group_id == group.id).all()
-    vls_db_data = session.query(ViewList).filter(ViewList.group_id == group.id).all()
-
-    wls = []
-    if len(wls_db_data) >= 0:
-        for wl in wls_db_data:
-            movie_data = get_movie_by_id(wl.movie_id,idiom)
-
-            if isinstance(movie_data,str):
-                continue
+        user_owner = session.query(GroupUser).filter((GroupUser.group_id == group.id)).first()
         
-            movieData(group_id= group.id, movie_id=int(id), movie=ShowMovie(
-            id=movie_data.id,
-            adult=movie_data.adult,
-            title=movie_data.title,
-            genres = get_genre_names(movie_data.genre_ids, idiom),
-            language=movie_data.language,
-            synopsis=movie_data.synopsis,
-            image=movie_data.image,
-            release_date=movie_data.release_date,
-            vote_average=movie_data.vote_average,
-            vote_count=movie_data.vote_count
-            ))
-
-    vls = []
-    if len(vls_db_data) >= 0:
-        for vl in vls_db_data:
-            movie_data = get_movie_by_id(vl.movie_id,idiom)
-
-            if isinstance(movie_data,str):
-                continue
         
-            movieData(group_id= group.id, movie_id=int(id), movie=ShowMovie(
-            id=movie_data.id,
-            adult=movie_data.adult,
-            title=movie_data.title,
-            genres = get_genre_names(movie_data.genre_ids, idiom),
-            language=movie_data.language,
-            synopsis=movie_data.synopsis,
-            image=movie_data.image,
-            release_date=movie_data.release_date,
-            vote_average=movie_data.vote_average,
-            vote_count=movie_data.vote_count
-            ))    
+        users = [group_user.user for group_user in session.query(GroupUser).filter((GroupUser.group_id == group.id)).all()]
     
-    return GroupSchema.GroupData(
-        id=group.id, 
-        name=group.name,  
-        user_owner_id=user_owner,
-        watchlist=wls,
-        viewlist=vls,
-        users=[{"userId": user.id, "email": user.email, "firebase_uuid": "", "role": user.role} for user in users]
-    )
+        wls_db_data = session.query(WatchList).filter(WatchList.group_id == group.id).all()
+        vls_db_data = session.query(ViewList).filter(ViewList.group_id == group.id).all()
+    
+        wls = []
+        if len(wls_db_data) >= 0:
+            for wl in wls_db_data:
+                movie_data = get_movie_by_id(wl.movie_id,idiom)
+    
+                if isinstance(movie_data,str):
+                    continue
+            
+                movieData(group_id= group.id, movie_id=int(id), movie=ShowMovie(
+                id=movie_data.id,
+                adult=movie_data.adult,
+                title=movie_data.title,
+                genres = get_genre_names(movie_data.genre_ids, idiom),
+                language=movie_data.language,
+                synopsis=movie_data.synopsis,
+                image=movie_data.image,
+                release_date=movie_data.release_date,
+                vote_average=movie_data.vote_average,
+                vote_count=movie_data.vote_count
+                ))
+    
+        vls = []
+        if len(vls_db_data) >= 0:
+            for vl in vls_db_data:
+                movie_data = get_movie_by_id(vl.movie_id,idiom)
+    
+                if isinstance(movie_data,str):
+                    continue
+            
+                movieData(group_id= group.id, movie_id=int(id), movie=ShowMovie(
+                id=movie_data.id,
+                adult=movie_data.adult,
+                title=movie_data.title,
+                genres = get_genre_names(movie_data.genre_ids, idiom),
+                language=movie_data.language,
+                synopsis=movie_data.synopsis,
+                image=movie_data.image,
+                release_date=movie_data.release_date,
+                vote_average=movie_data.vote_average,
+                vote_count=movie_data.vote_count
+                ))    
+        
+        devolver = GroupSchema.GroupData(
+            id=group.id, 
+            name=group.name,  
+            user_owner_id=user_owner,
+            watchlist=wls,
+            viewlist=vls,
+            users=[{"userId": user.id, "email": user.email, "firebase_uuid": "", "role": user.role} for user in users]
+        )
+    except Exception as e:
+        raise HTTPException(status_code=430, detail=f"Error : {e}")
+        
+    return devolver
 
 
 
