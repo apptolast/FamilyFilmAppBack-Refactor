@@ -23,8 +23,6 @@ def GroupData_id(id:int,idiom):
     user_owner = session.query(GroupUser).filter((GroupUser.group_id == group.id)).first()
     
     
-    print(user_owner)
-    
     users = [group_user.user for group_user in session.query(GroupUser).filter((GroupUser.group_id == group.id)).all()]
 
     wls_db_data = session.query(WatchList).filter(WatchList.group_id == group.id).all()

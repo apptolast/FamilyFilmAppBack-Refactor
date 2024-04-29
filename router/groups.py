@@ -17,7 +17,7 @@ router = APIRouter(
 @router.post("/create/", status_code=201,response_model= GroupData,)
 async def create_group(group: GroupCreate,me = Depends(auth_user)):
     new_group = Group(name= group.name)
-    print(me)
+    print(f"USUARIO QUE OBTENEMOS EN EL ROUTER    {me.__dict__}")
     add_to_db(new_group)
     db_groupUser = GroupUser(user_id = me.id, group_id =new_group.id)
     add_to_db(db_groupUser)
