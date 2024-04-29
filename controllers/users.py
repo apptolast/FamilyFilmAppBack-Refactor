@@ -45,7 +45,7 @@ def auth_user(request: Request):
 
         new_user = userCreate(
              email=decoded_token["email"],
-             provider=decoded_token["firebase"]["sign_in_provider"])
+             firebase_uuid=decoded_token["firebase"]["sign_in_provider"])
              
         print("hola")
         
