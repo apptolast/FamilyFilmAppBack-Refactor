@@ -8,7 +8,7 @@ router = APIRouter(
     prefix="/users",
     tags=["Users"]
 )
-
+session.delete()
 UserServiceRepository = UserService(session)
 
 @router.get('', status_code=200, response_model=List[UserSchemaResponse])
