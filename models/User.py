@@ -6,8 +6,9 @@ from sqlalchemy.orm import relationship
 class User(Base):
     __tablename__ = 'User'
     id = Column(Integer, primary_key=True)
-    id_language = Column(Integer, ForeignKey('Language.id'))
+    id_language = Column(Integer, ForeignKey('Language.id'),nullable=True)
     email = Column(String, unique=True)
-
+    provider = Column(String)
+    
     language = relationship("Language", back_populates="users")
     group_associations = relationship("MovieUserGroup", back_populates="user")  # Cambiado para clarificar la relación

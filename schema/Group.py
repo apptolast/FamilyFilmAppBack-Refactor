@@ -3,12 +3,12 @@ from pydantic import BaseModel, EmailStr
 
 
 class UserSchemaRequest(BaseModel):
-    email: EmailStr
-    provider:str
+    name:str
 
 class UserSchemaResponse(BaseModel):
     
     id:int
-    email: EmailStr
-    language:Optional[int] = None
+    owner_id:int
+    name: str
     provider:str
+
