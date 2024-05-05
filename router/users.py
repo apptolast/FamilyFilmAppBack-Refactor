@@ -44,4 +44,4 @@ async def me(me = Depends(UserServiceRepository.auth_user)):
 
 @router.delete('',status_code=204)
 async def delete_user(me = Depends(UserServiceRepository.auth_user)):
-    UserServiceRepository.delete_user(me.id)
+    UserServiceRepository.delete_user(me)

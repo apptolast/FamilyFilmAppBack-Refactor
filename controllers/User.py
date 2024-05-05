@@ -75,7 +75,7 @@ class UserService:
         except HTTPException as http_error:
             raise http_error
         
-        except (auth.UserNotFoundError, ValueError) as error_firebase:
+        except (auth.UserNotFoundError,ValueError,auth.FirebaseError) as error_firebase:
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"An error occurred: {str(error_firebase)}")
         
         except Exception as e:
