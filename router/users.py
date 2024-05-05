@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter,Depends
-from schema.User import UserSchemaRequest, UserSchemaResponse
+from schema.User import UserSchemaResponse
 from controllers.User import UserService
 from config.db import session
 
