@@ -60,22 +60,12 @@ class UserService:
 
     def delete_user(self, user):
         try:
-                # Attempt to find and delete the user in Firebase Auth
-                current_user = auth.get_user_by_email(user.email)
-                result = auth.delete_user(current_user.uid)
-                if result is None:  # Assuming that `delete_user` returns None on success
-                    # Delete user from the local database
-                    self.db_session.delete(user)
-                    self.db_session.commit()
-                    return user
-                else:
-                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Firebase deletion failed")
-        
-        
-        except HTTPException as http_error:
-            raise http_error
-        
-        except (auth.UserNotFoundError,ValueError,auth.FirebaseError) as error_firebase:
+            current_user = auth.get_user_by_email(user.email)
+            auth.delete_user(current_user.uid)
+            self.db_session.delete(user)
+            self.db_session.commit()
+                
+        except (auth.UserNotFoundError,ValueError) as error_firebase:
             raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"An error occurred: {str(error_firebase)}")
         
         except Exception as e:
