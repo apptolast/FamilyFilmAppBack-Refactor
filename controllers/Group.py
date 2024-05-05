@@ -31,7 +31,7 @@ class GroupService:
         #         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios")
 
         
-        def get_user_id(self, group_id):
+        def get_grouo_id(self, group_id):
             try:
                 user = self.db_session.query(Group).filter(Group.id == group_id).first()
                 
