@@ -90,6 +90,6 @@ class UserService:
             return self.db_session.query(User).filter(User.email == new_user.email).first()
         
         except Exception as e:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= "Invalid authentication credentials")
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= f"Invalid authentication credentials: {str(e)}")
         
 
