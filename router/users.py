@@ -42,6 +42,6 @@ async def me(me = Depends(UserServiceRepository.auth_user)):
         )
 
 
-@router.delete('/{id:int}',status_code=204)
-async def delete_user(id:int, me = Depends(UserServiceRepository.auth_user)):
-    UserServiceRepository.delete_user(id)
+@router.delete('',status_code=204)
+async def delete_user(me = Depends(UserServiceRepository.auth_user)):
+    UserServiceRepository.delete_user(me.id)

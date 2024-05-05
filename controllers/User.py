@@ -2,7 +2,7 @@ from fastapi import HTTPException, Request,status
 from models.User import User
 from firebase_admin import auth as firebase_auth
 from schema.User import UserSchemaRequest
-
+from firebase_admin import auth
 
 class UserService:
     
@@ -58,10 +58,11 @@ class UserService:
     #         self.db_session.commit()
     #         return user
 
-    def delete_user(self, user_id):
-        user = self.get_user_id(user_id)
+    def delete_user(self, user):
         try:    
             if user :
+                current_user = auth.get_user_by_email(user.email) 
+                auth.delete_user(current_user.uid)
                 self.db_session.delete(user)
                 self.db_session.commit()
             return True
