@@ -69,11 +69,14 @@ class UserService:
                     self.db_session.commit()
                     return user
                 else:
-                    raise HTTPException(status_code=404, detail="Firebase deletion failed")
+                    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Firebase deletion failed")
         
         
         except HTTPException as http_error:
             raise http_error
+        
+        except (auth.UserNotFoundError, ValueError) as error_firebase:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"An error occurred: {str(error_firebase)}")
         
         except Exception as e:
             self.db_session.rollback()
