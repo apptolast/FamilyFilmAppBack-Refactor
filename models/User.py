@@ -1,16 +1,13 @@
-from sqlalchemy import Column, Integer, String, Boolean, Float, ForeignKey, Table, create_engine
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, ForeignKey, Integer, String
 from models.base import Base
-from models.RoleEnum import role_enum
-
-
+from sqlalchemy.orm import relationship
 
 
 class User(Base):
-    __tablename__ = 'users'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    __tablename__ = 'User'
+    id = Column(Integer, primary_key=True)
+    id_language = Column(Integer, ForeignKey('Language.id'))
     email = Column(String, unique=True)
-    firebase_uuid = Column(String)
-    role = Column(role_enum, default='USER')
 
-    groups = relationship('GroupUser', back_populates='user')
+    language = relationship("Language", back_populates="users")
+    group_associations = relationship("MovieUserGroup", back_populates="user")  # Cambiado para clarificar la relación

@@ -1,12 +1,12 @@
 from .base import Base
 from .Genre import Genre
-from .GenreMovieAssociation import genre_movie_association
+from .GenreMovie import GenreMovie
 from .Group import Group
-from .GroupUser import GroupUser
+from .Language import Language
 from .Movie import Movie
-from .RoleEnum import role_enum
+from .MovieUserGroup import MovieUserGroup
 from .User import User
-from .ViewList import ViewList
-from .WatchList import WatchList
+
+
 
 
