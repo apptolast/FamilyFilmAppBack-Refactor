@@ -11,13 +11,8 @@ router = APIRouter(
 
 UserServiceRepository = UserService(session)
 
-@router.post('')
-async def create_user(user:UserSchemaRequest):
-    user = UserServiceRepository.create_user(user)
-    return user
-
 @router.get('', status_code=200, response_model=List[UserSchemaResponse])
-async def get_users():
+async def get_users(me = Depends(UserServiceRepository.auth_user)):
     users = UserServiceRepository.get_users()
     return [UserSchemaResponse(
         id= user.id,
@@ -27,7 +22,7 @@ async def get_users():
         ) for user in users]
 
 @router.get('/{id:int}',status_code=200)
-async def get_user(id:int):
+async def get_user(id:int, me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(id)
     return UserSchemaResponse(
         id= user.id,
@@ -48,5 +43,5 @@ async def me(me = Depends(UserServiceRepository.auth_user)):
 
 
 @router.delete('/{id:int}',status_code=204)
-async def delete_user(id:int):
+async def delete_user(id:int, me = Depends(UserServiceRepository.auth_user)):
     UserServiceRepository.delete_user(id)

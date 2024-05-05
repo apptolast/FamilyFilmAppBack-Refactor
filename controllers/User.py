@@ -6,9 +6,8 @@ from schema.User import UserSchemaRequest
 
 class UserService:
     
-    
     def __init__(self, db_session):
-            self.db_session = db_session
+        self.db_session = db_session
 
     def create_user(self, user):
             new_user = User(
