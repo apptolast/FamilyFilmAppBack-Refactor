@@ -8,19 +8,19 @@ class GroupService:
             self.db_session = db_session
 
         def create_user(self, group_data):
-                new_user = Group(
-                    owner_id = group_data.email,
+                new_group = Group(
+                    owner_id = group_data.id,
                     name = group_data.name
                 )
                 try:
-                    self.db_session.add(new_user)
+                    self.db_session.add(new_group)
                     self.db_session.commit()
                     
                 except Exception as e:
                     self.db_session.rollback()
                     raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{str(e)}")
                 
-                return self.db_session.query(Group).filter(Group.owner_id == group_data.email).all()[-1]
+                return self.db_session.query(Group).filter(Group.owner_id == group_data.id).all()[-1]
             
         # def get_users(self):
         #     try:
