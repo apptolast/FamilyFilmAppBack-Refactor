@@ -80,10 +80,13 @@ class UserService:
     def check_user_exists_or_create(self, request: Request):
         try:
             decoded_token = self.firebase_auth_service.verify_token(request.headers.get("Authorization"))
-            user_email = decoded_token["email"]
-            user = self.db_session.query(User).filter(User.email == user_email).first()
+            new_user = UserSchemaRequest(
+                email=decoded_token["email"],
+                provider=decoded_token["firebase"]["sign_in_provider"]
+            )
+            user = self.db_session.query(User).filter(User.email == new_user.email).first()
             if user is None:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found in local database")
+                self.create_user(user=new_user)
             else:
                 return user
         except HTTPException as http_error:
@@ -93,12 +96,7 @@ class UserService:
     
     
     def create_user(self, user):
-        new_user = UserSchemaRequest(
-            email=user.email,
-            provider=user.provider
-        )
-        if self.db_session.query(User).filter(User.email == new_user.email).first() is None:
-            self.create_user(new_user)
+        self.create_user(user=user)
     
     def check_user_exists(self, request: Request):
         try:
