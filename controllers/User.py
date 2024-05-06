@@ -11,20 +11,6 @@ class UserService:
         self.db_session = db_session
         self.firebase_auth_service = firebase_auth_service
 
-    def create_user(self, user):
-            new_user = User(
-                 email = user.email,
-                 provider = user.provider
-            )
-            try:
-                self.db_session.add(new_user)
-                self.db_session.commit()
-                
-            except Exception as e:
-                 self.db_session.rollback()
-                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")
-            
-            return self.db_session.query(User).filter(User.email == new_user.email).first()
         
     def get_users(self):
         try:
@@ -32,7 +18,7 @@ class UserService:
             return user
         except Exception as e:
              self.db_session.rollback()
-             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios")
+             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios {e}")
 
     
     def get_user_id(self, user_id):
@@ -91,7 +77,7 @@ class UserService:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     def check_user_exists_or_create(self, request: Request):
-        decoded_token = self.firebase_auth_service.verify_token(request.headers.get("Authorization"))
+        decoded_token = self.auth_user(request=request.headers.get("Authorization"))
         user_email = decoded_token["email"]
         user_provider = decoded_token["firebase"]["sign_in_provider"]
         user = self.db_session.query(User).filter(User.email == user_email).first()
@@ -99,6 +85,7 @@ class UserService:
             user_schema = UserSchemaRequest(email=user_email, provider=user_provider)
             user = self.create_user(user_data=user_schema)
         return user
+        
 
     def auth_user(self, request: Request):
         token = request.headers.get("Authorization")
