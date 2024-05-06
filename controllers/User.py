@@ -1,18 +1,14 @@
-import logging
 from fastapi import HTTPException, Request,status
 from models.User import User
-from firebase_admin import auth as firebase_auth
-from schema.User import UserSchemaRequest
-from firebase_admin import auth
 from controllers.Auth import FirebaseAuthService
 
 
-FirebaseAuthService = FirebaseAuthService()
 
 class UserService:
     
-    def __init__(self, db_session):
+    def __init__(self, db_session, firebase_auth_service):
         self.db_session = db_session
+        self.firebase_auth_service = firebase_auth_service
 
     def create_user(self, user):
             new_user = User(
@@ -63,30 +59,41 @@ class UserService:
     #         self.db_session.commit()
     #         return user
 
-    def delete_user(self, user):
+
+    def delete_user(self, request: Request):
         try:
-            print(f"Attempting to delete Firebase user: {user.email}")
-            current_user = auth.get_user_by_email(user.email)
-            auth.delete_user(current_user.uid)
-            print(f"Firebase user deleted: {current_user.uid}")
-            
-            print(f"Deleting user from local database: {user.email}")
-            self.db_session.delete(user)
-            self.db_session.commit()
-            print("User deleted from local database successfully")
-                
-        except (auth.UserNotFoundError,ValueError) as error_firebase:
-            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=f"An error occurred: {str(error_firebase)}")
-        
+            user = self.check_user_exists(request=request)
+            if user:
+                self.firebase_auth_service.delete_user_firebase(email=user.email)
+                self.db_session.delete(user)
+                self.db_session.commit()
+            else:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        except HTTPException as http_error:
+            raise http_error
         except Exception as e:
             self.db_session.rollback()
-            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"An error occurred: {str(e)}")
 
-    def auth_user(self,request: Request):
+    def check_user_exists(self, request: Request):
+        try:
+            decoded_token = self.firebase_auth_service.verify_token(request.headers.get("Authorization"))
+            user_email = decoded_token["email"]
+            user = self.db_session.query(User).filter(User.email == user_email).first()
+            if user is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found in local database")
+            return user
+        except HTTPException as http_error:
+            raise http_error
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Check if user exits error: {str(e)}")
+
+    def auth_user(self, request: Request):
         token = request.headers.get("Authorization")
         try:
-            FirebaseAuthService.verify_token(token=token)
+            # Utiliza la instancia de FirebaseAuthService pasada en el constructor
+            token_decoded = self.firebase_auth_service.verify_token(token=token)
+            return token_decoded
         except Exception as e:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= f"Invalid authentication credentials: {str(e)}")
-        
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Last Step to Auth user error: {str(e)}")
 
