@@ -4,6 +4,10 @@ from models.User import User
 from firebase_admin import auth as firebase_auth
 from schema.User import UserSchemaRequest
 from firebase_admin import auth
+from controllers.Auth import FirebaseAuthService
+
+
+FirebaseAuthService = FirebaseAuthService()
 
 class UserService:
     
@@ -80,19 +84,8 @@ class UserService:
 
     def auth_user(self,request: Request):
         token = request.headers.get("Authorization")
-        if token is None:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")
         try:
-            if token.startswith("Bearer "):
-                token = token[7:]
-            decoded_token = firebase_auth.verify_id_token(token)
-            new_user = UserSchemaRequest(
-                email=decoded_token["email"],
-                provider=decoded_token["firebase"]["sign_in_provider"])
-            if self.db_session.query(User).filter(User.email == new_user.email).first() is None:
-                self.create_user(new_user)
-            return self.db_session.query(User).filter(User.email == new_user.email).first()
-        
+            FirebaseAuthService.verify_token(token=token)
         except Exception as e:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail= f"Invalid authentication credentials: {str(e)}")
         
