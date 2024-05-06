@@ -1,6 +1,7 @@
 from fastapi import HTTPException, Request,status
 from models.User import User
 from controllers.Auth import FirebaseAuthService
+from schema.User import UserSchemaRequest
 
 
 
@@ -92,7 +93,12 @@ class UserService:
     
     
     def create_user(self, user):
-        pass
+        new_user = UserSchemaRequest(
+            email=user.email,
+            provider=user.provider
+        )
+        if self.db_session.query(User).filter(User.email == new_user.email).first() is None:
+            self.create_user(new_user)
     
     def check_user_exists(self, request: Request):
         try:
