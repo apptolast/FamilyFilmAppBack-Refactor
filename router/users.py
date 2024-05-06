@@ -3,12 +3,16 @@ from fastapi import APIRouter,Depends
 from schema.User import UserSchemaResponse
 from controllers.User import UserService
 from config.db import session
+from controllers.Auth import FirebaseAuthService
+
 
 router = APIRouter(
     prefix="/users",
     tags=["Users"]
 )
-UserServiceRepository = UserService(session)
+
+firebase_auth_service = FirebaseAuthService()
+UserServiceRepository = UserService(session, firebase_auth_service)
 
 @router.get('', status_code=200, response_model=List[UserSchemaResponse])
 async def get_users(me = Depends(UserServiceRepository.auth_user)):
