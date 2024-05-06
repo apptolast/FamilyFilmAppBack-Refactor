@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter,Depends
-from schema.User import UserSchemaResponse
+from schema.User import UserSchemaRequest, UserSchemaResponse
 from controllers.User import UserService
 from config.db import session
 from controllers.Auth import FirebaseAuthService
@@ -13,6 +13,12 @@ router = APIRouter(
 
 firebase_auth_service = FirebaseAuthService()
 UserServiceRepository = UserService(session, firebase_auth_service)
+
+
+@router.post('', status_code=201, response_model=UserSchemaResponse)
+async def create_user(user: UserSchemaRequest, me = Depends(UserServiceRepository.auth_user)):
+    return UserServiceRepository.create_user(user)
+
 
 @router.get('', status_code=200, response_model=List[UserSchemaResponse])
 async def get_users(me = Depends(UserServiceRepository.auth_user)):
@@ -46,5 +52,5 @@ async def me(me = Depends(UserServiceRepository.auth_user)):
 
 
 @router.delete('',status_code=204)
-async def delete_user(me = Depends(UserServiceRepository.auth_user)):
-    UserServiceRepository.delete_user(me)
+async def delete_user(me = Depends(UserServiceRepository.delete_user)):
+    return get_users()
