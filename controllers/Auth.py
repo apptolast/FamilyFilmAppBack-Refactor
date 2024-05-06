@@ -5,7 +5,7 @@ from firebase_admin import auth as firebase_auth
 class FirebaseAuthService:
     def verify_token(self, token: str):
         try:
-            if not token.startswith("Bearer "):
+            if not token.startswith("Bearer ") or len(token) < 8 or len(token) > 2048 or token[7:] == "" or token == "" or token is None:
                 raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid format token must start with 'Bearer '")
             decoded_token = firebase_auth.verify_id_token(token[7:])
             return decoded_token
