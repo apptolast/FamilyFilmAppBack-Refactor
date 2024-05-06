@@ -63,7 +63,7 @@ class UserService:
 
     def delete_user(self, request: Request):
         try:
-            user = self.check_user_exists(request=request)
+            user = self.check_user_exists_or_create(request=request)
             if user:
                 self.firebase_auth_service.delete_user_firebase(email=user.email)
                 self.db_session.delete(user)
@@ -77,46 +77,33 @@ class UserService:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"An error occurred: {str(e)}")
 
 
+    def create_user(self, user_data):
+        new_user = User(
+            email=user_data.email,
+            provider=user_data.provider
+        )
+        try:
+            self.db_session.add(new_user)
+            self.db_session.commit()
+            return new_user
+        except Exception as e:
+            self.db_session.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
     def check_user_exists_or_create(self, request: Request):
-        try:
-            decoded_token = self.firebase_auth_service.verify_token(request.headers.get("Authorization"))
-            new_user = UserSchemaRequest(
-                email=decoded_token["email"],
-                provider=decoded_token["firebase"]["sign_in_provider"]
-            )
-            user = self.db_session.query(User).filter(User.email == new_user.email).first()
-            if user is None:
-                self.create_user(user=new_user)
-            else:
-                return user
-        except HTTPException as http_error:
-            raise http_error
-        except Exception as e:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Check if user exits error: {str(e)}")
-    
-    
-    def create_user(self, user):
-        self.create_user(user=user)
-    
-    def check_user_exists(self, request: Request):
-        try:
-            decoded_token = self.firebase_auth_service.verify_token(request.headers.get("Authorization"))
-            user_email = decoded_token["email"]
-            user = self.db_session.query(User).filter(User.email == user_email).first()
-            if user is None:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found in local database")
-            return user
-        except HTTPException as http_error:
-            raise http_error
-        except Exception as e:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Check if user exits error: {str(e)}")
+        decoded_token = self.firebase_auth_service.verify_token(request.headers.get("Authorization"))
+        user_email = decoded_token["email"]
+        user_provider = decoded_token["firebase"]["sign_in_provider"]
+        user = self.db_session.query(User).filter(User.email == user_email).first()
+        if user is None:
+            user_schema = UserSchemaRequest(email=user_email, provider=user_provider)
+            user = self.create_user(user_data=user_schema)
+        return user
 
     def auth_user(self, request: Request):
         token = request.headers.get("Authorization")
         try:
-            # Utiliza la instancia de FirebaseAuthService pasada en el constructor
-            token_decoded = self.firebase_auth_service.verify_token(token=token)
+            token_decoded = self.firebase_auth_service.verify_token(token)
             return token_decoded
         except Exception as e:
-            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Last Step to Auth user error: {str(e)}")
-
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Authentication error: {str(e)}")
