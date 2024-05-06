@@ -75,6 +75,25 @@ class UserService:
             self.db_session.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"An error occurred: {str(e)}")
 
+
+    def check_user_exists_or_create(self, request: Request):
+        try:
+            decoded_token = self.firebase_auth_service.verify_token(request.headers.get("Authorization"))
+            user_email = decoded_token["email"]
+            user = self.db_session.query(User).filter(User.email == user_email).first()
+            if user is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found in local database")
+            else:
+                return user
+        except HTTPException as http_error:
+            raise http_error
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Check if user exits error: {str(e)}")
+    
+    
+    def create_user(self, user):
+        pass
+    
     def check_user_exists(self, request: Request):
         try:
             decoded_token = self.firebase_auth_service.verify_token(request.headers.get("Authorization"))
