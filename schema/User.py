@@ -14,7 +14,10 @@ class UserFirebaseBackendTestRequest(BaseModel):
     display_name: str
     photo_url: str
     disabled: Optional[bool] = False
-    
+
+
+class UserTokenResponse(BaseModel):
+    token:str
 
 class UserSchemaResponse(BaseModel):
     

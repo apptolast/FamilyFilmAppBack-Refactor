@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter, Body,Depends
-from schema.User import UserSchemaRequest, UserSchemaResponse
+from schema.User import UserFirebaseBackendTestRequest, UserSchemaRequest, UserSchemaResponse, UserTokenResponse
 from controllers.User import UserService
 from config.db import session
 from controllers.Auth import FirebaseAuthService
@@ -20,10 +20,9 @@ async def create_user(user: UserSchemaRequest, me = Depends(UserServiceRepositor
     return UserServiceRepository.create_user(user)
     
 
-@router.post('/backend_test', status_code=201, response_model=UserSchemaResponse)
-async def create_user_firebase_backend_test(user: UserSchemaRequest = Body(...), user_service: UserService = Depends()):
-    result = user_service.create_user_firebase_backend_test(user)
-    return result
+@router.post('/backend_test', status_code=201, response_model=UserTokenResponse)
+async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTestRequest):
+    return UserServiceRepository.create_user_firebase_backend_test(user_request)
 
 @router.get('', status_code=200, response_model=List[UserSchemaResponse])
 async def get_users(me = Depends(UserServiceRepository.auth_user)):
