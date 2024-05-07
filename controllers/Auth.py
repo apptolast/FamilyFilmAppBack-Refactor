@@ -4,6 +4,29 @@ from firebase_admin import auth as firebase_auth
 
 class FirebaseAuthService:
 
+
+    def create_firebase_user(self, email: str, password: str, phone_number: str, display_name: str, photo_url: str, disabled: bool):
+        try:
+            user_record = firebase_auth.create_user(
+                email=email,
+                email_verified=False,
+                phone_number=phone_number,
+                password=password,
+                display_name=display_name,
+                photo_url=photo_url,
+                disabled=disabled
+            )
+            return user_record
+        except firebase_auth.FirebaseError as e:
+            raise HTTPException(status_code=400, detail=f"Firebase error: {str(e)}")
+
+    def generate_custom_token(self, uid: str):
+        try:
+            custom_token = firebase_auth.create_custom_token(uid)
+            return custom_token
+        except firebase_auth.FirebaseError as e:
+            raise HTTPException(status_code=400, detail=f"Failed to create custom token: {str(e)}")
+
     def verify_token(self, token: str):
         try:
             if not token.startswith("Bearer ") or len(token) < 8 or len(token) > 2048 or token[7:] == "" or token == "" or token is None:
