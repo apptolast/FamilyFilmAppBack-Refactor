@@ -1,7 +1,7 @@
 from fastapi import HTTPException, Request,status
 from models.User import User
 from controllers.Auth import FirebaseAuthService
-from schema.User import UserSchemaRequest
+from schema.User import UserFirebaseBackendTestRequest, UserSchemaRequest
 
 
 
@@ -87,26 +87,18 @@ class UserService:
         return user
         
         
-    def create_user_firebase_backend_test(self, user_data: UserSchemaRequest):
-        # Crea usuario en Firebase
+    def create_user_firebase_backend_test(self, user_data: UserFirebaseBackendTestRequest):
+        # Lógica para crear usuario en Firebase y generar token
         user_record = self.firebase_auth_service.create_firebase_user(
             email=user_data.email,
-            password="secretPassword",  # Suponer una contraseña predeterminada o solicitarla
-            phone_number="+15555550100",  # Suponer o solicitar
-            display_name=user_data.display_name if hasattr(user_data, 'display_name') else '',
-            photo_url="http://www.example.com/12345678/photo.png",  # Suponer o solicitar
-            disabled=False
+            password=user_data.password,
+            phone_number=user_data.phone_number,
+            display_name=user_data.display_name,
+            photo_url=user_data.photo_url,
+            disabled=user_data.disabled
         )
-        # Generar token personalizado para el usuario
         custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
-
-        # Crear usuario en la base de datos local si es necesario
-        existing_user = self.db_session.query(User).filter_by(email=user_data.email).first()
-        if not existing_user:
-            new_user = User(email=user_data.email, provider='firebase')
-            self.db_session.add(new_user)
-            self.db_session.commit()
-
+        # Lógica para manejar usuario en DB local, si es necesario
         return {"user": user_record, "token": custom_token}
         
     def auth_user(self, request: Request):
