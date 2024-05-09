@@ -76,15 +76,8 @@ class UserService:
             self.db_session.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-    def check_user_exists_or_create(self, request: Request):
-        decoded_token = self.auth_user(request=request.headers.get("Authorization"))
-        user_email = decoded_token["email"]
-        user_provider = decoded_token["firebase"]["sign_in_provider"]
-        user = self.db_session.query(User).filter(User.email == user_email).first()
-        if user is None:
-            user_schema = UserSchemaRequest(email=user_email, provider=user_provider)
-            user = self.create_user(user_data=user_schema)
-        return user
+    def check_user_exists(self,email):
+        return self.db_session.query(User).filter(User.email == email).first()
         
         
     def create_user_firebase_backend_test(self, user_data: UserFirebaseBackendTestRequest):
