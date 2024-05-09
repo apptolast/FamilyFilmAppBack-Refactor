@@ -97,7 +97,7 @@ class UserService:
             'token': custom_token,
             'returnSecureToken': True
         }
-        response = requests.post(url, headers=headers, data=json.dumps(payload))
+        response = requests.post(url, headers=headers, data=payload)
         if response.status_code == 200:
             return response.json()
         else:
