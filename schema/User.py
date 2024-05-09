@@ -7,7 +7,9 @@ class UserSchemaRequest(BaseModel):
     provider:str
     
 class UserFirebaseBackendTestRequest(BaseModel):
-    idToken: str
+    email: EmailStr
+    email_verified: Optional[bool] = True
+    password: str
 
 class UserTokenResponse(BaseModel):
     token:str
