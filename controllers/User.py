@@ -1,4 +1,6 @@
+import json
 from fastapi import HTTPException, Request,status
+import requests
 from models.User import User
 from controllers.Auth import FirebaseAuthService
 from schema.User import UserFirebaseBackendTestRequest, UserSchemaRequest
@@ -81,8 +83,25 @@ class UserService:
         
         
     def create_user_firebase_backend_test(self, user_data: UserFirebaseBackendTestRequest):
+        user_record = self.firebase_auth_service.create_firebase_user(
+            email=user_data.email,
+            password=user_data.password
+        )
+        custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
         # Lógica para manejar usuario en DB local, si es necesario
-        return {"token": user_data.idToken}
+        url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyCteax39LNAtY9CrrfNOU8Y95iH93Jl5e4"
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        payload = {
+            'token': custom_token,
+            'returnSecureToken': True
+        }
+        response = requests.post(url, headers=headers, data=json.dumps(payload))
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return response.status_code, response.text
         
     def auth_user(self, request: Request):
         token = request.headers.get("Authorization")
