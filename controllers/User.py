@@ -84,8 +84,7 @@ class UserService:
         # Lógica para crear usuario en Firebase y generar token
         user_record = self.firebase_auth_service.create_firebase_user(
             email=user_data.email,
-            password=user_data.password,
-            disabled=user_data.disabled
+            password=user_data.password
         )
         custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
         # Lógica para manejar usuario en DB local, si es necesario
