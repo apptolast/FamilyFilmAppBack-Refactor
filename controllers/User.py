@@ -85,9 +85,6 @@ class UserService:
         user_record = self.firebase_auth_service.create_firebase_user(
             email=user_data.email,
             password=user_data.password,
-            phone_number=user_data.phone_number,
-            display_name=user_data.display_name,
-            photo_url=user_data.photo_url,
             disabled=user_data.disabled
         )
         custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
