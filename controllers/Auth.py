@@ -5,7 +5,7 @@ from firebase_admin import auth as firebase_auth
 class FirebaseAuthService:
 
 
-    def create_firebase_user(self, email: str, password: str, phone_number: str, display_name: str, photo_url: str, disabled: bool):
+    def create_firebase_user(self, email: str, password: str):
         try:
             user_record = firebase_auth.create_user(
                 email=email,
