@@ -81,14 +81,8 @@ class UserService:
         
         
     def create_user_firebase_backend_test(self, user_data: UserFirebaseBackendTestRequest):
-        # Lógica para crear usuario en Firebase y generar token
-        user_record = self.firebase_auth_service.create_firebase_user(
-            email=user_data.email,
-            password=user_data.password
-        )
-        custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
         # Lógica para manejar usuario en DB local, si es necesario
-        return {"user": user_record, "token": custom_token}
+        return {"token": user_data.idToken}
         
     def auth_user(self, request: Request):
         token = request.headers.get("Authorization")
