@@ -1,47 +1,32 @@
 from fastapi import HTTPException,status
+from controllers.MovieGroupUser import MovieUserGroupService
 from models.Group import Group
-
 
 class GroupService:
         
         def __init__(self, db_session):
             self.db_session = db_session
 
-        def create_user(self, group_data):
-                new_group = Group(
-                    owner_id = group_data.id,
-                    name = group_data.name
-                )
-                try:
-                    self.db_session.add(new_group)
-                    self.db_session.commit()
-                    
-                except Exception as e:
-                    self.db_session.rollback()
-                    raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{str(e)}")
-                
-                return self.db_session.query(Group).filter(Group.owner_id == group_data.id).all()[-1]
-            
-        # def get_users(self):
-        #     try:
-        #         user = self.db_session.query(User).all()
-        #         return user
-        #     except Exception as e:
-        #         self.db_session.rollback()
-        #         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios")
-
-        
-        def get_grouo_id(self, group_id):
+        def create_group(self, name, ownerID):
+            new_group = Group(
+                 name = name,
+                 owner_id = ownerID
+            )
             try:
-                user = self.db_session.query(Group).filter(Group.id == group_id).first()
-                
-                if not user:
-                    raise HTTPException(status_code=404, detail="Group not found")
-                return user
-                
-            except HTTPException as http_error:
-                raise http_error
-
+                self.db_session.add(new_group)
+                self.db_session.commit()
+                grupo = self.db_session.query(Group).filter(Group.owner_id == ownerID).all()[-1]
+                MovieUserGroupService.create_union_user(user_id=ownerID,group_id=grupo.id)
             except Exception as e:
-                self.db_session.rollback()
-                raise HTTPException(status_code=500, detail=f"An error occurred:  {str(e)}")
+                 self.db_session.rollback()
+                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")
+            
+            return grupo
+        
+        def get_groups(self,user_id):
+            return MovieUserGroupService.get_groups(user_id=user_id)
+            
+        
+        def get_group_id(self, gruop_id):
+            return MovieUserGroupService.get_group_id(gruop_id=gruop_id)
+

@@ -2,7 +2,7 @@ from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 
-class UserSchemaRequest(BaseModel):
+class GroupSchemaRequest(BaseModel):
     name:str
 
 class UserSchemaResponse(BaseModel):
