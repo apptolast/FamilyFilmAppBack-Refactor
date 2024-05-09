@@ -9,12 +9,8 @@ class FirebaseAuthService:
         try:
             user_record = firebase_auth.create_user(
                 email=email,
-                email_verified=False,
-                phone_number=phone_number,
+                email_verified=True,
                 password=password,
-                display_name=display_name,
-                photo_url=photo_url,
-                disabled=disabled
             )
             return user_record
         except firebase_auth.FirebaseError as e:

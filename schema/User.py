@@ -8,13 +8,8 @@ class UserSchemaRequest(BaseModel):
     
 class UserFirebaseBackendTestRequest(BaseModel):
     email: EmailStr
-    email_verified: Optional[bool] = False
-    phone_number: str
+    email_verified: Optional[bool] = True
     password: str
-    display_name: str
-    photo_url: str
-    disabled: Optional[bool] = False
-
 
 class UserTokenResponse(BaseModel):
     token:str
