@@ -97,6 +97,7 @@ class UserService:
             
     def id_token_for_backend(self, custom_token_decoded: str, user_data: UserFirebaseBackendTestRequest):
         url = os.getenv("URL_FOR_BACKEND_TOKEN")
+        print(f" SOY LA URL A MANDAR LA PETICION {url}")
         headers = {
             'Content-Type': 'application/json'
         }
@@ -115,14 +116,14 @@ class UserService:
             return response.status_code, response.text
         
     def login_with_custom_token(self, user_data: UserFirebaseBackendTestRequest):
+        print(f"SOY USERR DATA {user_data}")
         uid_user = self.firebase_auth_service.get_uid_user(user_data.email)
+        print(f"UIIIID USER {uid_user}")
         custom_token = self.firebase_auth_service.generate_custom_token(uid_user)
+        print(f" SOY EL CUSTOM TOKEN : {custom_token}")
         custom_token_decoded = custom_token.decode('utf-8')
         return self.id_token_for_backend(custom_token_decoded=custom_token_decoded, user_data=user_data)
     
-    def login_with_custom_token(self, user_data):
-        pass
-        
     def auth_user(self, request: Request):
         token = request.headers.get("Authorization")
         try:

@@ -1,7 +1,11 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from config.firebase import initialize_firebase
 from router.users import router as users_router
 from router.groups import router as groups_router
+import os 
+
+load_dotenv()
 
 app = FastAPI()
 
