@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from config.firebase import initialize_firebase
 from router.users import router as users_router
+from router.groups import router as groups_router
 
 app = FastAPI()
 
@@ -14,3 +15,4 @@ initialize_firebase()
 
 
 app.include_router(users_router)
+app.include_router(groups_router)
