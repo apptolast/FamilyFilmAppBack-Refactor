@@ -88,15 +88,13 @@ class UserService:
             password=user_data.password
         )
         custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
-        custom_token_chain = str(custom_token)
-        print(custom_token_chain)
         # Lógica para manejar usuario en DB local, si es necesario
         url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyCteax39LNAtY9CrrfNOU8Y95iH93Jl5e4"
         headers = {
             'Content-Type': 'application/json'
         }
         payload = {
-            'token': f"{custom_token_chain}",
+            'token': f"{custom_token}",
             'returnSecureToken': True
         }
         response = requests.post(url, headers=headers, json=payload)
