@@ -24,9 +24,16 @@ async def create_user(me = Depends(UserServiceRepository.auth_user)):
     return UserServiceRepository.create_user(user)
     
 
-@router.post('/backend_test', status_code=201, response_model=UserTokenResponse)
+@router.post('/backend_test/register', status_code=201, response_model=UserTokenResponse)
 async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTestRequest):
     return UserServiceRepository.create_user_firebase_backend_test(user_request)
+
+
+
+@router.post('/backend_test/login', status_code=201, response_model=UserTokenResponse)
+async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTestRequest):
+    return UserServiceRepository.login_with_custom_token(user_request)
+
 
 @router.get('', status_code=200, response_model=List[UserSchemaResponse])
 async def get_users(me = Depends(UserServiceRepository.auth_user)):
