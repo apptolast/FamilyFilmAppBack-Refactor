@@ -5,7 +5,8 @@ from models.Group import Group
 class GroupService:
         
         def __init__(self, db_session):
-            self.db_session = db_session
+            self.db_session = db_session,
+            self.movie_user_group_repository = MovieUserGroupService(self.db_session)
 
         def create_group(self, name, ownerID):
             new_group = Group(
@@ -16,7 +17,7 @@ class GroupService:
                 self.db_session.add(new_group)
                 self.db_session.commit()
                 grupo = self.db_session.query(Group).filter(Group.owner_id == ownerID).all()[-1]
-                MovieUserGroupService.create_union_user(user_id=ownerID,group_id=grupo.id)
+                self.movie_user_group_repository.create_union_user(user_id=ownerID,group_id=grupo.id)
             except Exception as e:
                  self.db_session.rollback()
                  raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")
