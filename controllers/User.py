@@ -97,7 +97,6 @@ class UserService:
             
     def id_token_for_backend(self, custom_token_decoded: str, user_data: UserFirebaseBackendTestRequest):
         url = os.getenv("URL_FOR_BACKEND_TOKEN")
-        print(f" SOY LA URL A MANDAR LA PETICION {url}")
         headers = {
             'Content-Type': 'application/json'
         }
@@ -117,7 +116,6 @@ class UserService:
     
     def id_token_for_login(self, custom_token_decoded: str, user_data: UserFirebaseBackendTestRequest):
         url = os.getenv("URL_FOR_BACKEND_TOKEN")
-        print(f" SOY LA URL A MANDAR LA PETICION {url}")
         headers = {
             'Content-Type': 'application/json'
         }
@@ -126,7 +124,6 @@ class UserService:
             'returnSecureToken': True
         }
         response = requests.post(url, headers=headers, json=payload)
-        print(f"SOY LA RESPUESTA {response}")
         if response.status_code == 200:
             return response.json()
         else:
@@ -135,13 +132,9 @@ class UserService:
         
         
     def login_with_custom_token(self, user_data: UserFirebaseBackendTestRequest):
-        print(f"SOY USERR DATA {user_data}")
         uid_user = self.firebase_auth_service.get_uid_user(user_data.email)
-        print(f"UIIIID USER {uid_user}")
         custom_token = self.firebase_auth_service.generate_custom_token(uid_user)
-        print(f" SOY EL CUSTOM TOKEN : {custom_token}")
         custom_token_decoded = custom_token.decode('utf-8')
-        print(f" SOY EL CUSTOM TOKEN DECODIFICADO : {custom_token_decoded}")
         return self.id_token_for_login(custom_token_decoded=custom_token_decoded, user_data=user_data)
     
     def auth_user(self, request: Request):
