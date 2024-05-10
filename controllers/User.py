@@ -93,7 +93,9 @@ class UserService:
         )
         custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
         custom_token_decoded = custom_token.decode('utf-8')
-        # Lógica para manejar usuario en DB local, si es necesario
+        return self.id_token_for_backend(custom_token_decoded=custom_token_decoded, user_data=user_data)
+            
+    def id_token_for_backend(self, custom_token_decoded: str, user_data: UserFirebaseBackendTestRequest):
         url = os.getenv("URL_FOR_BACKEND_TOKEN")
         headers = {
             'Content-Type': 'application/json'
@@ -111,6 +113,15 @@ class UserService:
             return response.json()
         else:
             return response.status_code, response.text
+        
+    def login_with_custom_token(self, user_data: UserFirebaseBackendTestRequest):
+        uid_user = self.firebase_auth_service.get_uid_user(user_data.email)
+        custom_token = self.firebase_auth_service.generate_custom_token(uid_user)
+        custom_token_decoded = custom_token.decode('utf-8')
+        return self.id_token_for_backend(custom_token_decoded=custom_token_decoded, user_data=user_data)
+    
+    def login_with_custom_token(self, user_data):
+        pass
         
     def auth_user(self, request: Request):
         token = request.headers.get("Authorization")

@@ -1,0 +1,19 @@
+{
+    "users": [
+      {
+        "email": "testusuariosparaback1@example.com",
+        "email_verified": true,
+        "password": "pass123"
+      },
+      {
+        "email": "testusuariosparaback2@example.com",
+        "email_verified": true,
+        "password": "pass123"
+      },
+      {
+        "email": "testusuariosparaback3@example.com",
+        "email_verified": true,
+        "password": "pass123"
+      }
+    ]
+}

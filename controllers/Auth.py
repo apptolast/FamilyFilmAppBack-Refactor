@@ -15,6 +15,11 @@ class FirebaseAuthService:
             return user_record
         except firebase_auth.FirebaseError as e:
             raise HTTPException(status_code=400, detail=f"Firebase error: {str(e)}")
+    
+    def get_uid_user(self,email: str):
+        current_user = firebase_auth.get_user_by_email(email=email)
+        return current_user.uid
+        
 
     def generate_custom_token(self, uid: str):
         try:
