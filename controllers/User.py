@@ -1,6 +1,8 @@
 import json
+import os
 from fastapi import HTTPException, Request,status
 import requests
+from dotenv import load_dotenv
 from models.User import User
 from controllers.Auth import FirebaseAuthService
 from schema.User import UserFirebaseBackendTestRequest, UserSchemaRequest
@@ -12,6 +14,7 @@ class UserService:
     def __init__(self, db_session, firebase_auth_service):
         self.db_session = db_session
         self.firebase_auth_service = firebase_auth_service
+        self.load_dotenv = load_dotenv()
 
         
     def get_users(self):
@@ -90,7 +93,7 @@ class UserService:
         custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
         custom_token_decoded = custom_token.decode('utf-8')
         # Lógica para manejar usuario en DB local, si es necesario
-        url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithCustomToken?key=AIzaSyCteax39LNAtY9CrrfNOU8Y95iH93Jl5e4"
+        url = os.getenv("URL_FOR_BACKEND_TOKEN")
         headers = {
             'Content-Type': 'application/json'
         }
