@@ -12,6 +12,7 @@ services:
       - db
     environment:
       DATABASE_URL: ${DATABASE_URL}
+      URL_FOR_BACKEND_TOKEN: ${URL_FOR_BACKEND_TOKEN}
   db:
     image: postgres
     environment:
