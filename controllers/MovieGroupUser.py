@@ -1,6 +1,6 @@
 from fastapi import HTTPException,status
+from sqlalchemy import and_
 from models.MovieUserGroup import MovieUserGroup
-from schema.MovieUserGroup import MovieUserGroup 
 
 class MovieUserGroupService:
         
@@ -10,15 +10,14 @@ class MovieUserGroupService:
 
         def create_union_user(self,user_id, group_id):
             new_group_asotiation = MovieUserGroup(
-                id_movie = None,
-                user_id = user_id,
-                group_id = group_id,
+                id_movie= 0,
+                id_user = user_id,
+                id_group= group_id,
                 toWatch = None
             )
             try:
                 self.db_session.add(new_group_asotiation)
                 self.db_session.commit()
-                
             except Exception as e:
                  self.db_session.rollback()
                  raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")
@@ -29,15 +28,15 @@ class MovieUserGroupService:
                 return groups
             except Exception as e:
                 self.db_session.rollback()
-                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios {str(e)}")
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{str(e)}")
             
         def get_group_id(self,gruop_id):
             try:
-                gruop = self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_group == gruop_id).first()
+                group = self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_group == gruop_id).first()
                 
-                if not gruop:
-                    raise HTTPException(status_code=404, detail="Gruop not found")
-                return gruop
+                if not group:
+                    raise HTTPException(status_code=404, detail="Group not found")
+                return group
                 
             except HTTPException as http_error:
                 raise http_error
@@ -46,4 +45,15 @@ class MovieUserGroupService:
                 self.db_session.rollback()
                 raise HTTPException(status_code=500, detail=f"An error occurred:  {str(e)}")
 
-              
+        def delete_union_user(self,user_id,group_id):
+            try:
+                delete = self.db_session.query(MovieUserGroup).filter(and_(MovieUserGroup.id_group == group_id, MovieUserGroup.id_user == user_id))
+                
+                if delete is None:
+                    raise HTTPException(status_code=404, detail="user not found in a group")
+
+                self.db_session.delete(delete)
+                self.db_session.commit()
+            except Exception as e:
+                 self.db_session.rollback()
+                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")

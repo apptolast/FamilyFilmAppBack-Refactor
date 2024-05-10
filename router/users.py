@@ -18,8 +18,8 @@ UserServiceRepository = UserService(session, firebase_auth_service)
 @router.post('', status_code=201, response_model=UserSchemaResponse)
 async def create_user(me = Depends(UserServiceRepository.auth_user)):
     user = UserSchemaRequest(
-        user_email = me["email"],
-        user_provider = me["firebase"]["sign_in_provider"]
+        email = me["email"],
+        provider = me["firebase"]["sign_in_provider"]
     )
     return UserServiceRepository.create_user(user)
     

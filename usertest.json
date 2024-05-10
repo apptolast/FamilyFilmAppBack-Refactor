@@ -1,20 +1,25 @@
 {
-    "users": [
-      {
-        "email": "user1@example.com",
-        "password": "password123",
-        "provider": "email"
-      },
-      {
-        "email": "user2@example.com",
-        "password": "password123",
-        "provider": "email"
-      },
-      {
-        "email": "user3@example.com",
-        "password": "password123",
-        "provider": "email"
-      }
-    ]
+
+  "type": "service_account",
+
+  "project_id": "family-film-app",
+
+  "private_key_id": "762ab41ed88a881930bbb1497bd33af0cb58f57e",
+
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCxYHTKjt8Lc7t+\nzYeh8W+HSDi0/CijO7CQQ22spXTLd0DpLH4ZFEd30i8jDwiTultumwpkQKex4WnX\nF0NLHwcd+qWFbaE3UAv/N436CO6FpeVFm9RxXqL5s+ZUAnFeLsi5OQVh/9G3MJBp\n5FGwCI0kV5/Nw6+18K36nv/KzIj1wYYYWpo271quKc+J/CdV2sxGCu+ved5luA2S\nNMOqplcMcsjYgoPhEpzRGPV464N9NqmSXmbiiZpGMANGsr/pe42M1k1NLz1XrnTX\n8kFOF1rpR/GHlMxRwMPLwkBuTo1/MU0cTAD2fWIg3SmvFC8fuZDnIbxopmFuQk57\nrQIoo6SnAgMBAAECggEAJkn/DBapOSyjZazyQVf/zkEd1Ju2Hf5tj8aubx1MR/uX\nLH5pPfqtrsTVXgkJvfH1eLvJE3kNeg2BrmecJCQvgh4wCsxuh6Uk4dPZNwckjf8Q\nreUEh/B419QovSvF0yHgPHN9oPj7CUNXeTRLGefOp/CuU1mRnYG13Krj5qAeVIY0\ncr/2LMtvsXg1pcr8Wx8n3Et+A0T35qbrc1rqlPD086EeDi7hZnNRrGhngBxhj/vO\niNNSjKhjHoM1lUJK0ony0Xei/R9GQu1KfFwgM13rN9BQOrfePnZ425mpI+NSVdJf\nioPluS0M6WMGMTwTeJ87rsaFZuqAROAmEn4vAW0oyQKBgQDsLEXjW+zKey6AZ9fy\ngR2hSZcRoLQ9djtIIwEQPFszam78kORNsA4uwk0CCFV8Jd6TRPYOZWLSTf4aQZfR\n/zuLukUAWL7rX1mF6a5uS2heDhyQk69D5XohtJ383cq1i9+M2EbKPgLxLJgm/B3+\npOOHJLFWiwRhu3oYGgu+SD4pwwKBgQDARI+/lQE3Ij6yBsBMGaNdHwbxmvpWn4/X\nnZe8MRWGBtfG3RuauanABKljyWblMB++7MLRQo8I2C1+Py00XVxpMh9vJFn3DbX9\nwea602ETOi4uynSnDZFvXeeTW04mSMEkQ72x+BtdYoKB452+LLjmBTVidLKSNmcX\n/K/8bHRHTQKBgFbAOHe4R3Vk5ALkog0A4mphRq2B81L0P/hSa0yUbwem29fIPSRQ\nPBVu56yMdSIiIuzDkwJcuXz4ixMH7wWDFFNR+5CSCKcaoh6vZJQ8/Lw3wMRWizWM\ncF07JCFDMveWxmnM88vMFXaTY9xGFZp45N66Wq2oaNahb8q0noWpsbPTAoGAb2xM\nUh6sIaN66fj3oCKLhf/hKktCIMk/txjhQnK/onh8vAaPZM+MDHenIuko9FE7VI4p\nKNSFx/5f/vXl4J7qWxxtEx/h80bC3Vhtun+dlmL1OLCjgdxfGEc3WTJky9MF+1o2\nqNi8IxZfw56BYCDS1prWIUS35/wXKtOJuaOwj1ECgYEAj88X3h1G823PdIpNdRZl\n87sYRDTu+22jEbQjo45LDtm5YSKYv632QVhXumjdxt2G5djeYpbMiibXMbnIERvZ\nuNGX2KpUMiMgs32pjKm0GOy0zBOsCSFgmjCqYVlTrUDHvVnXvV1of8okKYFJUYpJ\np8phK5gdKnjPivlIXq+RDyY=\n-----END PRIVATE KEY-----\n",
+
+  "client_email": "firebase-adminsdk-qr49b@family-film-app.iam.gserviceaccount.com",
+
+  "client_id": "109297378757161119781",
+
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+
+  "token_uri": "https://oauth2.googleapis.com/token",
+
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-qr49b%40family-film-app.iam.gserviceaccount.com",
+
+  "universe_domain": "googleapis.com"
+
 }
-  
