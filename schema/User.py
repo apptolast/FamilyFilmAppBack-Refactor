@@ -12,7 +12,9 @@ class UserFirebaseBackendTestRequest(BaseModel):
     password: str
 
 class UserTokenResponse(BaseModel):
-    token:str
+    idToken:str
+    refreshToken: str
+    expiresIn: str
 
 class UserSchemaResponse(BaseModel):
     
