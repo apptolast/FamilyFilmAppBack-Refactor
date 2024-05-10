@@ -14,8 +14,7 @@ GroupRepository = GroupService(db_session= session)
 @router.post("")
 async def create_group(group:GroupSchemaRequest,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    return user
-    #GroupRepository.create_group(name = group.name,ownerID = user.id)
+    return GroupRepository.create_group(name = group.name,ownerID = user.id)
 
 @router.get("")
 async def get_groups(me = Depends(UserServiceRepository.auth_user)):
