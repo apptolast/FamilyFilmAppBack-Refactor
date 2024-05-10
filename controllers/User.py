@@ -83,8 +83,7 @@ class UserService:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     def check_user_exists(self,email):
-        #self.db_session.query(User).filter(User.email == email).first()
-        return email
+        return self.db_session.query(User).filter(User.email == email).first()
         
         
     def create_user_firebase_backend_test(self, user_data: UserFirebaseBackendTestRequest):
