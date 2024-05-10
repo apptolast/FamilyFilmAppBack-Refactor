@@ -103,6 +103,10 @@ class UserService:
         }
         response = requests.post(url, headers=headers, json=payload)
         if response.status_code == 200:
+            self.create_user(user_data=UserSchemaRequest(
+                email=user_data.email,
+                provider='password'
+            ))
             return response.json()
         else:
             return response.status_code, response.text
