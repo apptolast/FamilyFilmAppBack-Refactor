@@ -50,7 +50,7 @@ class GroupService:
                 
 
                 self.movie_user_group_repository.delete_union_user(user_id,group_id)    
-                return self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_group == group_id).all()
+                return self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_group == group_id).first()
 
             except HTTPException as http_error:
                 raise http_error
@@ -59,6 +59,7 @@ class GroupService:
         def is_owner(self,user_id,group_id):
             try:
                 group = self.db_session.query(Group).filter(and_(Group.owner_id == user_id, Group.id == group_id)).first()
+                print("group")
                 return group
             except Exception as e:
                  self.db_session.rollback()

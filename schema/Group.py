@@ -1,6 +1,6 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr
-from schema.Movie import MovieResponse
+from pydantic import BaseModel, EmailStr 
+from schema.User import UserSchemaResponse
 
 
 class GroupSchemaRequest(BaseModel):
@@ -14,11 +14,15 @@ class UserSchemaResponse(BaseModel):
     provider:str
 
 
+class usuarito(BaseModel):
+    
+    id:int
+    email: EmailStr
+    language:Optional[int] = None
+    provider:str
+
 class groupSchema(BaseModel):
     id:int
     owner_id:int
     name:str
-    users:list[EmailStr]
-    watched_list:list[MovieResponse]
-    to_watch_List:list[MovieResponse]
-    recommended_movie:MovieResponse
+    users:list[usuarito]
