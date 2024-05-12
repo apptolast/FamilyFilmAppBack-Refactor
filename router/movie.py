@@ -2,15 +2,13 @@ from fastapi import APIRouter
 from config.db import session
 from controllers.Movie import MovieService
 from controllers.DataTransfer import DataTransfer
+
 router = APIRouter(
     prefix="/movies",
     tags=["Movies"]
 )
 
-
 MovieServiceRepository = MovieService(session)
-
-
 
 @router.get("/{page}/{leng}")
 async def get_movies(page:int,leng:str):

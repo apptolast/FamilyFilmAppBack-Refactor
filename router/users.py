@@ -1,7 +1,7 @@
 from typing import List
-from fastapi import APIRouter, Body,Depends
+from fastapi import APIRouter,Depends
 from config.readJsonUsers import read_json_users_file
-from schema.User import AutomaticUpdateTokenRequest, AutomaticUpdateTokenResponse, UserFirebaseBackendTestRequest, UserSchemaRequest, UserSchemaResponse, UserTokenResponse
+from schema.User import AutomaticUpdateTokenResponse, UserFirebaseBackendTestRequest, UserSchemaRequest, UserSchemaResponse, UserTokenResponse
 from controllers.User import UserService
 from config.db import session
 from controllers.Auth import FirebaseAuthService
@@ -36,9 +36,9 @@ async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTes
     return UserServiceRepository.login_with_custom_token(user_request)
 
 
-@router.post('/automated/token', status_code=200, response_model=AutomaticUpdateTokenResponse)
-async def get_token(email_request: AutomaticUpdateTokenRequest):
-    return read_json_users_file()
+# @router.post('/automated/token', status_code=200, response_model=AutomaticUpdateTokenResponse)
+# async def get_token(email_request: AutomaticUpdateTokenRequest):
+#     return read_json_users_file()
 
 @router.get('', status_code=200, response_model=List[UserSchemaResponse])
 async def get_users(me = Depends(UserServiceRepository.auth_user)):
