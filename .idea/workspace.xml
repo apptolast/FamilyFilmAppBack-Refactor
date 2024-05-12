@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4295d780-47a5-43c0-8cac-0a0e488aea68" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-    </list>
+    <list default="true" id="4295d780-47a5-43c0-8cac-0a0e488aea68" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,6 +54,15 @@
       <option name="presentableId" value="Default" />
       <updated>1715534429493</updated>
     </task>
+    <task id="LOCAL-00001" summary="Add genres and movies">
+      <option name="closed" value="true" />
+      <created>1715535024774</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1715535024774</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -68,5 +75,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="add genres and movies" />
+    <MESSAGE value="Add genres and movies" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add genres and movies" />
   </component>
 </project>
