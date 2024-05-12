@@ -1,6 +1,8 @@
+from datetime import datetime 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from sqlalchemy import Column, Integer,JSON
+from config.checkAutomaticTokens import check_token_validation
 from config.firebase import initialize_firebase
 from models.Movie import Movie
 from router.users import router as users_router
@@ -9,10 +11,16 @@ from router.genre import router as genres_router
 from router.movie import router as movies_router
 import os
 from config.db import session
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import os 
 
 load_dotenv()
 
 app = FastAPI()
+
+scheduler = AsyncIOScheduler()
+scheduler.start()
+
 
 
 @app.get("/")
@@ -41,3 +49,5 @@ app.include_router(users_router)
 app.include_router(groups_router)
 app.include_router(genres_router)
 app.include_router(movies_router)
+
+scheduler.add_job(check_token_validation, 'interval', hours=1, next_run_time=datetime.now())
