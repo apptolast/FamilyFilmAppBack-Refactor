@@ -8,6 +8,7 @@ class DataTransfer:
 
     MovieServiceRepository = MovieService(session)
     GenreServiceRepository = GenreService(session)
+    
     session = session
  
     def get_movie_datatransfer(self,id,language):
@@ -27,7 +28,7 @@ class DataTransfer:
         )
     
     def get_movies_datatransfer(self,language,page):
-        movies = self.MovieServiceRepository.get_movies(language,page)
+        movies = self.MovieServiceRepository.get_movies(page)
         movies_response = []
         for movie in movies:
             genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
@@ -45,3 +46,4 @@ class DataTransfer:
                 genres = genres_name,
         ))
         return movies_response
+    

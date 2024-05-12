@@ -10,21 +10,32 @@ class MovieService:
     def __init__(self,db_session):
         self.db_session = db_session
     
-    def get_movies(self,language,page):
-
+    def get_movies(self,page):
         items_per_page = 20
         start = (page - 1) * items_per_page
         end = start + items_per_page
-        movies = self.db_session.query(Movie).slice(start, end).all()
 
-        if len(movies) < 20:
-            self.dowload_movie(language,page=page+1)
-            self.get_movies
+        try:
+            movies = self.db_session.query(Movie).slice(start, end).all()
+            return movies
+        except Exception as e:
+             self.db_session.rollback()
+             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios {e}")
 
-        return movies
+    def get_movie_id(self,movie_id):
+        try:
+            movie = self.db_session.query(Movie).filter(Movie.id == movie_id).first()
+            
+            if not movie:
+                raise HTTPException(status_code=404, detail="Movie not found")
+            return movie
+            
+        except HTTPException as http_error:
+            raise http_error
 
-    def get_movie(self,id):
-        return self.db_session.query(Movie).filter(Movie.id == id).first()
+        except Exception as e:
+            self.db_session.rollback()
+            raise HTTPException(status_code=500, detail=f"An error occurred:  {str(e)}")
     
 
     def dowload_movie(self,language,page,adult = True ,video = True):
@@ -34,7 +45,6 @@ class MovieService:
         
         movie_dowloads = []
         url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&&page={page}"
-        print(url)
         for movie in self.api_start(url)['results']:
             existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
 
