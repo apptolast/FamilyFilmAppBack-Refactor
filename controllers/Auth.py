@@ -13,7 +13,7 @@ class FirebaseAuthService:
                 password=password,
             )
             return user_record
-        except firebase_auth.FirebaseError as e:
+        except Exception as e:
             raise HTTPException(status_code=400, detail=f"Firebase error: {str(e)}")
     
     def get_uid_user(self,email: str):
@@ -25,7 +25,7 @@ class FirebaseAuthService:
         try:
             custom_token = firebase_auth.create_custom_token(uid)
             return custom_token
-        except firebase_auth.FirebaseError as e:
+        except Exception as e:
             raise HTTPException(status_code=400, detail=f"Failed to create custom token: {str(e)}")
 
     def verify_token(self, token: str):
