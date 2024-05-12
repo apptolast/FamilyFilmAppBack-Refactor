@@ -1,6 +1,7 @@
 from typing import List
 from fastapi import APIRouter,Depends
 from config.readJsonUsers import read_json_users_file
+from controllers.DataTransfer import DataTransfer
 from schema.User import AutomaticUpdateTokenResponse, UserFirebaseBackendTestRequest, UserSchemaRequest, UserSchemaResponse, UserTokenResponse
 from controllers.User import UserService
 from config.db import session
@@ -16,7 +17,7 @@ firebase_auth_service = FirebaseAuthService()
 UserServiceRepository = UserService(session, firebase_auth_service)
 
 
-@router.post('', status_code=201, response_model=UserSchemaResponse)
+@router.post('', status_code=201)
 async def create_user(me = Depends(UserServiceRepository.auth_user)):
     user = UserSchemaRequest(
         email = me["email"],
@@ -29,8 +30,6 @@ async def create_user(me = Depends(UserServiceRepository.auth_user)):
 async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTestRequest):
     return UserServiceRepository.create_user_firebase_backend_test(user_request)
 
-
-
 @router.post('/backend_test/login', status_code=201, response_model=UserTokenResponse)
 async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTestRequest):
     return UserServiceRepository.login_with_custom_token(user_request)
@@ -40,35 +39,19 @@ async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTes
 # async def get_token(email_request: AutomaticUpdateTokenRequest):
 #     return read_json_users_file()
 
-@router.get('', status_code=200, response_model=List[UserSchemaResponse])
+@router.get('', status_code=200)
 async def get_users(me = Depends(UserServiceRepository.auth_user)):
-    users = UserServiceRepository.get_users()
-    return [UserSchemaResponse(
-        id= user.id,
-        email =  user.email,
-        provider =user.provider,
-        language = user.id_language
-        ) for user in users]
+    return DataTransfer().get_users()
 
 @router.get('/{id:int}',status_code=200)
 async def get_user(id:int, me = Depends(UserServiceRepository.auth_user)):
-    user = UserServiceRepository.get_user_id(id)
-    return UserSchemaResponse(
-        id= user.id,
-        email =  user.email,
-        provider =user.provider,
-        language = user.id_language
-        )
+    return DataTransfer().get_user_id(id)
 
-@router.get('/me',status_code=200,response_model=UserSchemaResponse)
+@router.get('/me',status_code=200)
 async def me(me = Depends(UserServiceRepository.auth_user)):
-    user = UserServiceRepository.get_user_id(me.id)
-    return UserSchemaResponse(
-        id= user.id,
-        email =  user.email,
-        provider =user.provider,
-        language = user.id_language
-        )
+    user = UserServiceRepository.check_user_exists(me['email'])
+    return DataTransfer().get_user_id(user.id)
+
 
 
 @router.delete('',status_code=204)

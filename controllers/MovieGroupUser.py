@@ -47,7 +47,7 @@ class MovieUserGroupService:
 
         def delete_union_user(self,user_id,group_id):
             try:
-                delete = self.db_session.query(MovieUserGroup).filter(and_(MovieUserGroup.id_group == group_id, MovieUserGroup.id_user == user_id))
+                delete = self.db_session.query(MovieUserGroup).filter(and_(MovieUserGroup.id_group == group_id, MovieUserGroup.id_user == user_id)).first()
                 
                 if delete is None:
                     raise HTTPException(status_code=404, detail="user not found in a group")

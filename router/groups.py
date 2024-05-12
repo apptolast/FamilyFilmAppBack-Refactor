@@ -1,5 +1,6 @@
 from fastapi import APIRouter,Depends
 from config.db import session
+from controllers.DataTransfer import DataTransfer
 from controllers.Group import GroupService
 from controllers.MovieGroupUser import MovieUserGroupService
 from router.users import UserServiceRepository
@@ -29,7 +30,7 @@ async def get_groups(me = Depends(UserServiceRepository.auth_user)):
 
 @router.get("/{id}")
 async def get_group(id:int,me = Depends(UserServiceRepository.auth_user)):
-    return GroupRepository.get_group_id(id)
+    return DataTransfer().get_group(id)
 
 @router.delete("/{group_id}/user/{user_id}")
 async def group_delete_user(user_id:int,group_id:int,me = Depends(UserServiceRepository.auth_user)):

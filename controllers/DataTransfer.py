@@ -6,16 +6,17 @@ from config.db import session
 from controllers.MovieGroupUser import MovieUserGroupService
 from controllers.User import UserService
 from models.GenreMovie import GenreMovie
-from schema.Group import groupSchema
+from models.Group import Group
+from schema.Group import groupSchema, usuarito
 from schema.Movie import MovieResponse
 
 class DataTransfer:
 
     MovieServiceRepository = MovieService(session)
     GenreServiceRepository = GenreService(session)
-    # GroupServiceRepository = GroupService(session,MovieUserGroupService(session))
-    # MovieUserGrouServicepRepository = MovieUserGroupService(session)
-    # UserServiceRepository = UserService(session,FirebaseAuthService())
+    GroupServiceRepository = GroupService(session,MovieUserGroupService(session))
+    MovieUserGrouServicepRepository = MovieUserGroupService(session)
+    UserServiceRepository = UserService(session,FirebaseAuthService())
 
     session = session
  
@@ -57,18 +58,34 @@ class DataTransfer:
     
     def get_group(self,group_id):
         group_data = self.GroupServiceRepository.get_group_id(group_id)
-        MovieUserGroupd_Dta = self.MovieUserGrouServicepRepository.get_group_id(group_id)
-        user_list = []
-
-        # for group_data_mug in MovieUserGroupd_Dta:
-        return ""
+        group_name_owner = session.query(Group).filter(Group.id == group_data[0].id_group ).first()
+        #     {
+        # "id_user": 16,
+        # "id_movie": 0,
+        # "toWatch": null,
+        # "id_group": 3
+        #      }
 
         return groupSchema(
-                id = group_data.id ,
-                owner_id = group_data.owner_id ,
-                users = [self.UserServiceRepository.get_user_id(user) for user in MovieUserGroupd_Dta.id_user],
+                id = group_data[0].id_group ,
+                owner_id = group_name_owner.owner_id,
+                name = group_name_owner.name,
+                users = [self.get_user_id(user.id_user) for user in group_data]
                 # movie_toWatch = ,
                 # movie_Watched = 
         )
+    
+    def get_user_id(self,id:int):
+        usuario = self.UserServiceRepository.get_user_id(id)
+        return usuarito(
+            id = usuario.id,
+            email=usuario.email,
+            language=usuario.language,
+            provider=usuario.provider
+        )
+    
+    def get_users(self):
+        users = self.UserServiceRepository.get_users()
+        return [self.get_user_id(user.id) for user in users]
 
     
