@@ -3,7 +3,9 @@ from fastapi import FastAPI
 from config.firebase import initialize_firebase
 from router.users import router as users_router
 from router.groups import router as groups_router
-import os 
+from router.genre import router as genres_router
+from router.movie import router as movies_router
+import os
 
 load_dotenv()
 
@@ -20,3 +22,5 @@ initialize_firebase()
 
 app.include_router(users_router)
 app.include_router(groups_router)
+app.include_router(genres_router)
+app.include_router(movies_router)
