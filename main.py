@@ -28,11 +28,11 @@ async def init():
     synopsis ={"null":"null"},
     image = "null",
     adult =True ,
-    release_date =00.0,
-    rating_average =00.0,
-    rating_value = 00.0
+    release_date = "1977-05-25",
+    rating_average =8.203,
+    rating_value = 19977
     ))
-    
+
 # Init Firebase Admin SDK and get the app
 initialize_firebase()
 
