@@ -3,7 +3,6 @@ from pydantic import BaseModel
 import datetime
 
 class MovieResponse(BaseModel):
-    
     id:int
     title:str
     synopsis:str

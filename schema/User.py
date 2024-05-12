@@ -31,3 +31,5 @@ class UserSchemaResponse(BaseModel):
     email: EmailStr
     language:Optional[int] = None
     provider:str
+
+
