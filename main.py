@@ -1,11 +1,14 @@
 from dotenv import load_dotenv
 from fastapi import FastAPI
+from sqlalchemy import Column, Integer,JSON
 from config.firebase import initialize_firebase
+from models.Movie import Movie
 from router.users import router as users_router
 from router.groups import router as groups_router
 from router.genre import router as genres_router
 from router.movie import router as movies_router
 import os
+from config.db import session
 
 load_dotenv()
 
@@ -14,8 +17,22 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
+    
     return {"message": "Hello World"}
 
+@app.post("/initgroups")
+async def init():
+    session.add(Movie(
+    id = 0 ,
+    title = {"null":"null"},
+    synopsis ={"null":"null"},
+    image = "null",
+    adult =True ,
+    release_date =00.0,
+    rating_average =00.0,
+    rating_value = 00.0
+    ))
+    
 # Init Firebase Admin SDK and get the app
 initialize_firebase()
 
