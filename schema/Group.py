@@ -1,6 +1,5 @@
 from typing import Optional
 from pydantic import BaseModel, EmailStr
-
 from schema.Movie import MovieResponse
 
 
@@ -18,6 +17,8 @@ class UserSchemaResponse(BaseModel):
 class groupSchema(BaseModel):
     id:int
     owner_id:int
+    name:str
     users:list[EmailStr]
-    movie_toWatch:list[MovieResponse]
-    movie_Watched:list[MovieResponse]
+    watched_list:list[MovieResponse]
+    to_watch_List:list[MovieResponse]
+    recommended_movie:MovieResponse

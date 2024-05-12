@@ -32,7 +32,7 @@ class MovieUserGroupService:
             
         def get_group_id(self,gruop_id):
             try:
-                group = self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_group == gruop_id).first()
+                group = self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_group == gruop_id).all()
                 
                 if not group:
                     raise HTTPException(status_code=404, detail="Group not found")
