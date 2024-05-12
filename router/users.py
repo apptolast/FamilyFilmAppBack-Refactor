@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter,Depends
 from config.readJsonUsers import read_json_users_file
 from controllers.DataTransfer import DataTransfer
-from schema.User import AutomaticUpdateTokenResponse, UserFirebaseBackendTestRequest, UserSchemaRequest, UserSchemaResponse, UserTokenResponse
+from schema.User import AutomaticUpdateTokenRequest, AutomaticUpdateTokenResponse, UserFirebaseBackendTestRequest, UserSchemaRequest, UserSchemaResponse, UserTokenResponse
 from controllers.User import UserService
 from config.db import session
 from controllers.Auth import FirebaseAuthService

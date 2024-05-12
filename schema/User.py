@@ -13,8 +13,8 @@ class UserFirebaseBackendTestRequest(BaseModel):
     email_verified: Optional[bool] = True
     password: str
 
-# class AutomaticUpdateTokenRequest(BaseModel):
-#     email: Optional[str] = read_json_users_file()
+class AutomaticUpdateTokenRequest(BaseModel):
+    email: Optional[str] = read_json_users_file()
 
 class AutomaticUpdateTokenResponse(BaseModel):
     email: str
