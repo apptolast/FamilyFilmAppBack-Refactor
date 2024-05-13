@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from models.User import User
 from controllers.Auth import FirebaseAuthService
 from schema.User import UserFirebaseBackendTestRequest, UserSchemaRequest
+from models.Language import Language
 
 
 
@@ -30,8 +31,7 @@ class UserService:
         try:
             
             user = self.db_session.query(User).filter(User.id == user_id).first()
-            
-            if not user:
+            if user is None:
                 raise HTTPException(status_code=404, detail="User not found")
             return user
             
@@ -42,17 +42,29 @@ class UserService:
             self.db_session.rollback()
             raise HTTPException(status_code=500, detail=f"An error occurred:  {str(e)}")
             
+    def set_language(self,language,user_id):
+        new_language = language.lower()
+        
+        try:
+            if len(new_language) > 2 or len(language) <2:
+                raise HTTPException(status_code=404, detail="the language is not possible set in user")
 
+            if self.db_session.query(Language).filter(Language.language == new_language).first() is None:
+                set = Language(language = new_language)
+                self.db_session.add(set)
+                self.db_session.commit()
 
-    # def update_user(self,user):
-    #     user = self.get_user_by_id(user.id)
-    #     if user:
-    #         for key, value in kwargs.items():
-    #             setattr(user, key, value)
-    #         self.db_session.commit()
-    #         return user
-
-
+            id_language = self.db_session.query(Language).filter(Language.language == new_language).first()
+            self.get_user_id(user_id).id_language = id_language.id
+            self.db_session.commit()
+            return self.get_user_id(user_id)
+        except HTTPException as http_error:
+            raise http_error
+        
+        except Exception as e:
+            self.db_session.rollback()
+            raise HTTPException(status_code=500, detail=f"An error occurred:  {str(e)}")
+        
     def delete_user(self, request: Request):
         try:
             user = self.check_user_exists_or_create(request=request)
@@ -68,7 +80,6 @@ class UserService:
             self.db_session.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"An error occurred: {str(e)}")
 
-
     def create_user(self, user_data):
         new_user = User(
             email=user_data.email,
@@ -83,7 +94,14 @@ class UserService:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
     def check_user_exists(self,email):
-        return self.db_session.query(User).filter(User.email == email).first()
+        try:
+            user = self.db_session.query(User).filter(User.email == email).first()
+            if user is None:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+            return user
+        except Exception as e:
+            self.db_session.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         
         
     def create_user_firebase_backend_test(self, user_data: UserFirebaseBackendTestRequest):
@@ -135,7 +153,6 @@ class UserService:
         custom_token_decoded = custom_token.decode('utf-8')
         return self.id_token_for_login(custom_token_decoded=custom_token_decoded)
     
-        
         
         
     def login_with_custom_token(self, user_data: UserFirebaseBackendTestRequest):

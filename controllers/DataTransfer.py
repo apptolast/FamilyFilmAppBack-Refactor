@@ -7,6 +7,7 @@ from controllers.MovieGroupUser import MovieUserGroupService
 from controllers.User import UserService
 from models.GenreMovie import GenreMovie
 from models.Group import Group
+from models.Language import Language
 from schema.Group import groupSchema, usuarito
 from schema.Movie import MovieResponse
 
@@ -75,12 +76,17 @@ class DataTransfer:
                 # movie_Watched = 
         )
     
+    def get_groups(self,user_id):
+        grupos = self.GroupServiceRepository.get_groups(user_id)
+        return [self.get_group(grupo.id_group) for grupo in grupos]
+
     def get_user_id(self,id:int):
         usuario = self.UserServiceRepository.get_user_id(id)
+        leng = session.query(Language).filter(Language.id == usuario.id_language).first()
         return usuarito(
             id = usuario.id,
             email=usuario.email,
-            language=usuario.language,
+            language= leng.language,
             provider=usuario.provider
         )
     

@@ -11,6 +11,7 @@ class MovieService:
         self.db_session = db_session
     
     def get_movies(self,page):
+        
         items_per_page = 20
         start = (page - 1) * items_per_page
         end = start + items_per_page
@@ -25,7 +26,6 @@ class MovieService:
     def get_movie_id(self,movie_id):
         try:
             movie = self.db_session.query(Movie).filter(Movie.id == movie_id).first()
-            
             if not movie:
                 raise HTTPException(status_code=404, detail="Movie not found")
             return movie
