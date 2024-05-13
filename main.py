@@ -1,9 +1,11 @@
-from datetime import datetime 
+from datetime import datetime
+import logging 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from sqlalchemy import Column, Integer,JSON
 from config.checkAutomaticTokens import check_token_validation
 from config.firebase import initialize_firebase
+from config.logging_config import config_loggin_system
 from models.Movie import Movie
 from router.users import router as users_router
 from router.groups import router as groups_router
@@ -20,6 +22,13 @@ app = FastAPI()
 
 scheduler = AsyncIOScheduler()
 scheduler.start()
+
+
+config_loggin_system()
+
+
+
+logging.info('Inicio del servicio de logging.')
 
 
 
