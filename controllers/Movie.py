@@ -72,7 +72,13 @@ class MovieService:
                     self.set_genres_with_movie(movie)
                 
                 else:
+                    # Asegúrate de que el título es un diccionario
+                    if isinstance(existing_movie.title, str):
+                        existing_movie.title = {language: existing_movie.title}
                     existing_movie.title = {**existing_movie.title, language: movie['title']}
+                    # Asegúrate de que la sinopsis es un diccionario
+                    if isinstance(existing_movie.synopsis, str):
+                        existing_movie.synopsis = {language: existing_movie.synopsis}
                     existing_movie.synopsis = {**existing_movie.synopsis, language: movie['overview']}
                     self.db_session.commit()
             total_downloaded += len(movie_dowloads)
