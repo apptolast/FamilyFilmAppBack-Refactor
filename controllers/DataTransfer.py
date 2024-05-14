@@ -1,3 +1,4 @@
+import logging
 from controllers.Auth import FirebaseAuthService
 from controllers.Group import GroupService
 from controllers.Movie import MovieService
@@ -95,6 +96,8 @@ class DataTransfer:
         return [self.get_user_id(user.id) for user in users]
         
     def call_to_update_movies_peer_week(self):
-        return self.MovieServiceRepository.update_movies()
+        number_downloads = self.MovieServiceRepository.update_movies()
+        logging.info(f"Total movies downloaded in this update object JSON : {number_downloads}")
+        return number_downloads
 
     
