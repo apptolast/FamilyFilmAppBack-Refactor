@@ -6,6 +6,8 @@ from models.GenreMovie import GenreMovie
 from models.Movie import Movie
 from sqlalchemy import func, text
 
+from schema.Movie import AutomaticResponseForMovies
+
 class MovieService:
 
     def __init__(self,db_session):
@@ -108,9 +110,9 @@ class MovieService:
             total_downloaded += downloaded
             logging.info(f"Downloaded {downloaded} movies for language: {language}")
         logging.info(f"Total movies downloaded in this update: {total_downloaded}")
-        return {
-            "Total movies downloaded in this update" : f"{total_downloaded}"
-        }
+        return AutomaticResponseForMovies(
+            download_movies=total_downloaded
+        )
 
     def api_start(self,url):
         return requests.get(url, headers={
