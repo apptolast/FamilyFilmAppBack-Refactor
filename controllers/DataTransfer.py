@@ -93,5 +93,8 @@ class DataTransfer:
     def get_users(self):
         users = self.UserServiceRepository.get_users()
         return [self.get_user_id(user.id) for user in users]
+        
+    def call_to_update_movies_peer_week(self):
+        return self.MovieServiceRepository.update_movies()
 
     
