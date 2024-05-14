@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from sqlalchemy import Column, Integer,JSON
 from config.checkAutomaticTokens import check_token_validation
+from config.downloadMoviesAuto import automated_download_movies
 from config.firebase import initialize_firebase
 from config.logging_config import config_loggin_system
 from models.Movie import Movie
@@ -60,3 +61,4 @@ app.include_router(genres_router)
 app.include_router(movies_router)
 
 scheduler.add_job(check_token_validation, 'interval', hours=1, next_run_time=datetime.now())
+scheduler.add_job(automated_download_movies, 'interval', weeks=1, next_run_time=datetime.now())
