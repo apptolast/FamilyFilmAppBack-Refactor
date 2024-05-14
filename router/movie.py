@@ -22,4 +22,6 @@ async def get_movies(id:int):
 
 @router.get('/update/movies/automated', response_model=AutomaticResponseForMovies)
 async def updated_movies_endpoint():
-    return DataTransfer().call_to_update_movies_peer_week()
+    data = DataTransfer().call_to_update_movies_peer_week()
+    logging.info("Respuesta automática del endpoint: %s", data)
+    return data
