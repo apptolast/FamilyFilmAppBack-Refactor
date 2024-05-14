@@ -110,9 +110,7 @@ class MovieService:
             total_downloaded += downloaded
             logging.info(f"Downloaded {downloaded} movies for language: {language}")
         logging.info(f"Total movies downloaded in this update: {total_downloaded}")
-        return AutomaticResponseForMovies(
-            download_movies=total_downloaded
-        )
+        return AutomaticResponseForMovies(download_movies=total_downloaded)
 
     def api_start(self,url):
         return requests.get(url, headers={

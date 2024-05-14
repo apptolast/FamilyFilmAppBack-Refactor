@@ -1,5 +1,5 @@
 import logging
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from config.db import session
 from controllers.Movie import MovieService
 from controllers.DataTransfer import DataTransfer
@@ -22,7 +22,9 @@ async def get_movies(id:int):
 
 @router.get('/update/movies/automated', status_code=200, response_model=AutomaticResponseForMovies)
 async def updated_movies_endpoint():
-    data = DataTransfer().call_to_update_movies_peer_week()
-    logging.info("Respuesta automática del endpoint: %s", data)
-    print(f"SOY LA PUTA DATA QUE COJONES : {data}")
-    return data
+    try:
+        response = DataTransfer().call_to_update_movies_peer_week()
+        return response
+    except Exception as e:
+        logging.error(f"Error updating movies: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
