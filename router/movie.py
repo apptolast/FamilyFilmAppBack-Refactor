@@ -17,3 +17,7 @@ async def get_movies(page:int,leng:str):
 @router.get("/{id}")
 async def get_movies(id:int):
     return DataTransfer().get_movie_datatransfer(id,'es')
+
+@router.get('/update/movies/automated')
+async def updated_movies_endpoint():
+    return DataTransfer().call_to_update_movies_peer_week()

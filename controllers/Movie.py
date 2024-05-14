@@ -39,43 +39,40 @@ class MovieService:
     
 
     def dowload_movie(self,language,page,adult = True ,video = True):
-
-        if page > 500:
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="the page limit is 500 ")
+        page = 1
+        while True:
+            if page > 500:
+                break
         
-        movie_dowloads = []
-        url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&&page={page}"
-        for movie in self.api_start(url)['results']:
-            existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
+            movie_dowloads = []
+            url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&&page={page}"
+            response = self.api_start(url=url)['results']
+            if not response:
+                break
+            for movie in response:
+                existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
 
-            if existing_movie is None:
-                movie_dowloads.append(movie)
-                self.db_session.add(Movie(
-                    id =movie['id'],
-                    title ={language: movie['title']},
-                    synopsis ={language: movie['overview']},
-                    image =movie['poster_path'],
-                    adult =movie['adult'],
-                    release_date=movie['release_date'],
-                    rating_average=movie['vote_average'],
-                    rating_value=movie['vote_count']
-                ))
-                self.db_session.commit()
-                self.set_genres_with_movie(movie)
+                if existing_movie is None:
+                    movie_dowloads.append(movie)
+                    self.db_session.add(Movie(
+                        id =movie['id'],
+                        title ={language: movie['title']},
+                        synopsis ={language: movie['overview']},
+                        image =movie['poster_path'],
+                        adult =movie['adult'],
+                        release_date=movie['release_date'],
+                        rating_average=movie['vote_average'],
+                        rating_value=movie['vote_count']
+                    ))
+                    self.db_session.commit()
+                    self.set_genres_with_movie(movie)
                 
-            else:
-                existing_movie.title = {**existing_movie.title, language: movie['title']}
-                existing_movie.synopsis = {**existing_movie.synopsis, language: movie['overview']}
-                self.db_session.commit()
+                else:
+                    existing_movie.title = {**existing_movie.title, language: movie['title']}
+                    existing_movie.synopsis = {**existing_movie.synopsis, language: movie['overview']}
+                    self.db_session.commit()
+            page += 1
             
-        if video:
-            return self.dowload_movie(language, page, video=False, adult=adult)
-        elif adult:
-            return self.dowload_movie(language, page, video=video, adult=False)
-
-    
-                    
-   
     def set_genres_with_movie(self,movie):
         genres = movie['genre_ids']
         movie_id = movie['id']
@@ -97,6 +94,11 @@ class MovieService:
                     )
                     self.db_session.add(associaton)
                     self.db_session.commit()
+
+    def update_movies(self):
+        languages = ["en", "es"]  # Lista de idiomas a actualizar
+        for language in languages:
+            self.dowload_movie(language=language, page=1)
 
     def api_start(self,url):
         return requests.get(url, headers={
