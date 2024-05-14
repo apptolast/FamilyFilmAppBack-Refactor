@@ -1,3 +1,4 @@
+import logging
 import os
 from fastapi import HTTPException,status
 import requests
@@ -39,6 +40,7 @@ class MovieService:
     
 
     def dowload_movie(self,language,page,adult = True ,video = True):
+        total_downloaded = 0
         page = 1
         while True:
             if page > 500:
@@ -71,7 +73,10 @@ class MovieService:
                     existing_movie.title = {**existing_movie.title, language: movie['title']}
                     existing_movie.synopsis = {**existing_movie.synopsis, language: movie['overview']}
                     self.db_session.commit()
+            total_downloaded += len(movie_dowloads)
+            logging.info(f"{len(movie_dowloads)} movies downloaded on page {page}. Total downloaded so far: {total_downloaded}")
             page += 1
+        return total_downloaded
             
     def set_genres_with_movie(self,movie):
         genres = movie['genre_ids']
@@ -96,9 +101,13 @@ class MovieService:
                     self.db_session.commit()
 
     def update_movies(self):
+        total_downloaded = 0
         languages = ["en", "es"]  # Lista de idiomas a actualizar
         for language in languages:
-            self.dowload_movie(language=language, page=1)
+            downloaded = self.dowload_movie(language=language, page=1)
+            total_downloaded += downloaded
+            logging.info(f"Downloaded {downloaded} movies for language: {language}")
+        logging.info(f"Total movies downloaded in this update: {total_downloaded}")
 
     def api_start(self,url):
         return requests.get(url, headers={
