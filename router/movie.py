@@ -20,7 +20,7 @@ async def get_movies(page:int,leng:str):
 async def get_movies(id:int):
     return DataTransfer().get_movie_datatransfer(id,'es')
 
-@router.get('/update/movies/automated', response_model=AutomaticResponseForMovies)
+@router.get('/update/movies/automated', status_code=200, response_model=AutomaticResponseForMovies)
 async def updated_movies_endpoint():
     data = DataTransfer().call_to_update_movies_peer_week()
     logging.info("Respuesta automática del endpoint: %s", data)
