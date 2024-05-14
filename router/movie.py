@@ -24,4 +24,5 @@ async def get_movies(id:int):
 async def updated_movies_endpoint():
     data = DataTransfer().call_to_update_movies_peer_week()
     logging.info("Respuesta automática del endpoint: %s", data)
+    print(f"SOY LA PUTA DATA QUE COJONES : {data}")
     return data
