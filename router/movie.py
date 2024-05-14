@@ -1,3 +1,4 @@
+import logging
 from fastapi import APIRouter
 from config.db import session
 from controllers.Movie import MovieService
@@ -20,4 +21,6 @@ async def get_movies(id:int):
 
 @router.get('/update/movies/automated')
 async def updated_movies_endpoint():
-    return DataTransfer().call_to_update_movies_peer_week()
+    downloads = DataTransfer().call_to_update_movies_peer_week()
+    logging.info(f"Total movies downloaded in this update object JSON IN ENDPOINT THAT EXECUTE FUNCTION : {downloads}")
+    return downloads
