@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from config.db import session
 from controllers.Movie import MovieService
 from controllers.DataTransfer import DataTransfer
+from schema.Movie import AutomaticResponseForMovies
 
 router = APIRouter(
     prefix="/movies",
@@ -19,8 +20,6 @@ async def get_movies(page:int,leng:str):
 async def get_movies(id:int):
     return DataTransfer().get_movie_datatransfer(id,'es')
 
-@router.get('/update/movies/automated')
+@router.get('/update/movies/automated', response_model=AutomaticResponseForMovies)
 async def updated_movies_endpoint():
-    downloads = DataTransfer().call_to_update_movies_peer_week()
-    logging.info(f"Total movies downloaded in this update object JSON IN ENDPOINT THAT EXECUTE FUNCTION : {downloads}")
-    return downloads
+    return DataTransfer().call_to_update_movies_peer_week()

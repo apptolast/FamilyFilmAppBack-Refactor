@@ -96,8 +96,6 @@ class DataTransfer:
         return [self.get_user_id(user.id) for user in users]
         
     def call_to_update_movies_peer_week(self):
-        number_downloads = self.MovieServiceRepository.update_movies()
-        logging.info(f"Total movies downloaded in this update object JSON : {number_downloads}")
-        return number_downloads
+        return self.MovieServiceRepository.update_movies()
 
     

@@ -12,3 +12,7 @@ class MovieResponse(BaseModel):
     rating_average:float
     rating_value:float
     genres:list[str] = str
+
+
+class AutomaticResponseForMovies(BaseModel):
+    download_movies: int
