@@ -23,7 +23,7 @@ async def get_movies(id:int):
 @router.get('/update/movies/automated', status_code=200, response_model=AutomaticResponseForMovies)
 async def updated_movies_endpoint():
     try:
-        response = DataTransfer().call_to_update_movies_peer_week()
+        response = DataTransfer().call_to_update_movies_peer_week(genre_service=DataTransfer().GenreServiceRepository)
         return response
     except Exception as e:
         logging.error(f"Error updating movies: {e}")

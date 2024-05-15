@@ -2,6 +2,7 @@ import logging
 import os
 from fastapi import HTTPException,status
 import requests
+from controllers.Genre import GenreService
 from models.GenreMovie import GenreMovie
 from models.Movie import Movie
 from sqlalchemy import func, text
@@ -39,11 +40,11 @@ class MovieService:
         except Exception as e:
             self.db_session.rollback()
             raise HTTPException(status_code=500, detail=f"An error occurred:  {str(e)}")
-    
-
-    def dowload_movie(self,language,page,adult = True ,video = True):
+            
+            
+    def dowload_movie(self, language, genre_service: GenreService, page=1, adult=True, video=True):
         total_downloaded = 0
-        page = 1
+        genre_service.dowload_genres(language=language)  # Asegurarse de que los géneros están descargados
         while True:
             if page > 500:
                 break
@@ -108,11 +109,11 @@ class MovieService:
                     self.db_session.add(associaton)
                     self.db_session.commit()
 
-    def update_movies(self):
+    def update_movies(self, genre_service: GenreService):
         total_downloaded = 0
         languages = ["en", "es"]  # Lista de idiomas a actualizar
         for language in languages:
-            downloaded = self.dowload_movie(language=language, page=1)
+            downloaded = self.dowload_movie(language=language, page=1, genre_service=genre_service)
             total_downloaded += downloaded
             logging.info(f"Downloaded {downloaded} movies for language: {language}")
         logging.info(f"Total movies downloaded in this update: {total_downloaded}")
