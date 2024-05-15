@@ -31,7 +31,7 @@ class GenreService:
     
     def dowload_genres(self,language):
 
-        json_response = self.api_start(f'{self.url_genre}{language}')
+        json_response = GenreService.api_start(f'{self.url_genre}{language}')
 
         for genre in json_response['genres']:
             existing_genre = self.db_session.query(Genre).filter(Genre.id == genre['id']).first()
@@ -41,7 +41,8 @@ class GenreService:
             else:
                 existing_genre.name = {**existing_genre.name, language: genre['name']}
                 self.db_session.commit()
-
+    
+    @staticmethod
     def api_start(url):
         return requests.get(url, headers={
             "accept": "application/json",
