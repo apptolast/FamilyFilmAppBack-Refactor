@@ -14,17 +14,18 @@ from router.genre import router as genres_router
 from router.movie import router as movies_router
 import os
 from config.db import session
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import os 
 
 load_dotenv()
 
 app = FastAPI()
 
-# scheduler = AsyncIOScheduler()
-# scheduler.start()
+scheduler = AsyncIOScheduler()
+scheduler.start()
 
 
-# config_loggin_system()
+config_loggin_system()
 
 
 
@@ -59,9 +60,5 @@ app.include_router(groups_router)
 app.include_router(genres_router)
 app.include_router(movies_router)
 
-<<<<<<< HEAD
 scheduler.add_job(check_token_validation, 'interval', hours=1, next_run_time=datetime.now())
 scheduler.add_job(automated_download_movies, 'interval', weeks=1, next_run_time=datetime.now())
-=======
-# scheduler.add_job(check_token_validation, 'interval', hours=1, next_run_time=datetime.now())
->>>>>>> add0487 (terminando los ultimos retoques)
