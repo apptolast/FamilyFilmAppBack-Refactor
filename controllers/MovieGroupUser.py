@@ -1,5 +1,5 @@
 from fastapi import HTTPException,status
-from sqlalchemy import and_
+from sqlalchemy import and_, distinct
 from models.MovieUserGroup import MovieUserGroup
 
 class MovieUserGroupService:
@@ -57,3 +57,31 @@ class MovieUserGroupService:
             except Exception as e:
                  self.db_session.rollback()
                  raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")
+            
+        def create_union_group_movie(self,group_id,movie_id,user_id,is_to_Watch):
+            new_group_asotiation = MovieUserGroup(
+                id_movie= movie_id,
+                id_user = user_id,
+                id_group= group_id,
+                toWatch = is_to_Watch
+            )
+            try:
+                self.db_session.add(new_group_asotiation)
+                self.db_session.commit()
+            except Exception as e:
+                 self.db_session.rollback()
+                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")
+
+        def delete_union_group_movie(self,group_id,movie_id,user_id,is_to_Watch):
+            try:
+                delete = self.db_session.query(MovieUserGroup).filter(and_(MovieUserGroup.id_group == group_id, MovieUserGroup.id_movie == movie_id, MovieUserGroup.toWatch == is_to_Watch, MovieUserGroup.id_user == user_id)).first()
+                
+                if delete is None:
+                    raise HTTPException(status_code=404, detail="Movie not is possible delete")
+
+                self.db_session.delete(delete)
+                self.db_session.commit()
+            except Exception as e:
+                 self.db_session.rollback()
+                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")
+          

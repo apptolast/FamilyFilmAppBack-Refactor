@@ -58,6 +58,7 @@ class UserService:
             self.get_user_id(user_id).id_language = id_language.id
             self.db_session.commit()
             return self.get_user_id(user_id)
+        
         except HTTPException as http_error:
             raise http_error
         

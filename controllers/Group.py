@@ -47,8 +47,6 @@ class GroupService:
             try:
                 if self.is_owner(owner_id,group_id) is None:
                     raise HTTPException(status_code=404, detail="User not Owner")
-                
-
                 self.movie_user_group_repository.delete_union_user(user_id,group_id)    
                 return self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_group == group_id).first()
 
@@ -62,9 +60,20 @@ class GroupService:
         def is_owner(self,user_id,group_id):
             try:
                 group = self.db_session.query(Group).filter(and_(Group.owner_id == user_id, Group.id == group_id)).first()
-                print("group")
                 return group
             except Exception as e:
                  self.db_session.rollback()
                  raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"User is not owner")
            
+        def add_to_watch(self,user_id,group_id,movie_id):
+            self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,False)
+
+        def delete_to_watch(self,user_id,group_id,movie_id):
+            self.movie_user_group_repository.delete_union_group_movie(group_id,movie_id,user_id,False)
+        
+        def add_to_watched(self,user_id,group_id,movie_id):
+            self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,True)
+
+        def delete_to_watched(self,user_id,group_id,movie_id):
+            self.movie_user_group_repository.delete_union_group_movie(group_id,movie_id,user_id,True)
+        
