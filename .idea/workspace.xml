@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4295d780-47a5-43c0-8cac-0a0e488aea68" name="Changes" comment="" />
+    <list default="true" id="4295d780-47a5-43c0-8cac-0a0e488aea68" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/firebase.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/firebase.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/readJsonUsers.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/readJsonUsers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/DataTransfer.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/DataTransfer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/Group.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/Group.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/MovieGroupUser.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/MovieGroupUser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controllers/User.py" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/User.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/MovieUserGroup.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/MovieUserGroup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/router/groups.py" beforeDir="false" afterPath="$PROJECT_DIR$/router/groups.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/schema/Group.py" beforeDir="false" afterPath="$PROJECT_DIR$/schema/Group.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,31 +31,51 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="2e87f32cbec0c099fb2bc4db3d004665e73fc298" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitRewordedCommitMessages">
     <option name="onto" value="a78892a467d6995a14dd9e74a20a4e14162dc769" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 0
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 0
+}</component>
   <component name="ProjectId" id="2gNOAgxT2gwx0kYiTC2bhiW2teY" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "feature/RefactorModels",
-    "kotlin-language-version-configured": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/RefactorModels&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="Push.Settings">
     <force-push-targets>
       <force-push-target remote-path="origin" branch="feature/RefactorModels" />
     </force-push-targets>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="FamilyFilmAppBack-Refactor" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="FamilyFilmAppBack-Refactor" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -62,7 +94,15 @@
       <option name="project" value="LOCAL" />
       <updated>1715535024774</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Add genres and movies">
+      <option name="closed" value="true" />
+      <created>1715638219260</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1715638219260</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -70,7 +110,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="feature/RefactorModels" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -78,7 +130,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add genres and movies" />
-    <MESSAGE value="Add genres and movies" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add genres and movies" />
+    <MESSAGE value="Add setLanguage endpoint and refactor many classes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add setLanguage endpoint and refactor many classes" />
   </component>
 </project>

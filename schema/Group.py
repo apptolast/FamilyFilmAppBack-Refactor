@@ -1,7 +1,6 @@
 from typing import Optional
-from pydantic import BaseModel, EmailStr 
-
-
+from pydantic import BaseModel, EmailStr
+from schema.Movie import MovieResponse 
 
 class GroupSchemaRequest(BaseModel):
     name:str
@@ -17,6 +16,9 @@ class groupSchema(BaseModel):
     owner_id:int
     name:str
     users:list[usuarito]
+    to_Watch: list[MovieResponse] = []
+    to_Watched: list[MovieResponse] = []
+
 
 class groupSchemaDeleteUser(BaseModel):
     email: str
