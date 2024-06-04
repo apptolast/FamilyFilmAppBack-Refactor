@@ -1,8 +1,9 @@
 import logging
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from config.db import session
 from controllers.Movie import MovieService
 from controllers.DataTransfer import DataTransfer
+from router.users import UserServiceRepository
 from schema.Movie import AutomaticResponseForMovies
 
 router = APIRouter(
@@ -12,13 +13,15 @@ router = APIRouter(
 
 MovieServiceRepository = MovieService(session)
 
+returns = DataTransfer()
 @router.get("/{page}/{leng}")
 async def get_movies(page:int,leng:str):
-    return DataTransfer().get_movies_datatransfer(leng,page)
+    return returns.get_movies_datatransfer(leng,page)
 
 @router.get("/{id}")
-async def get_movies(id:int):
-    return DataTransfer().get_movie_datatransfer(id,'es')
+async def get_movies(id:int,me = Depends(UserServiceRepository.auth_user)):
+    user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
+    return returns.get_movie_datatransfer(id,returns.get_user_id(user.id).language)
 
 @router.get('/update/movies/automated', status_code=200, response_model=AutomaticResponseForMovies)
 async def updated_movies_endpoint():
