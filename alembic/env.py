@@ -21,14 +21,14 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from models.base import Base
 from models.Genre import Genre
-from models.GenreMovieAssociation import genre_movie_association
+from models.GenreMovie import GenreMovie
 from models.Group import Group
-from models.GroupUser import GroupUser
+from models.Language import Language
+from models.modelo import MovieUserGroup
 from models.Movie import Movie
-from models.RoleEnum import role_enum
+from models.MovieUserGroup import MovieUserGroup
 from models.User import User
-from models.ViewList import ViewList
-from models.WatchList import WatchList
+
 target_metadata = metadata
 
 # other values from the config, defined by the needs of env.py,
