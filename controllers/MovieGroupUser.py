@@ -10,7 +10,6 @@ class MovieUserGroupService:
 
         def create_union_user(self,user_id, group_id):
             new_group_asotiation = MovieUserGroup(
-                id_movie= 0,
                 id_user = user_id,
                 id_group= group_id,
                 toWatch = None
