@@ -20,7 +20,7 @@ async def create_group(group:GroupSchemaRequest,me = Depends(UserServiceReposito
     GroupRepository.create_group(name = group.name,ownerID = user.id)
     return returns.get_groups(user.id,returns.get_user_id(user.id).language)
 
-@router.post("/{id}")
+@router.put("/{id}")
 async def edit_group_name(group:GroupSchemaRequest,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
     GroupRepository.create_group(name = group.name,ownerID = user.id)
