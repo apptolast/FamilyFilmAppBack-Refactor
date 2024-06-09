@@ -88,3 +88,18 @@ class GroupService:
         def delete_to_watched(self,user_id,group_id,movie_id):
             self.movie_user_group_repository.delete_union_group_movie(group_id,movie_id,user_id,True)
         
+        def edit_group_name(self, name, ownerID):
+            new_group = Group(
+                 name = name,
+                 owner_id = ownerID
+            )
+            try:
+                self.db_session.add(new_group)
+                self.db_session.commit()
+                group = self.db_session.query(Group).filter(Group.owner_id == ownerID).all()[-1]
+                self.movie_user_group_repository.create_union_user(user_id=ownerID,group_id=group.id)
+            except Exception as e:
+                 self.db_session.rollback()
+                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")
+            
+            return group
