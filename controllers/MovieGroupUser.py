@@ -8,11 +8,12 @@ class MovieUserGroupService:
             self.db_session = db_session
 
 
-        def create_union_user(self,user_id, group_id):
+        def create_union_user(self,user_id, group_id,):
             new_group_asotiation = MovieUserGroup(
+                id_movie = 0,
                 id_user = user_id,
                 id_group= group_id,
-                toWatch = None
+                toWatch = False,
             )
             try:
                 self.db_session.add(new_group_asotiation)
