@@ -98,4 +98,4 @@ class GroupService:
                 group.name = name
                 self.db_session.commit()
             except HTTPException as error:
-                raise HTTPException(status_code=500, detail="error editing group {error}")
+                raise HTTPException(status_code=500, detail=f"error editing group {error}")
