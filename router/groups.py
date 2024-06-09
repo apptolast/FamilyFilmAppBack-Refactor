@@ -36,13 +36,11 @@ async def get_group(id:int,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
     return returns.get_group(id,returns.get_user_id(user.id).language)
 
-@router.delete("/{group_id}/user")
-async def group_delete_user(user_to_delete_email:groupSchemaDeleteUser,group_id:int,me = Depends(UserServiceRepository.auth_user)):
+@router.delete("/{group_id}/users/{user_to_delete_id}")
+async def group_delete_user(user_to_delete_id,group_id:int,me = Depends(UserServiceRepository.auth_user)):
     user_owner = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    user_to_delete = UserServiceRepository.check_user_exists(user_to_delete_email.email).id
-    GroupRepository.delete_user_to_group(user_to_delete,group_id,user_owner.id)
+    GroupRepository.delete_user_to_group(user_to_delete_id,group_id,user_owner.id)
     return returns.get_groups(user_owner.id,returns.get_user_id(user_owner.id).language)
-
 
 @router.delete("/{group_id}")
 async def group_delete_with_users(group_id,me = Depends(UserServiceRepository.auth_user)):

@@ -54,8 +54,9 @@ class GroupService:
                 raise http_error
 
         def delete_user_and_group(self,users_id,group_id,owner_id):
-            for user_id in users_id:
-                self.delete_user_to_group(user_id.id,group_id,owner_id)
+            user_ids = [user.id for user in users_id]
+            for user_id in user_ids:
+                self.delete_user_to_group(user_id, group_id, owner_id)
 
         def is_owner(self,user_id,group_id):
             try:
