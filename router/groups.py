@@ -13,6 +13,7 @@ router = APIRouter(
 
 GroupRepository = GroupService(db_session= session,movie_user_group_repository=MovieUserGroupService(db_session=session))
 returns = DataTransfer()
+
 @router.post("")
 async def create_group(group:GroupSchemaRequest,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
@@ -52,9 +53,9 @@ async def group_add_user(user_add_to_group:groupSchemaDeleteUser,group_id:int,me
 @router.delete("/{group_id}")
 async def group_delete_with_users(group_id,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    print(returns.get_group(group_id).users)
     GroupRepository.delete_user_and_group(users_id=returns.get_group(group_id).users,group_id=group_id,owner_id=user.id)
-    return returns.get_groups(user.id)
+    return returns.get_groups(user.id,returns.get_user_id(user.id).language)
+
 
 @router.put("/{group_id}/ToWatch/{id_movie}")
 async def group_add_to_watch_movie(group_id:int,id_movie:int,me = Depends(UserServiceRepository.auth_user)):
