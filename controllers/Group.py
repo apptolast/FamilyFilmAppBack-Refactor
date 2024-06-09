@@ -54,9 +54,19 @@ class GroupService:
                 raise http_error
 
         def delete_user_and_group(self,users_id,group_id,owner_id):
-            user_ids = [user.id for user in users_id]
-            for user_id in user_ids:
-                self.delete_user_to_group(user_id, group_id, owner_id)
+            try:
+                user_ids = [user.id for user in users_id]
+                print(user_ids)
+                for user_id in user_ids:
+                    self.delete_user_to_group(user_id, group_id, owner_id)
+            
+            except Exception as e:
+                 self.db_session.rollback()
+                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{e}")
+            
+
+            except HTTPException as http_error:
+                raise http_error
 
         def is_owner(self,user_id,group_id):
             try:
