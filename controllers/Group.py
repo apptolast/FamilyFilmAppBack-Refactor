@@ -93,8 +93,7 @@ class GroupService:
                 group = self.db_session.query(Group).filter(Group.id == group_id).first()
                 if group is None:
                     raise HTTPException(status_code=404, detail="Group not found")
-                self.is_owner(ownerID)
-
+                self.is_owner(ownerID,group_id=group_id)
                 group.name = name
                 self.db_session.commit()
             except HTTPException as error:
