@@ -173,3 +173,4 @@ class UserService:
             return token_decoded
         except Exception as e:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Authentication error: {str(e)}")
+
