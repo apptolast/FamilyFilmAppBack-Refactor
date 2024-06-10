@@ -100,6 +100,10 @@ class UserService:
             if user is None:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
             return user
+        
+        except HTTPException as http_error:
+            raise http_error
+
         except Exception as e:
             self.db_session.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
