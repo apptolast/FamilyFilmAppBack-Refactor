@@ -27,7 +27,9 @@ class DataTransfer:
         movie = self.MovieServiceRepository.get_movie_id(id)
         genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
         genres_name = [self.GenreServiceRepository.get_genre(language,genre.id_genre).name for genre in genres_in_movie]
-        return MovieResponse(
+        
+        if movie.title[language] is not None and movie.synopsis[language] is not None :
+            return MovieResponse(
                 id = movie.id,
                 title = movie.title[language],
                 synopsis = movie.synopsis[language],
@@ -45,19 +47,19 @@ class DataTransfer:
         for movie in movies:
             genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
             genres_data = [self.GenreServiceRepository.get_genre(language,genre.id_genre).name for genre in genres_in_movie]
+        if movie.title[language] is not None and movie.synopsis[language] is not None :
             movies_response.append(
-        #         MovieResponse(
-        #         id = movie.id,
-        #         synopsis = movie.synopsis[language],
-        #         title = movie.title[language],
-        #         image = movie.image,
-        #         adult = movie.adult,
-        #         release_date = movie.release_date,
-        #         rating_value = movie.rating_value,
-        #         rating_average = movie.rating_average,
-        #         genres = genres_data
-        # ))
-            movie)
+                MovieResponse(
+                id = movie.id,
+                synopsis = movie.synopsis[language],
+                title = movie.title[language],
+                image = movie.image,
+                adult = movie.adult,
+                release_date = movie.release_date,
+                rating_value = movie.rating_value,
+                rating_average = movie.rating_average,
+                genres = genres_data
+        ))
         return movies_response
     
     def get_group(self,group_id, language):
