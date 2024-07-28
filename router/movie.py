@@ -17,7 +17,6 @@ returns = DataTransfer()
 @router.get("/{page}")
 async def get_movies(page:int,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    print(f"LENGUAGE ES {returns.get_user_id(user.id).language}")
     MovieServiceRepository.dowload_movie(returns.get_user_id(user.id).language,page)
     return returns.get_movies_datatransfer(returns.get_user_id(user.id).language,page)
 
