@@ -46,17 +46,19 @@ class DataTransfer:
             genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
             genres_data = [self.GenreServiceRepository.get_genre(language,genre.id_genre).name for genre in genres_in_movie]
             movies_response.append(
-                MovieResponse(
-                id = movie.id,
-                title = movie.title[language],
-                synopsis = movie.synopsis[language],
-                image = movie.image,
-                adult = movie.adult,
-                release_date = movie.release_date,
-                rating_average = movie.rating_average,
-                rating_value = movie.rating_value,
-                genres = genres_data,
-        ))
+                # MovieResponse(
+                # id = movie.id,
+                # synopsis = movie.synopsis[language],
+                # title = movie.title[language],
+                # image = movie.image,
+                # adult = movie.adult,
+                # release_date = movie.release_date,
+                # rating_value = movie.rating_value,
+                # rating_average = movie.rating_average,
+                # genres = genres_data
+                movie
+        )
+        )
         return movies_response
     
     def get_group(self,group_id, language):
