@@ -73,22 +73,8 @@ class MovieService:
                 self.db_session.commit()
                 self.set_genres_with_movie(movie)
             else:
-                print(f"Updating existing movie: {existing_movie.id}")
-                existing_title = existing_movie.title.get(language)
-                existing_synopsis = existing_movie.synopsis.get(language)
-
-                if existing_title is None:
-                    print(f"Adding title for language {language}")
-                    existing_movie.title[language] = movie['title']
-                else:
-                    print(f"Title already exists for language {language}, not overwriting")
-
-                if existing_synopsis is None:
-                    print(f"Adding synopsis for language {language}")
-                    existing_movie.synopsis[language] = movie['overview']
-                else:
-                    print(f"Synopsis already exists for language {language}, not overwriting")
-
+                self.db_session.add(Movie(id=existing_movie.id, title={f"{language}":movie['title']}))
+                self.db_session.add(Movie(id=existing_movie.id, synopsis={f"{language}":movie['overview']}))
                 self.db_session.commit()
 
         if video:
