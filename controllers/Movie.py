@@ -75,13 +75,11 @@ class MovieService:
                 self.db_session.commit()
                 self.set_genres_with_movie(movie)
             else:
-                print(f"Updating existing movie: {existing_movie.id}")
-                if language not in existing_movie.title:
-                    existing_movie.title[language] = movie['title']
-                    print(f"CAMBIAMOS TITULO AHORA TENEMOS ESTOS TITULOS {existing_movie.title}")
-                if language not in existing_movie.synopsis:
-                    print(f"CAMBIAMOS descripcion AHORA TENEMOS ESTOS descripcionS {existing_movie.synopsis}")
-                    existing_movie.synopsis[language] = movie['overview']
+
+                existing_movie.title[language] = movie['title']
+                print(f"CAMBIAMOS TITULO AHORA TENEMOS ESTOS TITULOS {existing_movie.title}")
+                print(f"CAMBIAMOS descripcion AHORA TENEMOS ESTOS descripcionS {existing_movie.synopsis}")
+                existing_movie.synopsis[language] = movie['overview']
                 self.db_session.commit()
 
         if video:
