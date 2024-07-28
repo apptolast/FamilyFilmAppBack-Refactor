@@ -14,7 +14,7 @@ router = APIRouter(
 MovieServiceRepository = MovieService(session)
 
 returns = DataTransfer()
-@router.get("/{page}")
+@router.get("/catalogue/{page}")
 async def get_movies(page:int,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
     MovieServiceRepository.download_movie(returns.get_user_id(user.id).language,page)
