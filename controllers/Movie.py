@@ -40,12 +40,15 @@ class MovieService:
     
 
     def dowload_movie(self,language,page,adult = True ,video = True):
-        
+
+        print(f"EL LENGUAGE EN LA FUNCION DOWLOAD ES {language}")
+
         if page > 500:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="the page limit is 500 ")
         
         movie_dowloads = []
         url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&&page={page}"
+        
         for movie in self.api_start(url)['results']:
             existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
 
