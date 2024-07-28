@@ -68,6 +68,7 @@ class MovieService:
                 self.set_genres_with_movie(movie)
                 
             else:
+                print(f"probamos aqui tambien el existing {existing_movie}")
                 existing_movie.title = {**existing_movie.title, language: movie['title']}
                 existing_movie.synopsis = {**existing_movie.synopsis, language: movie['overview']}
                 self.db_session.commit()
