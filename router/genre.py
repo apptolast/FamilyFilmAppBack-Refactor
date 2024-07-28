@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from config.db import session
 from controllers.Genre import GenreService
-
+from controllers.DataTransfer import DataTransfer
 
 router = APIRouter(
     prefix="/genres",
@@ -10,7 +10,6 @@ router = APIRouter(
 
 GenreServiceRepository = GenreService(session)
 returns = DataTransfer()
-
 @router.post("")
 async def dowload_genres(me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
