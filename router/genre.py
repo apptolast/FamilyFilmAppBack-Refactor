@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
 from config.db import session
 from controllers.Genre import GenreService
 from controllers.DataTransfer import DataTransfer
