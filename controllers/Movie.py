@@ -58,8 +58,8 @@ class MovieService:
             print(f"Checking movie: {movie['id']}")
 
             if existing_movie is None:
+                # Add new movie if it doesn't exist
                 print(f"Adding new movie: {movie['title']}")
-                movie_downloads.append(movie)
                 self.db_session.add(Movie(
                     id=movie['id'],
                     title={language: movie['title']},
@@ -73,8 +73,10 @@ class MovieService:
                 self.db_session.commit()
                 self.set_genres_with_movie(movie)
             else:
-                self.db_session.add(Movie(id=existing_movie.id, title={f"{language}":movie['title']}))
-                self.db_session.add(Movie(id=existing_movie.id, synopsis={f"{language}":movie['overview']}))
+                # Update existing movie
+                print(f"Updating existing movie: {existing_movie.id}")
+                existing_movie.title[language] = movie['title']
+                existing_movie.synopsis[language] = movie['overview']
                 self.db_session.commit()
 
         if video:
