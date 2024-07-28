@@ -38,45 +38,102 @@ class MovieService:
             self.db_session.rollback()
             raise HTTPException(status_code=500, detail=f"An error occurred:  {str(e)}")
     
-
-    def dowload_movie(self,language,page,adult = True ,video = True):
-
+    def dowload_movie(self, language, page, adult=True, video=True):
         print(f"EL LENGUAGE EN LA FUNCION DOWLOAD ES {language}")
 
         if page > 500:
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="the page limit is 500 ")
-        
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The page limit is 500")
+
         movie_dowloads = []
-        url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&&page={page}"
-        print(url)
-        for movie in self.api_start(url)['results']:
+        url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&page={page}"
+        print(f"Request URL: {url}")
+
+        movies = self.api_start(url)['results']
+        print(f"Movies fetched: {len(movies)}")
+
+        for movie in movies:
             existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
-            print(existing_movie)
+            print(f"Checking movie: {movie['id']}")
+
             if existing_movie is None:
+                print(f"Adding new movie: {movie['title']}")
                 movie_dowloads.append(movie)
                 self.db_session.add(Movie(
-                    id =movie['id'],
-                    title ={language: movie['title']},
-                    synopsis ={language: movie['overview']},
-                    image =movie['poster_path'],
-                    adult =movie['adult'],
+                    id=movie['id'],
+                    title={language: movie['title']},
+                    synopsis={language: movie['overview']},
+                    image=movie['poster_path'],
+                    adult=movie['adult'],
                     release_date=movie['release_date'],
                     rating_average=movie['vote_average'],
                     rating_value=movie['vote_count']
                 ))
                 self.db_session.commit()
                 self.set_genres_with_movie(movie)
-                
             else:
-                print(f"probamos aqui tambien el existing {existing_movie}")
-                existing_movie.title = {**existing_movie.title, language: movie['title']}
-                existing_movie.synopsis = {**existing_movie.synopsis, language: movie['overview']}
+                print(f"Updating existing movie: {existing_movie.id}")
+                existing_title = existing_movie.title.get(language, None)
+                existing_synopsis = existing_movie.synopsis.get(language, None)
+
+                if existing_title is None:
+                    print(f"Adding title for language {language}")
+                    existing_movie.title[language] = movie['title']
+                else:
+                    print(f"Title already exists for language {language}, not overwriting")
+                
+                if existing_synopsis is None:
+                    print(f"Adding synopsis for language {language}")
+                    existing_movie.synopsis[language] = movie['overview']
+                else:
+                    print(f"Synopsis already exists for language {language}, not overwriting")
+                
                 self.db_session.commit()
-            
+
         if video:
+            print(f"Fetching movies with video set to False")
             return self.dowload_movie(language, page, video=False, adult=adult)
         elif adult:
+            print(f"Fetching movies with adult set to False")
             return self.dowload_movie(language, page, video=video, adult=False)
+
+    # def dowload_movie(self,language,page,adult = True ,video = True):
+
+    #     print(f"EL LENGUAGE EN LA FUNCION DOWLOAD ES {language}")
+
+    #     if page > 500:
+    #         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="the page limit is 500 ")
+        
+    #     movie_dowloads = []
+    #     url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&&page={page}"
+    #     print(url)
+    #     for movie in self.api_start(url)['results']:
+    #         existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
+    #         print(existing_movie)
+    #         if existing_movie is None:
+    #             movie_dowloads.append(movie)
+    #             self.db_session.add(Movie(
+    #                 id =movie['id'],
+    #                 title ={language: movie['title']},
+    #                 synopsis ={language: movie['overview']},
+    #                 image =movie['poster_path'],
+    #                 adult =movie['adult'],
+    #                 release_date=movie['release_date'],
+    #                 rating_average=movie['vote_average'],
+    #                 rating_value=movie['vote_count']
+    #             ))
+    #             self.db_session.commit()
+    #             self.set_genres_with_movie(movie)
+                
+    #         else:
+    #             print(f"probamos aqui tambien el existing {existing_movie}")
+    #             existing_movie.title = {**existing_movie.title, language: movie['title']}
+    #             existing_movie.synopsis = {**existing_movie.synopsis, language: movie['overview']}
+    #             self.db_session.commit()
+            
+    #     if video:
+    #         return self.dowload_movie(language, page, video=False, adult=adult)
+    #     elif adult:
+    #         return self.dowload_movie(language, page, video=video, adult=False)
 
     def set_genres_with_movie(self,movie):
         genres = movie['genre_ids']
