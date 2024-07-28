@@ -48,10 +48,10 @@ class MovieService:
         
         movie_dowloads = []
         url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&&page={page}"
-        
+        print(url)
         for movie in self.api_start(url)['results']:
             existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
-
+            print(existing_movie)
             if existing_movie is None:
                 movie_dowloads.append(movie)
                 self.db_session.add(Movie(
