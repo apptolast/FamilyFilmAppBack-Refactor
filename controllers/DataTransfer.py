@@ -58,7 +58,6 @@ class DataTransfer:
                 # genres = genres_data
                 movie
         )
-        )
         return movies_response
     
     def get_group(self,group_id, language):
