@@ -23,7 +23,6 @@ class DataTransfer:
 
     session = session
  
-    
     def get_movie_datatransfer(self, id: int, language: str):
         # Obtener la película desde el repositorio
         movie = self.MovieServiceRepository.get_movie_id(id)
@@ -38,8 +37,8 @@ class DataTransfer:
         
         # Verificar que el título y la sinopsis existen en el idioma solicitado
         if not movie.title.get(language) or not movie.synopsis.get(language):
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found in the specified language")
-        
+           return
+         
         # Retornar la respuesta de la película
         return MovieResponse(
             id=movie.id,
