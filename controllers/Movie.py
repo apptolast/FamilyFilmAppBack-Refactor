@@ -1,4 +1,5 @@
 import os
+from controllers.Genre import GenreService
 from fastapi import HTTPException,status
 import requests
 from models.GenreMovie import GenreMovie
@@ -9,9 +10,11 @@ from sqlalchemy import func, text
 
 class MovieService:
 
+
     def __init__(self,db_session):
         self.db_session = db_session
     
+
     def get_movies(self,page):
         
         items_per_page = 20
@@ -165,7 +168,7 @@ class MovieService:
 
     def get_movie_or_none(self, id: int, language: str):
         # Obtener la película desde el repositorio
-        movie = self.MovieServiceRepository.get_movie_id(id)
+        movie = self.get_movie_id(id)
         
         # Verificar si la película existe
         if movie is None:
@@ -173,7 +176,7 @@ class MovieService:
         
         # Obtener los géneros asociados con la película
         genres_in_movie = self.db_session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
-        genres_name = [self.GenreServiceRepository.get_genre(language, genre.id_genre).name for genre in genres_in_movie]
+        genres_name = [GenreService(self.db_session).get_genre(language, genre.id_genre).name for genre in genres_in_movie]
         
         # Verificar que el título y la sinopsis existen en el idioma solicitado
         if not movie.title.get(language) or not movie.synopsis.get(language):
