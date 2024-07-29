@@ -126,15 +126,18 @@ class MovieService:
                 self.db_session.add(new_movie)
             else:
                 # Update existing movie's title and synopsis
-                if isinstance(existing_movie.title, dict):
-                    existing_movie.title[language] = movie['title']
-                else:
-                    existing_movie.title = {language: movie['title']}
+                if not isinstance(existing_movie.title, dict):
+                    print(f"Existing movie title is not a dict: {existing_movie.title}")
+                    existing_movie.title = {}
+                if not isinstance(existing_movie.synopsis, dict):
+                    print(f"Existing movie synopsis is not a dict: {existing_movie.synopsis}")
+                    existing_movie.synopsis = {}
 
-                if isinstance(existing_movie.synopsis, dict):
-                    existing_movie.synopsis[language] = movie['overview']
-                else:
-                    existing_movie.synopsis = {language: movie['overview']}
+                existing_movie.title[language] = movie['title']
+                existing_movie.synopsis[language] = movie['overview']
+
+                print(f"Updated title: {existing_movie.title}")
+                print(f"Updated synopsis: {existing_movie.synopsis}")
 
             # Commit the changes after each loop iteration
             try:
@@ -143,9 +146,6 @@ class MovieService:
                 self.db_session.rollback()
                 print(f"Error committing changes: {e}")
                 continue
-
-            print(f"TITULOS ACTUALIZADOS: {existing_movie.title}")
-            print(f"DESCRIPCIONES ACTUALIZADAS: {existing_movie.synopsis}")
 
         if video:
             print(f"Fetching movies with video set to False")
