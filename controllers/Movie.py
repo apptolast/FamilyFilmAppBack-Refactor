@@ -91,27 +91,22 @@ class MovieService:
     #     return movie_downloads
 
     def download_movie(self, language, page, adult=True, video=True):
-        print(f"EL LENGUAJE EN LA FUNCION DOWNLOAD ES {language}")
 
         if page > 500:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The page limit is 500")
 
         movie_downloads = []
         url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&page={page}"
-        print(f"Request URL: {url}")
 
         # Fetch the movies
         response = self.api_start(url)
         movies = response.get('results', [])
-        print(f"Movies fetched: {len(movies)}")
 
         for movie in movies:
             existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
-            print(f"Checking movie: {movie['id']}")
             movie_downloads.append(movie)
             if existing_movie is None:
                 # Add new movie if it doesn't exist
-                print(f"Adding new movie: {movie['title']}")
                 new_movie = Movie(
                     id=movie['id'],
                     title={language: movie['title']},
@@ -126,17 +121,13 @@ class MovieService:
             else:
                 # Update existing movie's title and synopsis
                 if not isinstance(existing_movie.title, dict):
-                    print(f"Existing movie title is not a dict: {existing_movie.title}")
                     existing_movie.title = {}
                 if not isinstance(existing_movie.synopsis, dict):
-                    print(f"Existing movie synopsis is not a dict: {existing_movie.synopsis}")
                     existing_movie.synopsis = {}
 
                 existing_movie.title[language] = movie['title']
                 existing_movie.synopsis[language] = movie['overview']
 
-                print(f"Updated title: {existing_movie.title}")
-                print(f"Updated synopsis: {existing_movie.synopsis}")
 
             # Commit the changes after each loop iteration
             try:
