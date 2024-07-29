@@ -4,6 +4,7 @@ import requests
 from models.GenreMovie import GenreMovie
 from models.Movie import Movie
 from models.Language import Language
+from schema.Movie import MovieResponse
 from sqlalchemy import func, text
 
 class MovieService:
@@ -162,5 +163,33 @@ class MovieService:
             "Authorization": os.getenv('header_authorization')
         }).json()
 
+    def get_movie_or_none(self, id: int, language: str):
+        # Obtener la película desde el repositorio
+        movie = self.MovieServiceRepository.get_movie_id(id)
+        
+        # Verificar si la película existe
+        if movie is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found")
+        
+        # Obtener los géneros asociados con la película
+        genres_in_movie = self.db_session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
+        genres_name = [self.GenreServiceRepository.get_genre(language, genre.id_genre).name for genre in genres_in_movie]
+        
+        # Verificar que el título y la sinopsis existen en el idioma solicitado
+        if not movie.title.get(language) or not movie.synopsis.get(language):
+            return None
+        
+        # Retornar la respuesta de la película
+        return MovieResponse(
+            id=movie.id,
+            title=movie.title[language],
+            synopsis=movie.synopsis[language],
+            image=movie.image,
+            adult=movie.adult,
+            release_date=movie.release_date,
+            rating_average=movie.rating_average,
+            rating_value=movie.rating_value,
+            genres=genres_name,
+        )
 
 
