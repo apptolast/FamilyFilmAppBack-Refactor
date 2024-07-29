@@ -91,7 +91,7 @@ class MovieService:
     #     return movie_downloads
 
     def download_movie(self, language, page, adult=True, video=True):
-        print(f"EL LENGUAGE EN LA FUNCION DOWNLOAD ES {language}")
+        print(f"EL LENGUAJE EN LA FUNCION DOWNLOAD ES {language}")
 
         if page > 500:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="The page limit is 500")
@@ -124,15 +124,28 @@ class MovieService:
                     rating_value=movie['vote_count']
                 )
                 self.db_session.add(new_movie)
-                self.db_session.commit()
-                self.set_genres_with_movie(movie)
             else:
-                # Update existing movie
-                existing_movie.title = {**existing_movie.title, language: movie['title']}
-                existing_movie.synopsis = {**existing_movie.synopsis, language: movie['overview']}
+                # Update existing movie's title and synopsis
+                if isinstance(existing_movie.title, dict):
+                    existing_movie.title[language] = movie['title']
+                else:
+                    existing_movie.title = {language: movie['title']}
+
+                if isinstance(existing_movie.synopsis, dict):
+                    existing_movie.synopsis[language] = movie['overview']
+                else:
+                    existing_movie.synopsis = {language: movie['overview']}
+
+            # Commit the changes after each loop iteration
+            try:
                 self.db_session.commit()
-                print(f"CAMBIAMOS TITULO AHORA TENEMOS ESTOS TITULOS {existing_movie.title}")
-                print(f"CAMBIAMOS descripcion AHORA TENEMOS ESTOS descripcionS {existing_movie.synopsis}")
+            except Exception as e:
+                self.db_session.rollback()
+                print(f"Error committing changes: {e}")
+                continue
+
+            print(f"TITULOS ACTUALIZADOS: {existing_movie.title}")
+            print(f"DESCRIPCIONES ACTUALIZADAS: {existing_movie.synopsis}")
 
         if video:
             print(f"Fetching movies with video set to False")
