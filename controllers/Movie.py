@@ -25,7 +25,7 @@ class MovieService:
              raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios {e}")
 
 
-    def get_movies_by_language(self, language, search_keyword=None):
+    def get_movies_by_name(self, language, search_keyword=None):
 
         query = self.db_session.query(
             Movie.id,
@@ -157,7 +157,7 @@ class MovieService:
             movie_downloads.append(movie)
 
         if adult:
-            return self.download_movie_by_name(language, page, adult=False)
+            return self.download_movie_by_name(language, name ,page, adult=False)
 
         return {len(movie_downloads):movie_downloads}
     
