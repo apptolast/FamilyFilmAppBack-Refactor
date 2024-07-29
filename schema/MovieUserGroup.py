@@ -8,3 +8,6 @@ class MovieUserGroup(BaseModel):
     id_user:int
     id_group:int
     toWatch:Optional[bool] = None
+
+class MovieSearchName(BaseModel):
+    name:str

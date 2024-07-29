@@ -23,7 +23,7 @@ class DataTransfer:
 
     session = session
  
-
+    
     def get_movie_datatransfer(self, id: int, language: str):
         # Obtener la película desde el repositorio
         movie = self.MovieServiceRepository.get_movie_id(id)
