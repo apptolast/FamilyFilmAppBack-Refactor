@@ -54,13 +54,32 @@ class DataTransfer:
         )
 
     
-    def get_movies_datatransfer(self,language,page):
-        movies = self.MovieServiceRepository.get_movies(page)
+    def get_movies_datatransfer(self, language, page, page_size=20):
         movies_response = []
-        for movie in movies:
-            movies_response.append(
-                self.get_movie_datatransfer(movie.id,language)
-            )
+        while len(movies_response) < page_size:
+                movies = self.MovieServiceRepository.get_movies(page)
+                for movie in movies:
+                    # Verificar si la película tiene datos en el idioma solicitado
+                    if language in movie.title and language in movie.synopsis:
+                        # Obtener géneros de la película en el idioma solicitado
+                        genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
+                        genres_data = [
+                            self.GenreServiceRepository.get_genre(language, genre.id_genre).name
+                            for genre in genres_in_movie
+                        ]
+                        # Crear la respuesta de la película con los datos en el idioma solicitado
+                        movies_response.append({
+                            'id': movie.id,
+                            'synopsis': movie.synopsis[language],
+                            'title': movie.title[language],
+                            'image': movie.image,
+                            'adult': movie.adult,
+                            'release_date': movie.release_date,
+                            'rating_value': movie.rating_value,
+                            'rating_average': movie.rating_average,
+                            'genres': genres_data
+                        })
+                page+1
         return movies_response
     
     def get_group(self,group_id, language):
