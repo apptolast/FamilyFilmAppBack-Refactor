@@ -11,7 +11,7 @@ from models.Group import Group
 from models.Language import Language
 from schema.Group import groupSchema, usuarito
 from schema.Movie import MovieResponse
-from fastapi import HTTPException
+from fastapi import HTTPException,status
 
 class DataTransfer:
 
