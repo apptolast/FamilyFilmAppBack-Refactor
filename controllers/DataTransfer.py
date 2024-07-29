@@ -42,9 +42,11 @@ class DataTransfer:
         )
     
     def get_movies_datatransfer(self,language,page):
+        print("entrando en la funcion...")
         movies = self.MovieServiceRepository.get_movies(page)
         movies_response = []
         for movie in movies:
+            print(movie)
             genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
             genres_data = [self.GenreServiceRepository.get_genre(language,genre.id_genre).name for genre in genres_in_movie]
             print(f"MOVIE EN GET_MOVIES_DATATRANSFER {movie}")
@@ -63,7 +65,6 @@ class DataTransfer:
             movie
             )
         return movies
-        return movies_response
     
     def get_group(self,group_id, language):
         group_data = self.GroupServiceRepository.get_group_id(group_id)
