@@ -39,28 +39,23 @@ class MovieService:
             raise HTTPException(status_code=500, detail=f"An error occurred:  {str(e)}")
     
     def download_movie(self, language, page, adult=True, video=True):
-
         if page > 500:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The page limit is 500")
 
         movie_downloads = []
         url = f"https://api.themoviedb.org/3/discover/movie?include_adult={adult}&include_video={video}&language={language}&sort_by=popularity.desc&page={page}"
 
-        # Fetch the movies
         response = self.api_start(url)
         movies = response.get('results', [])
 
         for movie in movies:
             existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
-            movie_downloads.append(movie)
 
             if existing_movie is None:
-                # Add new movie if it doesn't exist
-                print(f"Adding new movie: {movie['title']}")
                 new_movie = Movie(
                     id=movie['id'],
-                    title={language: movie['title']},
-                    synopsis={language: movie['overview']},
+                    title={f"{language}": movie['title']},
+                    synopsis={f"{language}": movie['overview']},
                     image=movie['poster_path'],
                     adult=movie['adult'],
                     release_date=movie['release_date'],
@@ -68,29 +63,18 @@ class MovieService:
                     rating_value=movie['vote_count']
                 )
                 self.db_session.add(new_movie)
+                self.db_session.commit()
 
-                # Commit all changes once after all movies are processed
-                try:
-                    self.db_session.commit()
-                except Exception as e:
-                    self.db_session.rollback()
-
+                movie_downloads.append(new_movie)
             else:
-                # Update existing movie's title and synopsis
-                title_data = existing_movie.title if isinstance(existing_movie.title, dict) else {}
-                synopsis_data = existing_movie.synopsis if isinstance(existing_movie.synopsis, dict) else {}
+                existing_movie.title = {**existing_movie.title, language: movie['title']}
+                existing_movie.synopsis = {**existing_movie.synopsis, language: movie['overview']}
+                self.db_session.commit()
 
-                title_data[language] = movie['title']
-                synopsis_data[language] = movie['overview']
-
-                existing_movie.title = title_data
-                existing_movie.synopsis = synopsis_data
-
-                try:
-                    self.db_session.commit()
-                except Exception as e:
-                    self.db_session.rollback()
-            
+            try:
+                self.db_session.commit()
+            except Exception as e:
+                self.db_session.rollback()
 
         # if video:
         #     return self.download_movie(language, page, video=False, adult=adult)
