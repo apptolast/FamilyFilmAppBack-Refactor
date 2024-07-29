@@ -50,7 +50,7 @@ class MovieService:
 
         for movie in movies:
             existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
-
+            
             if existing_movie is None:
                 new_movie = Movie(
                     id=movie['id'],
@@ -75,6 +75,8 @@ class MovieService:
                 self.db_session.commit()
             except Exception as e:
                 self.db_session.rollback()
+            
+            movie_downloads.append(movie)
 
         # if video:
         #     return self.download_movie(language, page, video=False, adult=adult)
