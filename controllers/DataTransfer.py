@@ -72,7 +72,7 @@ class DataTransfer:
                             for genre in genres_in_movie
                         ]
                         # Crear la respuesta de la película con los datos en el idioma solicitado
-                        movies_response.append({
+                        movies_response.append(
                             MovieResponse(
                                 id=movie.id,
                                 title=movie.title[language],
@@ -84,7 +84,7 @@ class DataTransfer:
                                 rating_value=movie.rating_value,
                                 genres=genres_data,
                              )
-                        })
+                        )
 
                 page =+1
 
