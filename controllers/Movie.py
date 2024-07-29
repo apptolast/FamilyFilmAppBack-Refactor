@@ -56,7 +56,7 @@ class MovieService:
         for movie in movies:
             existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
             print(f"Checking movie: {movie['id']}")
-            movie_downloads.append(new_movie)
+            movie_downloads.append(movie)
 
             if existing_movie is None:
                 # Add new movie if it doesn't exist
