@@ -62,6 +62,7 @@ class DataTransfer:
         # ))
             movie
             )
+        return movies
         return movies_response
     
     def get_group(self,group_id, language):
