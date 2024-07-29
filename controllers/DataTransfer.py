@@ -46,7 +46,7 @@ class DataTransfer:
         for movie in movies:
             genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
             genres_data = [self.GenreServiceRepository.get_genre(language,genre.id_genre).name for genre in genres_in_movie]
-            
+            print(movie)
             movies_response.append(
         #         MovieResponse(
         #         id = movie.id,
