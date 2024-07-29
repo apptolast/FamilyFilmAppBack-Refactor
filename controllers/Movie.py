@@ -78,10 +78,10 @@ class MovieService:
             
             movie_downloads.append(movie)
 
-        # if video:
-        #     return self.download_movie(language, page, video=False, adult=adult)
-        # elif adult:
-        #     return self.download_movie(language, page, video=video, adult=False)
+        if video:
+            return self.download_movie(language, page, video=False, adult=adult)
+        elif adult:
+            return self.download_movie(language, page, video=video, adult=False)
 
         return {len(movie_downloads):movie_downloads}
     

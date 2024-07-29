@@ -23,46 +23,45 @@ class DataTransfer:
 
     session = session
  
-    def get_movie_datatransfer(self,id,language):
+
+    def get_movie_datatransfer(self, id: int, language: str):
+        # Obtener la película desde el repositorio
         movie = self.MovieServiceRepository.get_movie_id(id)
-        genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
-        genres_name = [self.GenreServiceRepository.get_genre(language,genre.id_genre).name for genre in genres_in_movie]
         
-        return movie
-        MovieResponse(
-                id = movie.id,
-                title = movie.title[language],
-                synopsis = movie.synopsis[language],
-                image = movie.image,
-                adult = movie.adult,
-                release_date = movie.release_date,
-                rating_average = movie.rating_average,
-                rating_value = movie.rating_value,
-                genres = genres_name,
+        # Verificar si la película existe
+        if movie is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found")
+        
+        # Obtener los géneros asociados con la película
+        genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
+        genres_name = [self.GenreServiceRepository.get_genre(language, genre.id_genre).name for genre in genres_in_movie]
+        
+        # Verificar que el título y la sinopsis existen en el idioma solicitado
+        if not movie.title.get(language) or not movie.synopsis.get(language):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found in the specified language")
+        
+        # Retornar la respuesta de la película
+        return MovieResponse(
+            id=movie.id,
+            title=movie.title[language],
+            synopsis=movie.synopsis[language],
+            image=movie.image,
+            adult=movie.adult,
+            release_date=movie.release_date,
+            rating_average=movie.rating_average,
+            rating_value=movie.rating_value,
+            genres=genres_name,
         )
+
     
     def get_movies_datatransfer(self,language,page):
         movies = self.MovieServiceRepository.get_movies(page)
         movies_response = []
         for movie in movies:
-            print(movie)
-            genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
-            genres_data = [self.GenreServiceRepository.get_genre(language,genre.id_genre).name for genre in genres_in_movie]
             movies_response.append(
-        #         MovieResponse(
-        #         id = movie.id,
-        #         synopsis = movie.synopsis[language],
-        #         title = movie.title[language],
-        #         image = movie.image,
-        #         adult = movie.adult,
-        #         release_date = movie.release_date,
-        #         rating_value = movie.rating_value,
-        #         rating_average = movie.rating_average,
-        #         genres = genres_data
-        # ))
-            movie
+                self.get_movie_datatransfer(movie.id,language)
             )
-        return movies
+        return movies_response
     
     def get_group(self,group_id, language):
         group_data = self.GroupServiceRepository.get_group_id(group_id)
