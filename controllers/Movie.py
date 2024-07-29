@@ -24,37 +24,6 @@ class MovieService:
              self.db_session.rollback()
              raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios {e}")
 
-
-    def get_movies_by_name(self, language, search_keyword=None):
-
-        query = self.db_session.query(
-            Movie.id,
-            text(f" Movie.title->>'{language}' AS title"),
-            text(f" Movie.synopsis->>'{language}' AS synopsis"),
-            Movie.image,
-            Movie.adult,
-            Movie.release_date,
-            Movie.rating_value,
-            Movie.rating_average
-        ).filter(
-            text(f" Movie.title ? '{language}' AND  Movie.synopsis ? '{language}'")
-        )
-
-
-        if search_keyword:
-            search_pattern = f"%{search_keyword}%"
-            query = query.filter(
-                text(f" Movie.title->>'{language}' LIKE :pattern OR     Movie.synopsis->>'{language}' LIKE :pattern")
-            ).params(pattern=search_pattern)
-
-        movies = query.all()
-
-        return [
-            {"id":movie.id}
-            for movie in movies
-        ]
-
-
     def get_movie_id(self,movie_id):
         try:
             movie = self.db_session.query(Movie).filter(Movie.id == movie_id).first()
@@ -159,7 +128,7 @@ class MovieService:
         if adult:
             return self.download_movie_by_name(language, name ,page, adult=False)
 
-        return {len(movie_downloads):movie_downloads}
+        return movie_downloads
     
     def set_genres_with_movie(self,movie):
         genres = movie['genre_ids']
