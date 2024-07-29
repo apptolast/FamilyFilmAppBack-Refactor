@@ -17,8 +17,10 @@ returns = DataTransfer()
 @router.get("/catalogue/{page}")
 async def get_movies(page:int,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    MovieServiceRepository.download_movie(returns.get_user_id(user.id).language,page)
-    return returns.get_movies_datatransfer(returns.get_user_id(user.id).language,page)
+    # MovieServiceRepository.download_movie(returns.get_user_id(user.id).language,page)
+    # return returns.get_movies_datatransfer(returns.get_user_id(user.id).language,page)
+    return MovieServiceRepository.download_movie(returns.get_user_id(user.id).language,page)
+
 
 @router.get("/{id}")
 async def get_movies(id:int,me = Depends(UserServiceRepository.auth_user)):
