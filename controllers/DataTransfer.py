@@ -58,6 +58,10 @@ class DataTransfer:
         movies_response = []
         while len(movies_response) < page_size:
                 movies = self.MovieServiceRepository.get_movies(page)
+
+                if not movies:
+                    break
+
                 for movie in movies:
                     # Verificar si la película tiene datos en el idioma solicitado
                     if language in movie.title and language in movie.synopsis:
@@ -69,18 +73,22 @@ class DataTransfer:
                         ]
                         # Crear la respuesta de la película con los datos en el idioma solicitado
                         movies_response.append({
-                            'id': movie.id,
-                            'synopsis': movie.synopsis[language],
-                            'title': movie.title[language],
-                            'image': movie.image,
-                            'adult': movie.adult,
-                            'release_date': movie.release_date,
-                            'rating_value': movie.rating_value,
-                            'rating_average': movie.rating_average,
-                            'genres': genres_data
+                            MovieResponse(
+                                id=movie.id,
+                                title=movie.title[language],
+                                synopsis=movie.synopsis[language],
+                                image=movie.image,
+                                adult=movie.adult,
+                                release_date=movie.release_date,
+                                rating_average=movie.rating_average,
+                                rating_value=movie.rating_value,
+                                genres=genres_data,
+                             )
                         })
-                page+1
-        return movies_response
+
+                page =+1
+
+        return movies_response[:page_size]
     
     def get_group(self,group_id, language):
         group_data = self.GroupServiceRepository.get_group_id(group_id)
