@@ -29,22 +29,22 @@ class MovieService:
 
         query = self.db_session.query(
             Movie.id,
-            text(f"movies.title->>'{language}' AS title"),
-            text(f"movies.synopsis->>'{language}' AS synopsis"),
+            text(f" Movie.title->>'{language}' AS title"),
+            text(f" Movie.synopsis->>'{language}' AS synopsis"),
             Movie.image,
             Movie.adult,
             Movie.release_date,
             Movie.rating_value,
             Movie.rating_average
         ).filter(
-            text(f"movies.title ? '{language}' AND movies.synopsis ? '{language}'")
+            text(f" Movie.title ? '{language}' AND  Movie.synopsis ? '{language}'")
         )
 
 
         if search_keyword:
             search_pattern = f"%{search_keyword}%"
             query = query.filter(
-                text(f"movies.title->>'{language}' LIKE :pattern OR movies.synopsis->>'{language}' LIKE :pattern")
+                text(f" Movie.title->>'{language}' LIKE :pattern OR     Movie.synopsis->>'{language}' LIKE :pattern")
             ).params(pattern=search_pattern)
 
         movies = query.all()
