@@ -147,12 +147,12 @@ class MovieService:
                 print(f"Error committing changes: {e}")
                 continue
 
-        if video:
-            print(f"Fetching movies with video set to False")
-            return self.download_movie(language, page, video=False, adult=adult)
-        elif adult:
-            print(f"Fetching movies with adult set to False")
-            return self.download_movie(language, page, video=video, adult=False)
+        # if video:
+        #     print(f"Fetching movies with video set to False")
+        #     return self.download_movie(language, page, video=False, adult=adult)
+        # elif adult:
+        #     print(f"Fetching movies with adult set to False")
+        #     return self.download_movie(language, page, video=video, adult=False)
 
         return movie_downloads
 
