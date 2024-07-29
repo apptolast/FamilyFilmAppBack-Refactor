@@ -37,8 +37,8 @@ class DataTransfer:
         
         # Verificar que el título y la sinopsis existen en el idioma solicitado
         if not movie.title.get(language) or not movie.synopsis.get(language):
-           return
-         
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movie not found in the specified language")
+        
         # Retornar la respuesta de la película
         return MovieResponse(
             id=movie.id,
@@ -102,12 +102,14 @@ class DataTransfer:
         movies_to_watched = []
         if len(group_data) > 0:
             for group in group_data:
+                movie = self.MovieServiceRepository.get_movie_or_none(group.id_movie,language)
+                if movie is None:
+                    pass
                 if group.toWatch == True and group.id_movie != 0:
-                    print(self.get_movie_datatransfer(group.id_movie,language))
-                    movies_to_watched.append(self.get_movie_datatransfer(group.id_movie,language))
+                    movies_to_watched.append(movie)
                 if group.toWatch == False and group.id_movie != 0:
-                    print(self.get_movie_datatransfer(group.id_movie,language))
-                    movies_to_watch.append(self.get_movie_datatransfer(group.id_movie,language))
+                    
+                    movies_to_watch.append(movie)
 
         return groupSchema(
                 id = group_data[0].id_group ,
