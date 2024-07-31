@@ -27,16 +27,14 @@ class DataTransfer:
 
     def get_recomendation_movie(self,id_group):
         users = self.get_group(id_group,"es").users
-        print(users)
 
         users_en = sum(1
                         for user in users
                         if user.language == "en")
         
-        print(users_en)
-        recommended_language = "en" if users_en >= (len(users) - len(users_en)) else "es"
+        recommended_language = "en" if users_en >= (len(users) - users_en) else "es"
         movies = self.get_group(id_group,recommended_language).to_Watch
-        print(movies)
+
         if len(movies) > 0:
             return random.choice(movies)
         
@@ -75,6 +73,7 @@ class DataTransfer:
     
     def get_movies_datatransfer(self, language, page, page_size=20):
         movies_response = []
+
         while len(movies_response) < page_size:
                 movies = self.MovieServiceRepository.get_movies(page,language)
 
@@ -179,6 +178,40 @@ class DataTransfer:
     def call_to_update_movies_peer_week(self, genre_service: GenreService):
         return self.MovieServiceRepository.update_movies(genre_service=genre_service)
     
+    def get_movies_datatransfer_by_name(self, language, page, name, page_size=20):
+        movies_response = []
+        
+        while len(movies_response) < page_size:
+                movies = self.MovieServiceRepository.get_movie_name(page,language,name)
 
+                if not movies:
+                    break
 
+                for movie in movies:
+                    # Verificar si la película tiene datos en el idioma solicitado
+                    if language in movie.title and language in movie.synopsis:
+                        # Obtener géneros de la película en el idioma solicitado
+                        genres_in_movie = session.query(GenreMovie).filter(GenreMovie.id_movie == movie.id).all()
+                        genres_data = [
+                            self.GenreServiceRepository.get_genre(language, genre.id_genre).name
+                            for genre in genres_in_movie
+                        ]
+                        # Crear la respuesta de la película con los datos en el idioma solicitado
+                        movies_response.append(
+                            MovieResponse(
+                                id=movie.id,
+                                title=movie.title[language],
+                                synopsis=movie.synopsis[language],
+                                image=movie.image,
+                                adult=movie.adult,
+                                release_date=movie.release_date,
+                                rating_average=movie.rating_average,
+                                rating_value=movie.rating_value,
+                                genres=genres_data,
+                             )
+                        )
+
+                page =+1
+
+        return movies_response[:page_size]
     
