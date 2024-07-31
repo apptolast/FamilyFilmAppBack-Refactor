@@ -29,7 +29,7 @@ class UserSchemaResponse(BaseModel):
     
     id:int
     email: EmailStr
-    language:Optional[int] = None
+    language:Optional[str] = None
     provider:str
 
 

@@ -15,7 +15,7 @@ class MovieService:
         self.db_session = db_session
     
 
-    def get_movies(self,page):
+    def get_movies(self,page,language):
         
         items_per_page = 20
         start = (page - 1) * items_per_page
@@ -23,6 +23,11 @@ class MovieService:
 
         try:
             movies = self.db_session.query(Movie).slice(start, end).all()
+                   
+            if len(movies) < items_per_page:
+                self.download_movie(language,page)
+                movies = self.db_session.query(Movie).slice(start, end).all()
+
             return movies
         except Exception as e:
              self.db_session.rollback()
@@ -156,9 +161,17 @@ class MovieService:
                     self.db_session.add(associaton)
                     self.db_session.commit()
 
-    # def movie_by_name(self,name,lang):
-    #     existing_movie = self.db_session.query(Movie).filter(Movie.title == name).first()
-    #     if existing_movie is None:
+    def movie_by_name(self,name,language,page):
+        # Construir la consulta para extraer el texto del campo JSON `title` en el idioma especificado
+        movies = (
+            self.db_session.query(Movie)
+            .filter(
+                func.json_extract_path_text(Movie.title, language).ilike(f"%{name}%")
+            )
+            .all()
+        )
+
+        return movies 
 
     def api_start(self,url):
         return requests.get(url, headers={

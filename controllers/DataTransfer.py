@@ -1,4 +1,5 @@
 import logging
+import random
 from controllers.Auth import FirebaseAuthService
 from controllers.Group import GroupService
 from controllers.Movie import MovieService
@@ -22,7 +23,23 @@ class DataTransfer:
     UserServiceRepository = UserService(session,FirebaseAuthService())
 
     session = session
- 
+
+
+    def get_recomendation_movie(self,id_group):
+        users = self.get_group(id_group,"es").users
+        users_en = sum(1
+                        for user in users
+                        if user.language == "en")
+        
+        recommended_language = "en" if users_en >= (len(users) - len(users_en)) else "es"
+        movies = self.get_group(id_group,recommended_language).to_Watch
+
+        if len(movies) > 0:
+            return random.choice(movies)
+        
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movies not found, please add movies")
+        
+
     def get_movie_datatransfer(self, id: int, language: str):
         # Obtener la película desde el repositorio
         movie = self.MovieServiceRepository.get_movie_id(id)
@@ -56,7 +73,7 @@ class DataTransfer:
     def get_movies_datatransfer(self, language, page, page_size=20):
         movies_response = []
         while len(movies_response) < page_size:
-                movies = self.MovieServiceRepository.get_movies(page)
+                movies = self.MovieServiceRepository.get_movies(page,language)
 
                 if not movies:
                     break
@@ -159,8 +176,6 @@ class DataTransfer:
     def call_to_update_movies_peer_week(self, genre_service: GenreService):
         return self.MovieServiceRepository.update_movies(genre_service=genre_service)
     
-    def add_to_watch(self,user_id,group_id,movie_id,language):
-        self.GroupServiceRepository.add_to_watch(user_id,group_id,movie_id)
 
 
     
