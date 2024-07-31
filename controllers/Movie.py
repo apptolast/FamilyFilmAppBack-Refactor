@@ -26,7 +26,7 @@ class MovieService:
                    
             if len(movies) < items_per_page:
                 self.download_movie(language,page)
-                movies = self.db_session.query(Movie).slice(start, end).all()
+                self.get_movies(page,language)
 
             return movies
         except Exception as e:
@@ -99,7 +99,7 @@ class MovieService:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="The page limit is 500")
 
         movie_downloads = []
-        url = f"https://api.themoviedb.org/3/search/movie?query={name}&include_adult={adult}&{language}=es&page={page}"
+        url = f"https://api.themoviedb.org/3/search/movie?query={name}&include_adult={adult}&language={language}&page={page}"
 
         response = self.api_start(url)
         movies = response.get('results', [])
@@ -160,18 +160,31 @@ class MovieService:
                     )
                     self.db_session.add(associaton)
                     self.db_session.commit()
+    
+    def get_movie_name(self,page,language,name):
+        
+        items_per_page = 20
+        start = (page - 1) * items_per_page
+        end = start + items_per_page
 
-    def movie_by_name(self,name,language):
-        # Construir la consulta para extraer el texto del campo JSON `title` en el idioma especificado
-        movies = (
+        try:
+            movies = (
             self.db_session.query(Movie)
             .filter(
                 func.json_extract_path_text(Movie.title, language).ilike(f"%{name}%")
             )
             .all()
         )
+            if len(movies) < items_per_page:
+                self.download_movie_by_name(language,name,page)
+                self.get_movie_name(page,language,name)
+
+            return movies
         
-        return movies
+        except Exception as e:
+             self.db_session.rollback()
+             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios {e}")
+
     
 
     def api_start(self,url):
