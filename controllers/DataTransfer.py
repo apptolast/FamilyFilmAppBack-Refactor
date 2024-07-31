@@ -182,7 +182,7 @@ class DataTransfer:
         movies_response = []
         
         while len(movies_response) < page_size:
-                movies = self.MovieServiceRepository.get_movie_name(page,language,name)
+                movies = self.MovieServiceRepository.get_movie_name(language,name,page)
 
                 if not movies:
                     break

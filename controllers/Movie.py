@@ -26,7 +26,8 @@ class MovieService:
                    
             if len(movies) < items_per_page:
                 self.download_movie(language,page)
-                self.get_movies(page,language)
+                movies = self.db_session.query(Movie).slice(start, end).all()
+
 
             return movies
         except Exception as e:
@@ -161,31 +162,41 @@ class MovieService:
                     self.db_session.add(associaton)
                     self.db_session.commit()
     
-    def get_movie_name(self,page,language,name):
-        
-        items_per_page = 20
-        start = (page - 1) * items_per_page
-        end = start + items_per_page
 
+    def get_movie_name(self,language: str, name: str, page: int, items_per_page = 20):
+        start = (page - 1) * items_per_page
         try:
             movies = (
-            self.db_session.query(Movie)
-            .filter(
-                func.json_extract_path_text(Movie.title, language).ilike(f"%{name}%")
+                self.db_session.query(Movie)
+                .filter(
+                    func.json_extract_path_text(Movie.title, language).ilike(f"%{name}%")
+                )
+                .offset(start)
+                .limit(items_per_page)
+                .all()
             )
-            .all()
-        )
+
+            # Si el número de resultados es menor que items_per_page, descargar más datos
             if len(movies) < items_per_page:
-                self.download_movie_by_name(language,name,page)
-                self.get_movie_name(page,language,name)
+                self.download_movie_by_name(language, name, page)
+                # Volver a intentar la consulta después de descargar más datos
+                movies = (
+                    self.db_session.query(Movie)
+                    .filter(
+                        func.json_extract_path_text(Movie.title, language).ilike(f"%{name}%")
+                    )
+                    .offset(start)
+                    .limit(items_per_page)
+                    .all()
+                )
 
             return movies
         
         except Exception as e:
-             self.db_session.rollback()
-             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"No existen usuarios {e}")
-
-    
+            # Manejo de errores de SQLAlchemy
+            self.db_session.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error al obtener películas: {e}")
+        
 
     def api_start(self,url):
         return requests.get(url, headers={
