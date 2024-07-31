@@ -27,13 +27,16 @@ class DataTransfer:
 
     def get_recomendation_movie(self,id_group):
         users = self.get_group(id_group,"es").users
+        print(users)
+
         users_en = sum(1
                         for user in users
                         if user.language == "en")
         
+        print(users_en)
         recommended_language = "en" if users_en >= (len(users) - len(users_en)) else "es"
         movies = self.get_group(id_group,recommended_language).to_Watch
-
+        print(movies)
         if len(movies) > 0:
             return random.choice(movies)
         
