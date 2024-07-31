@@ -161,7 +161,7 @@ class MovieService:
                     self.db_session.add(associaton)
                     self.db_session.commit()
 
-    def movie_by_name(self,name,language,page):
+    def movie_by_name(self,name,language):
         # Construir la consulta para extraer el texto del campo JSON `title` en el idioma especificado
         movies = (
             self.db_session.query(Movie)
@@ -170,8 +170,9 @@ class MovieService:
             )
             .all()
         )
-
-        return movies 
+        
+        return movies
+    
 
     def api_start(self,url):
         return requests.get(url, headers={
