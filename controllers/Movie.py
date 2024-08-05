@@ -172,7 +172,6 @@ class MovieService:
                     func.json_extract_path_text(Movie.title, language).ilike(f"%{name}%")
                 )
                 .offset(start)
-                .limit(items_per_page)
                 .all()
             )
 
@@ -181,14 +180,13 @@ class MovieService:
                 self.download_movie_by_name(language, name, page)
                 # Volver a intentar la consulta después de descargar más datos
                 movies = (
-                    self.db_session.query(Movie)
-                    .filter(
-                        func.json_extract_path_text(Movie.title, language).ilike(f"%{name}%")
-                    )
-                    .offset(start)
-                    .limit(items_per_page)
-                    .all()
+                self.db_session.query(Movie)
+                .filter(
+                    func.json_extract_path_text(Movie.title, language).ilike(f"%{name}%")
                 )
+                .offset(start)
+                .all()
+            )
 
             return movies
         
