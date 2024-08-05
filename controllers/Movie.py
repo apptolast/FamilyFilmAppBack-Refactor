@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 from controllers.Genre import GenreService
 from fastapi import HTTPException,status
@@ -109,15 +110,30 @@ class MovieService:
             existing_movie = self.db_session.query(Movie).filter(Movie.id == movie['id']).first()
             
             if existing_movie is None:
+                image = movie['poster_path'] if movie['poster_path'] != '' else 'default_image_path.jpg'  # Valor por defecto para la imagen
+
+                adul = movie['adult'] if isinstance(movie['adult'], bool) else False  # Valor predeterminado para 'adult'
+
+                # Intentar parsear la fecha, si es una cadena vacía o no se puede parsear, usar None
+                try:
+                    release_date = datetime.strptime(movie['release_date'], "%Y-%m-%d") if movie['release_date'] != '' else datetime(1900, 1, 1)
+                except ValueError:
+                    release_date = None
+
+                rating_average = movie['vote_average'] if isinstance(movie['vote_average'], (int, float)) else 0.0  # Valor predeterminado para rating_average
+
+                rating_value = movie['vote_count'] if isinstance(movie['vote_count'], int) else 0  # Valor predeterminado para rating_value
+
+                # Crear una nueva instancia de Movie
                 new_movie = Movie(
                     id=movie['id'],
                     title={f"{language}": movie['title']},
                     synopsis={f"{language}": movie['overview']},
-                    image=movie['poster_path'],
-                    adult=movie['adult'],
-                    release_date=movie['release_date'],
-                    rating_average=movie['vote_average'],
-                    rating_value=movie['vote_count']
+                    image=image,
+                    adult=adul,
+                    release_date=release_date,
+                    rating_average=rating_average,
+                    rating_value=rating_value
                 )
                 self.db_session.add(new_movie)
                 self.db_session.commit()
