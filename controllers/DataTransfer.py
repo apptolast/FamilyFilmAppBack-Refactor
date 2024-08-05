@@ -198,18 +198,19 @@ class DataTransfer:
                         ]
                         # Crear la respuesta de la película con los datos en el idioma solicitado
                         movies_response.append(
-                            MovieResponse(
-                                id=movie.id,
-                                title=movie.title[language],
-                                synopsis=movie.synopsis[language],
-                                image=movie.image,
-                                adult=movie.adult,
-                                release_date=movie.release_date,
-                                rating_average=movie.rating_average,
-                                rating_value=movie.rating_value,
-                                genres=genres_data,
-                             )
+                            {
+                            "id":movie.id,
+                            "title":movie.title[language],
+                            "synopsis":movie.synopsis[language],
+                            "image":movie.image,
+                            "adult":movie.adult,
+                            "release_date":movie.release_date,
+                            "rating_average":movie.rating_average,
+                            "rating_value":movie.rating_value,
+                            "genres":genres_data
+                            }
                         )
+                        
 
                 page =+1
 

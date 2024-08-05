@@ -4,14 +4,15 @@ import datetime
 
 class MovieResponse(BaseModel):
     id:int
-    title:str = ''
-    synopsis:str = ''
-    image:str = ''
-    adult:bool = ''
-    release_date: datetime.datetime = ''
-    rating_average:float = ''
-    rating_value:float = ''
-    genres:list[str] = ''
+    title:str
+    synopsis:str 
+    image:str 
+    adult:bool = False
+    release_date: datetime.datetime
+    rating_average:float
+    rating_value:float
+    genres:list[str] = str
+
 
 
 class AutomaticResponseForMovies(BaseModel):
