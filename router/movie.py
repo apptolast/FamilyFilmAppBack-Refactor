@@ -27,10 +27,10 @@ async def get_movie_id(id:int,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
     return returns.get_movie_datatransfer(id,returns.get_user_id(user.id).language)
 
-@router.get("/name/{page}")
-async def get_movie_name(movie:MovieSearchName,page:int,me = Depends(UserServiceRepository.auth_user)):
+@router.get("/{page}/{name}")
+async def get_movie_name(page:int,name:str,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    return returns.get_movies_datatransfer_by_name(returns.get_user_id(user.id).language,page,movie.name)
+    return returns.get_movies_datatransfer_by_name(returns.get_user_id(user.id).language,page,name)
 
 @router.get("/nameD/{page}")
 async def get_movie_name(movie:MovieSearchName,page:int,me = Depends(UserServiceRepository.auth_user)):
