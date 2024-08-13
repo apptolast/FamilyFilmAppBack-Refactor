@@ -56,7 +56,6 @@ class GroupService:
         def delete_user_and_group(self,users_id,group_id,owner_id):
             try:
                 user_ids = [user.id for user in users_id]
-                print(user_ids)
                 for user_id in user_ids:
                     self.delete_user_to_group(user_id, group_id, owner_id)
             
