@@ -134,8 +134,8 @@ class DataTransfer:
                 owner_id = group_name_owner.owner_id,
                 name = group_name_owner.name,
                 users = self.not_duplicated_users(group_data),
-                to_Watch= movies_to_watch,
-                to_Watched=movies_to_watched
+                watch= movies_to_watch,
+                watched=movies_to_watched
         )
     
     def not_duplicated_users(self,group_data):

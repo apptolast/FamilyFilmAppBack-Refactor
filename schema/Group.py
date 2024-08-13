@@ -16,8 +16,8 @@ class groupSchema(BaseModel):
     owner_id:int
     name:str
     users:list[usuarito]
-    to_Watch: list[MovieResponse] = []
-    to_Watched: list[MovieResponse] = []
+    watch: list[MovieResponse] = []
+    watched: list[MovieResponse] = []
 
 
 class groupSchemaDeleteUser(BaseModel):
