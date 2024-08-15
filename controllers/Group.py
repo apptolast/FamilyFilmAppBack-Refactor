@@ -43,6 +43,16 @@ class GroupService:
             except HTTPException as http_error:
                 raise http_error
             
+            
+        def get_member_groups(self, user_id):
+            try:
+                # Consulta para obtener los grupos en los que el usuario es miembro
+                member_groups = self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_user == user_id).all()
+                return member_groups
+            except Exception as e:
+                self.db_session.rollback()
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{str(e)}")
+        
         def delete_user_to_group(self,user_id,group_id,owner_id):
             try:
                 if self.is_owner(owner_id,group_id) is None:

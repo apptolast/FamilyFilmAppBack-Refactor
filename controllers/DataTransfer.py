@@ -138,6 +138,12 @@ class DataTransfer:
                 watched=movies_to_watched
         )
     
+    def get_all_groups_for_user(self,user_id,language):
+        created_groups = self.GroupServiceRepository.get_groups(user_id)
+        member_groups = self.GroupServiceRepository.get_member_groups(user_id)
+        all_groups = created_groups + member_groups
+        return self.not_duplicated_groups(all_groups,language)
+    
     def not_duplicated_users(self,group_data):
         users_id = set()
         for user in group_data:
