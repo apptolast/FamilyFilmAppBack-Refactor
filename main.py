@@ -36,7 +36,7 @@ logging.info('Inicio del servicio de logging.')
 @app.get("/")
 async def root():
     
-    return {"message": "Hello World Check "}
+    return {"message": "Hello World"}
 
 @app.post("/initgroups")
 async def init():
