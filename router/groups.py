@@ -40,7 +40,8 @@ async def get_group(id:int,me = Depends(UserServiceRepository.auth_user)):
 @router.get("/groupsUser")
 async def get_groups_user(me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    return returns.get_all_groups_for_user(user.id, returns.get_user_id(user.id).language)
+    return user
+    #return returns.get_all_groups_for_user(user.id, returns.get_user_id(user.id).language)
     
     
 @router.delete("/{group_id}/user/{user_to_delete_id}")
