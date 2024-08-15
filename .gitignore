@@ -9,7 +9,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+.json
 # Distribution / packaging
 .Python
 build/
@@ -208,3 +208,11 @@ pip-selfcheck.json
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,virtualenv
+config/firebase.py
+tokensusers.json
+usertest.json
+familyfilmapp-4f3cb-e2dfd19702cd.json
+config/firebase.py
+
+tokensusers.json
+usertest.json

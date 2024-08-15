@@ -20,8 +20,3 @@ def api(url):
         "accept": "application/json",
         "Authorization": os.getenv('header_authorization')
     }).json()
-
-
-
-
-

@@ -12,6 +12,9 @@ services:
       - db
     environment:
       DATABASE_URL: ${DATABASE_URL}
+      URL_FOR_BACKEND_TOKEN: ${URL_FOR_BACKEND_TOKEN}
+      URL_FOR_AUTOMATIC_RENEW_TOKEN: ${URL_FOR_AUTOMATIC_RENEW_TOKEN}
+      URL_FOR_AUTOMATIC_DOWNLOAD_MOVIES: ${URL_FOR_AUTOMATIC_DOWNLOAD_MOVIES}
   db:
     image: postgres
     environment:

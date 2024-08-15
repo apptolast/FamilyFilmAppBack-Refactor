@@ -1,12 +1,12 @@
-from sqlalchemy import JSON, Column, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy import JSON, ForeignKey, String, Integer, Column
 from models.base import Base
-from models.GenreMovieAssociation import genre_movie_association
+from sqlalchemy.orm import relationship
 
 
 class Genre(Base):
     __tablename__ = 'genres'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True)
     name = Column(JSON)
 
-    movies = relationship('Movie', secondary=genre_movie_association, back_populates='genres')
+
+    movies = relationship("Movie", secondary="Genre_Movie", back_populates="genres")

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
-class ShowGenre(BaseModel):
+class GenreResponse(BaseModel):
     id:int
     name:str

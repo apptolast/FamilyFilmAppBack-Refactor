@@ -1,27 +1,24 @@
-from pydantic import BaseModel,EmailStr
-from typing import Optional, List
+from typing import Optional
+from pydantic import BaseModel, EmailStr
+from schema.Movie import MovieResponse 
 
-from schema import Movie,User
-
-class GroupCreate(BaseModel):
+class GroupSchemaRequest(BaseModel):
     name:str
 
-class LoginCreate(BaseModel):
-    token:str
-class AddUser(BaseModel):
-    email:EmailStr
+class usuarito(BaseModel):
+    id:int
+    email: EmailStr
+    language:Optional[str] = None
+    provider:str
 
-class GroupData(GroupCreate):
-    id: int
-    user_owner_id: int
-    watchlist: Optional[List[Movie.movieData]] = []
-    viewlist: Optional[List[Movie.movieData]] = []
-    users: List[User.User]
+class groupSchema(BaseModel):
+    id:int
+    owner_id:int
+    name:str
+    users:list[usuarito]
+    watch: list[MovieResponse] = []
+    watched: list[MovieResponse] = []
 
 
-class WatchListCreate(BaseModel):
-    group_id:int
-    movie_id:int
-
-class ViewListCreate(WatchListCreate):
-    pass
+class groupSchemaDeleteUser(BaseModel):
+    email: str
