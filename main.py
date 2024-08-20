@@ -60,5 +60,3 @@ app.include_router(groups_router)
 app.include_router(genres_router)
 app.include_router(movies_router)
 
-scheduler.add_job(check_token_validation, 'interval', hours=1, next_run_time=datetime.now())
-scheduler.add_job(automated_download_movies, 'interval', weeks=1, next_run_time=datetime.now())
