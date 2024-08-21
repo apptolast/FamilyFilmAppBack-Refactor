@@ -4,6 +4,9 @@ FROM python:3.11.8
 # Set the working directory in the container
 WORKDIR /code
 
+# Install system dependencies for PostgreSQL and psycopg2
+RUN apt-get update && apt-get install -y postgresql libpq-dev gcc
+
 # Copy the dependencies file to the working directory
 COPY requirements.txt .
 
