@@ -14,6 +14,8 @@ class MovieResponse(BaseModel):
     genres:list[str] = str
 
 
+class MovieIds(BaseModel):
+    ids_movie: list[int]
 
 class AutomaticResponseForMovies(BaseModel):
     download_movies: int

@@ -5,6 +5,7 @@ from controllers.Group import GroupService
 from controllers.MovieGroupUser import MovieUserGroupService
 from router.users import UserServiceRepository
 from schema.Group import GroupSchemaRequest, groupSchemaDeleteUser
+from schema.Movie import MovieIds
 
 router = APIRouter(
     prefix="/groups",
@@ -63,26 +64,26 @@ async def group_delete_with_users(group_id,me = Depends(UserServiceRepository.au
     return returns.get_groups(user.id,returns.get_user_id(user.id).language)
 
 
-@router.put("/{group_id}/ToWatch/{ids_movie}")
-async def group_add_to_watch_movie(group_id:int,ids_movie:list,me = Depends(UserServiceRepository.auth_user)):
+@router.put("/{group_id}/ToWatch/")
+async def group_add_to_watch_movie(group_id:int,movieIds:MovieIds,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    GroupRepository.add_to_watch(user.id,group_id,ids_movie)
+    GroupRepository.add_to_watch(user.id,group_id,movieIds.ids_movie)
     return returns.get_groups(user.id,returns.get_user_id(user.id).language)
 
-@router.delete("/{group_id}/ToWatch/{ids_movie}")
-async def group_delete_to_watch_movie(group_id:int,ids_movie:list,me = Depends(UserServiceRepository.auth_user)):
+@router.delete("/{group_id}/ToWatch/")
+async def group_delete_to_watch_movie(group_id:int,movieIds:MovieIds,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    GroupRepository.delete_to_watch(user.id,group_id=group_id,movie_id=ids_movie)
+    GroupRepository.delete_to_watch(user.id,group_id=group_id,movie_id=movieIds.ids_movie)
     return returns.get_groups(user.id,returns.get_user_id(user.id).language)
 
 @router.put("/{group_id}/ToWatched/{ids_movie}")
-async def group_add_to_watched_movie(group_id:int,ids_movie:list,me = Depends(UserServiceRepository.auth_user)):
+async def group_add_to_watched_movie(group_id:int,movieIds:MovieIds,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    GroupRepository.add_to_watched(user.id,group_id,ids_movie)
+    GroupRepository.add_to_watched(user.id,group_id,movieIds.ids_movie)
     return returns.get_groups(user.id,returns.get_user_id(user.id).language)
 
 @router.delete("/{group_id}/ToWatched/{ids_movie}")
-async def group_delete_to_watched_movie(group_id:int,ids_movie:list,me = Depends(UserServiceRepository.auth_user)):
+async def group_delete_to_watched_movie(group_id:int,movieIds:MovieIds,me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    GroupRepository.delete_to_watched(user.id,group_id=group_id,movie_id=ids_movie)
+    GroupRepository.delete_to_watched(user.id,group_id=group_id,movie_id=movieIds.ids_movie)
     return returns.get_groups(user.id,returns.get_user_id(user.id).language)
