@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional,Any
 from pydantic import BaseModel, EmailStr
 from schema.Movie import MovieResponse
 
@@ -26,7 +26,7 @@ class groupSchema(BaseModel):
     users:list[usuarito]
     watch: list[MovieResponse] = []
     watched: list[MovieResponse] = []
-    recommended_movie: MovieResponse = None
+    recommended_movie:Any
 
 class groupSchemaDeleteUser(BaseModel):
     email: str
