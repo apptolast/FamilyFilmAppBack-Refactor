@@ -86,7 +86,15 @@ class GroupService:
                  raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"User is not owner")
            
         def add_to_watch(self,user_id,group_id,movie_ids):
-            for movie_id in movie_ids:
+            groups = self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_user == user_id).all()
+            movies_to_add = []
+
+            for i in range(len(movie_ids)):
+                for group in groups:
+                    if group.id_group != group_id and group.id_movie != movie_ids[i]:
+                       movies_to_add.append(group.id_movie)
+                    
+            for movie_id in movies_to_add:
                 self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,False)
 
         def delete_to_watch(self,user_id,group_id,movie_ids):
@@ -94,7 +102,15 @@ class GroupService:
                 self.movie_user_group_repository.delete_union_group_movie(group_id,movie_id,user_id,False)
         
         def add_to_watched(self,user_id,group_id,movie_ids):
-            for movie_id in movie_ids:
+            groups = self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_user == user_id).all()
+            movies_to_add = []
+
+            for i in range(len(movie_ids)):
+                for group in groups:
+                    if group.id_group != group_id and group.id_movie != movie_ids[i]:
+                       movies_to_add.append(group.id_movie)
+                    
+            for movie_id in movies_to_add:
                 self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,True)
 
         def delete_to_watched(self,user_id,group_id,movie_ids):

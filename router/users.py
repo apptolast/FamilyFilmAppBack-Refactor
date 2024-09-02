@@ -29,16 +29,27 @@ async def create_user(me = Depends(UserServiceRepository.auth_user)):
 
 @router.post('/backend_test/register', status_code=201, response_model=UserTokenResponse)
 async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTestRequest):
-    return UserServiceRepository.create_user_firebase_backend_test(user_request)
+    try:
+        a = UserServiceRepository.create_user_firebase_backend_test(user_request)
+        return a
+    except Exception as e:
+        print(e)
 
 @router.post('/backend_test/login', status_code=201, response_model=UserTokenResponse)
 async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTestRequest):
-    return UserServiceRepository.login_with_custom_token(user_request)
-
+    try:
+        a = UserServiceRepository.login_with_custom_token(user_request)
+        return a
+    except Exception as e:
+        print(e)
 
 @router.post('/automated/token', status_code=200, response_model=UserTokenResponse)
 async def get_token(email_request: AutomaticUpdateTokenRequest):
-    return UserServiceRepository.refresh_automatic_token_logic(email=email_request.email)
+    try:
+        a = UserServiceRepository.refresh_automatic_token_logic(email=email_request.email)
+        return a
+    except Exception as e:    
+        print(e)
 
 @router.get('', status_code=200)
 async def get_users(me = Depends(UserServiceRepository.auth_user)):
