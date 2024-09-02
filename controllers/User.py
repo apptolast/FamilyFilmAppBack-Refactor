@@ -110,14 +110,32 @@ class UserService:
         
         
     def create_user_firebase_backend_test(self, user_data: UserFirebaseBackendTestRequest):
-        user_record = self.firebase_auth_service.create_firebase_user(
-            email=user_data.email,
-            password=user_data.password
-        )
-        custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
-        custom_token_decoded = custom_token.decode('utf-8')
-        return self.id_token_for_backend(custom_token_decoded=custom_token_decoded, user_data=user_data)
-            
+        try:
+            # Crear un usuario en Firebase
+            user_record = self.firebase_auth_service.create_firebase_user(
+                email=user_data.email,
+                password=user_data.password
+            )
+        except Exception as e:
+            # Manejo de excepciones al crear el usuario
+            raise HTTPException(status_code=400, detail=f"Error al crear el usuario en Firebase: {str(e)}")
+
+        try:
+            # Generar un token personalizado para el usuario
+            custom_token = self.firebase_auth_service.generate_custom_token(user_record.uid)
+            custom_token_decoded = custom_token.decode('utf-8')
+        except Exception as e:
+            # Manejo de excepciones al generar el token personalizado
+            raise HTTPException(status_code=500, detail=f"Error al generar el token personalizado: {str(e)}")
+
+        try:
+            # Obtener el ID Token y Refresh Token usando el token personalizado
+            tokens = self.id_token_for_backend(custom_token_decoded=custom_token_decoded, user_data=user_data)
+            return tokens
+        except Exception as e:
+            # Manejo de excepciones al obtener los tokens
+            raise HTTPException(status_code=500, detail=f"Error al obtener el ID Token y Refresh Token: {str(e)}")
+        
     def id_token_for_backend(self, custom_token_decoded: str, user_data: UserFirebaseBackendTestRequest):
         url = os.getenv("URL_FOR_BACKEND_TOKEN")
         headers = {
@@ -146,11 +164,24 @@ class UserService:
             'token': f"{custom_token_decoded}",
             'returnSecureToken': True
         }
-        response = requests.post(url, headers=headers, json=payload)
-        if response.status_code == 200:
-            return response.json()
-        else:
-            return response.status_code, response.text
+        
+        try:
+            # Realizar la solicitud POST
+            response = requests.post(url, headers=headers, json=payload)
+            response.raise_for_status()  # Lanzar una excepción para errores HTTP
+            
+            # Verificar si la respuesta es exitosa
+            if response.status_code == 200:
+                return response.json()
+            else:
+                # Manejo de casos donde la respuesta no es exitosa
+                raise HTTPException(
+                    status_code=response.status_code,
+                    detail=f"Error al obtener el ID Token y Refresh Token: {response.text}"
+                )
+        except requests.RequestException as e:
+            # Manejo de excepciones durante la solicitud
+            raise HTTPException(status_code=500, detail=f"Error al hacer la solicitud al backend: {str(e)}")
     
     def refresh_automatic_token_logic(self, email: str):
         try:
