@@ -124,9 +124,9 @@ class DataTransfer:
                 movie = self.MovieServiceRepository.get_movie_or_none(group.id_movie,language)
                 if movie is None:
                     continue
-                if group.toWatch == True and group.id_movie != 0:
-                    movies_to_watched.append(movie)
                 if group.toWatch == False and group.id_movie != 0:
+                    movies_to_watched.append(movie)
+                if group.toWatch == True and group.id_movie != 0:
                     movies_to_watch.append(movie)
 
         return groupSchema(

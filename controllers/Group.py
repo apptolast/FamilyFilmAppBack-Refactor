@@ -92,11 +92,11 @@ class GroupService:
 
             for movie_id in movie_ids:
                 if movie_id not in ids_in_groups:    
-                    self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,False)
+                    self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,True)
 
         def delete_to_watch(self,user_id,group_id,movie_ids):
             for movie_id in movie_ids:
-                self.movie_user_group_repository.delete_union_group_movie(group_id,movie_id,user_id,False)
+                self.movie_user_group_repository.delete_union_group_movie(group_id,movie_id,user_id,True)
         
         def add_to_watched(self,user_id,group_id,movie_ids):
             groups = self.db_session.query(MovieUserGroup).filter(and_(MovieUserGroup.id_user == user_id,MovieUserGroup.id_group ==group_id)).all()
@@ -105,11 +105,11 @@ class GroupService:
 
             for movie_id in movie_ids:
                 if movie_id not in ids_in_groups:    
-                    self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,True)
+                    self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,False)
 
         def delete_to_watched(self,user_id,group_id,movie_ids):
             for movie_id in movie_ids:
-                self.movie_user_group_repository.delete_union_group_movie(group_id,movie_id,user_id,True)
+                self.movie_user_group_repository.delete_union_group_movie(group_id,movie_id,user_id,False)
         
         def edit_group_name(self, name, ownerID,group_id):
             try:
