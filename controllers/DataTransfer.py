@@ -131,7 +131,7 @@ class DataTransfer:
                 if group.toWatch == True and group.id_movie != 0:
                     movies_to_watch.append(movie)
        
-        if len(movies_to_watch <= 0):
+        if len(movies_to_watch) <= 0 :
             recommended_movie = None
         recommended_movie = random.choice(movies_to_watch)
 
