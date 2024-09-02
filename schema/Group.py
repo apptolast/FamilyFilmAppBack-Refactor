@@ -15,15 +15,8 @@ class usuarito(BaseModel):
     email: EmailStr
     language:Optional[str] = None
     provider:str
-
-
-class usuaritome(BaseModel):
-    id:int
-    email: EmailStr
-    language:Optional[str] = None
-    provider:str
-    movies_watch:list[MovieGroup]
-    movies_watched:list[MovieGroup]
+    movies_watch:list[MovieGroup] = []
+    movies_watched:list[MovieGroup] = []
 
 
 class groupSchema(BaseModel):

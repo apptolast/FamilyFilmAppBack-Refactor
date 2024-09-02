@@ -10,7 +10,7 @@ from controllers.User import UserService
 from models.GenreMovie import GenreMovie
 from models.Group import Group
 from models.Language import Language
-from schema.Group import MovieGroup, groupSchema, usuarito, usuaritome
+from schema.Group import MovieGroup, groupSchema, usuarito
 from schema.Movie import MovieResponse
 from fastapi import HTTPException,status
 
@@ -162,24 +162,24 @@ class DataTransfer:
                 groups_id.add(group.id_group)
         return [self.get_group(id,language) for id in groups_id]
 
-    def get_user_id(self,id:int):
-        usuario = self.UserServiceRepository.get_user_id(id)
+    # def get_user_id(self,id:int):
+    #     usuario = self.UserServiceRepository.get_user_id(id)
          
-        try:
-            leng = session.query(Language).filter(Language.id == usuario.id_language).first()         
-            if leng is not None:
-                leng = leng.language
+    #     try:
+    #         leng = session.query(Language).filter(Language.id == usuario.id_language).first()         
+    #         if leng is not None:
+    #             leng = leng.language
 
-            return usuarito(
-                id = usuario.id,
-                email=usuario.email,
-                language= leng,
-                provider=usuario.provider
-            )
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"{str(e)}")
+    #         return usuarito(
+    #             id = usuario.id,
+    #             email=usuario.email,
+    #             language= leng,
+    #             provider=usuario.provider
+    #         )
+    #     except Exception as e:
+    #         raise HTTPException(status_code=500, detail=f"{str(e)}")
         
-    def get_userme_id(self,id:int):
+    def get_user_id(self,id:int):
         usuario = self.UserServiceRepository.get_user_id(id)
         movies = self.MovieUserGrouServiceRepository.get_groups(id)
          
@@ -208,7 +208,7 @@ class DataTransfer:
                         ) 
                     )
 
-            return usuaritome(
+            return usuarito(
                 id = usuario.id,
                 email=usuario.email,
                 language= leng,
