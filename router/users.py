@@ -51,7 +51,7 @@ async def get_user(id:int, me = Depends(UserServiceRepository.auth_user)):
 @router.get('/me',status_code=200)
 async def me(me = Depends(UserServiceRepository.auth_user)):
     user = UserServiceRepository.check_user_exists(me['email'])
-    return returns.get_user_id(user.id)
+    return returns.get_userme_id(user.id)
 
 @router.delete('',status_code=204)
 async def delete_user(me = Depends(UserServiceRepository.delete_user)):

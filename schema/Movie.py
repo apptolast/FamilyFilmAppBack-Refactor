@@ -14,6 +14,9 @@ class MovieResponse(BaseModel):
     genres:list[str] = str
 
 
+class MovieResponseGroup(MovieResponse):
+    user_id:int
+
 class MovieIds(BaseModel):
     ids_movie: list[int]
 

@@ -10,7 +10,7 @@ from controllers.User import UserService
 from models.GenreMovie import GenreMovie
 from models.Group import Group
 from models.Language import Language
-from schema.Group import groupSchema, usuarito
+from schema.Group import MovieGroup, groupSchema, usuarito, usuaritome
 from schema.Movie import MovieResponse
 from fastapi import HTTPException,status
 
@@ -164,15 +164,57 @@ class DataTransfer:
 
     def get_user_id(self,id:int):
         usuario = self.UserServiceRepository.get_user_id(id)
+         
         try:
             leng = session.query(Language).filter(Language.id == usuario.id_language).first()         
             if leng is not None:
                 leng = leng.language
+
             return usuarito(
                 id = usuario.id,
                 email=usuario.email,
                 language= leng,
                 provider=usuario.provider
+            )
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"{str(e)}")
+        
+    def get_userme_id(self,id:int):
+        usuario = self.UserServiceRepository.get_user_id(id)
+        movies = self.MovieUserGrouServiceRepository.get_groups(id)
+         
+        try:
+            leng = session.query(Language).filter(Language.id == usuario.id_language).first()         
+            if leng is not None:
+                leng = leng.language
+
+            movies_watch = []
+            movies_watched = []
+
+            for movie in movies:
+                
+                if movie.toWatch == False:
+                    movies_watched.append(
+                        MovieGroup(
+                            id_group=movie.id_group,
+                            id_movie=movie.id_movie
+                        ) 
+                    )
+                else:
+                    movies_watch.append(
+                        MovieGroup(
+                            id_group=movie.id_group,
+                            id_movie=movie.id_movie
+                        ) 
+                    )
+
+            return usuaritome(
+                id = usuario.id,
+                email=usuario.email,
+                language= leng,
+                provider=usuario.provider,
+                movies_watch=movies_watch,
+                movies_watched=movies_watched
             )
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"{str(e)}")
