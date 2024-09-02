@@ -143,7 +143,7 @@ class DataTransfer:
                     recommended_movie = None
             )
             if len(group.watch) > 0 :
-                group.recommended_movie = group.watch[random.randint(0, len(group.watch))]
+                group.recommended_movie = random.choice(group.watch)
                 return group
             return group
         except Exception as e:
