@@ -153,6 +153,7 @@ class DataTransfer:
 
     def get_groups(self,user_id,language):
         grupos = self.GroupServiceRepository.get_groups(user_id)
+        print(f"Estamos en GET_GROUP DATA TRANSFER: {grupos}")
         return self.not_duplicated_groups(groups=grupos,language=language)
 
     def not_duplicated_groups(self,groups,language):
