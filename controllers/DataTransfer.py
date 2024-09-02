@@ -131,19 +131,22 @@ class DataTransfer:
                 if group.toWatch == True and group.id_movie != 0:
                     movies_to_watch.append(movie)
        
-        if len(movies_to_watch) <= 0 :
-            recommended_movie = None
-        recommended_movie = random.choice(movies_to_watch)
-
+        # if len(movies_to_watch) == 0 :
+        #     recommended_movie = None
+        
+        # recommended_movie = random.choice(movies_to_watch)
+        # print(recommended_movie)
         group = groupSchema(
                 id = group_data[0].id_group ,
                 owner_id = group_name_owner.owner_id,
                 name = group_name_owner.name,
                 users = self.not_duplicated_users(group_data),
                 watch= movies_to_watch,
-                watched=movies_to_watched,
-                recommended_movie =  recommended_movie
+                watched=movies_to_watched
+                # recommended_movie =  recommended_movie
         )
+        # print(group)
+        return group
 
 
 
