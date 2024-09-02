@@ -54,7 +54,7 @@ async def init():
 # Init Firebase Admin SDK and get the app
 initialize_firebase()
 
-
+scheduler.add_job(check_token_validation, 'interval', hours=1, next_run_time=datetime.now())
 app.include_router(users_router)
 app.include_router(groups_router)
 app.include_router(genres_router)
