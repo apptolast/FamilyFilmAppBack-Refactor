@@ -86,32 +86,26 @@ class GroupService:
                  raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"User is not owner")
            
         def add_to_watch(self,user_id,group_id,movie_ids):
-            groups = self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_user == user_id).all()
-            movies_to_add = []
+            groups = self.db_session.query(MovieUserGroup).filter(and_(MovieUserGroup.id_user == user_id,MovieUserGroup.id_group ==group_id)).all()
+            
+            ids_in_groups = [group.id_movie for group in groups]
 
-            for i in range(len(movie_ids)):
-                for group in groups:
-                    if group.id_group != group_id and group.id_movie != movie_ids[i]:
-                       movies_to_add.append(group.id_movie)
-                    
-            for movie_id in movies_to_add:
-                self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,False)
+            for movie_id in movie_ids:
+                if movie_id not in ids_in_groups:    
+                    self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,False)
 
         def delete_to_watch(self,user_id,group_id,movie_ids):
             for movie_id in movie_ids:
                 self.movie_user_group_repository.delete_union_group_movie(group_id,movie_id,user_id,False)
         
         def add_to_watched(self,user_id,group_id,movie_ids):
-            groups = self.db_session.query(MovieUserGroup).filter(MovieUserGroup.id_user == user_id).all()
-            movies_to_add = []
+            groups = self.db_session.query(MovieUserGroup).filter(and_(MovieUserGroup.id_user == user_id,MovieUserGroup.id_group ==group_id)).all()
+            
+            ids_in_groups = [group.id_movie for group in groups]
 
-            for i in range(len(movie_ids)):
-                for group in groups:
-                    if group.id_group != group_id and group.id_movie != movie_ids[i]:
-                       movies_to_add.append(group.id_movie)
-                    
-            for movie_id in movies_to_add:
-                self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,True)
+            for movie_id in movie_ids:
+                if movie_id not in ids_in_groups:    
+                    self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,False)
 
         def delete_to_watched(self,user_id,group_id,movie_ids):
             for movie_id in movie_ids:
