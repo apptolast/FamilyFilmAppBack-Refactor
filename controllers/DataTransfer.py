@@ -110,43 +110,45 @@ class DataTransfer:
         return movies_response[:page_size]
     
     def get_group(self,group_id, language):
-        group_data = self.GroupServiceRepository.get_group_id(group_id)
-        group_name_owner = session.query(Group).filter(Group.id == group_data[0].id_group).first()
-        #     {
-        # "id_user": 16,
-        # "id_movie": 0,
-        # "toWatch": null,
-        # "id_group": 3
-        #      }
-        movies_to_watch = []
-        movies_to_watched = []
+        try:
+            group_data = self.GroupServiceRepository.get_group_id(group_id)
+            group_name_owner = session.query(Group).filter(Group.id == group_data[0].id_group).first()
+            #     {
+            # "id_user": 16,
+            # "id_movie": 0,
+            # "toWatch": null,
+            # "id_group": 3
+            #      }
+            movies_to_watch = []
+            movies_to_watched = []
+            
+            if len(group_data) > 0:
+                for group in group_data:
+                    movie = self.MovieServiceRepository.get_movie_or_none(group.id_movie,language)
+                    if movie is None:
+                        continue
+                    if group.toWatch == False and group.id_movie != 0:
+                        movies_to_watched.append(movie)
+                    if group.toWatch == True and group.id_movie != 0:
+                        movies_to_watch.append(movie)
         
-        if len(group_data) > 0:
-            for group in group_data:
-                movie = self.MovieServiceRepository.get_movie_or_none(group.id_movie,language)
-                if movie is None:
-                    continue
-                if group.toWatch == False and group.id_movie != 0:
-                    movies_to_watched.append(movie)
-                if group.toWatch == True and group.id_movie != 0:
-                    movies_to_watch.append(movie)
-       
-        # if len(movies_to_watch) == 0 :
-        #     recommended_movie = None
-        
-        # recommended_movie = random.choice(movies_to_watch)
-        # print(recommended_movie)
-        group = groupSchema(
-                id = group_data[0].id_group ,
-                owner_id = group_name_owner.owner_id,
-                name = group_name_owner.name,
-                users = self.not_duplicated_users(group_data),
-                watch= movies_to_watch,
-                watched=movies_to_watched
-                # recommended_movie =  recommended_movie
-        )
-        # print(group)
-        return group
+
+            group = groupSchema(
+                    id = group_data[0].id_group ,
+                    owner_id = group_name_owner.owner_id,
+                    name = group_name_owner.name,
+                    users = self.not_duplicated_users(group_data),
+                    watch= movies_to_watch,
+                    watched=movies_to_watched,
+                    recommended_movie = None
+            )
+            if len(group.watch) > 0 :
+                group.recommended_movie = random.choice(group.watch)
+                return group
+            return group
+        except Exception as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"{str(e)}")
+
 
 
 
