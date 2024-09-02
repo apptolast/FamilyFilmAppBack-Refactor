@@ -38,10 +38,10 @@ async def get_movie_name(movie:MovieSearchName,page:int,me = Depends(UserService
     return MovieServiceRepository.download_movie_by_name(returns.get_user_id(user.id).language,movie.name,page)
 
 
-@router.get("/{id}/recommended")
-async def get_movie_recommended(id:int,me = Depends(UserServiceRepository.auth_user)):
-    UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
-    return returns.get_recomendation_movie(id)
+# @router.get("/{id}/recommended")
+# async def get_movie_recommended(id:int,me = Depends(UserServiceRepository.auth_user)):
+#     UserServiceRepository.get_user_id(user_id= UserServiceRepository.check_user_exists(me['email']).id)
+#     return returns.get_recomendation_movie(id)
 
 
 # @router.get('/update/movies/automated', status_code=200, response_model=AutomaticResponseForMovies)
