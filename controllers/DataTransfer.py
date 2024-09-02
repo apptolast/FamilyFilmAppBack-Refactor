@@ -25,20 +25,21 @@ class DataTransfer:
     session = session
 
 
-    def get_recomendation_movie(self,id_group):
-        users = self.get_group(id_group,"es").users
+    # def get_recomendation_movie(self,group):
+    #     users = self.get_group(group.id,"es").users
 
-        users_en = sum(1
-                        for user in users
-                        if user.language == "en")
+    #     users_en = sum(1
+    #                     for user in users
+    #                     if user.language == "en")
         
-        recommended_language = "en" if users_en >= (len(users) - users_en) else "es"
-        movies = self.get_group(id_group,recommended_language).to_Watch
+    #     recommended_language = "en" if users_en >= (len(users) - users_en) else "es"
+    #     movies = self.get_group(group.id,recommended_language).to_Watch
 
-        if len(movies) > 0:
-            return random.choice(movies)
+    #     if len(movies) > 0:
+    #         return random.choice(movies)
+             
         
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movies not found, please add movies")
+    #     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movies not found, please add movies")
         
 
     def get_movie_datatransfer(self, id: int, language: str):
@@ -119,24 +120,36 @@ class DataTransfer:
         #      }
         movies_to_watch = []
         movies_to_watched = []
+        
         if len(group_data) > 0:
             for group in group_data:
                 movie = self.MovieServiceRepository.get_movie_or_none(group.id_movie,language)
                 if movie is None:
                     continue
-                if group.toWatch == True and group.id_movie != 0:
-                    movies_to_watched.append(movie)
                 if group.toWatch == False and group.id_movie != 0:
+                    movies_to_watched.append(movie)
+                if group.toWatch == True and group.id_movie != 0:
                     movies_to_watch.append(movie)
-
-        return groupSchema(
+       
+        # if len(movies_to_watch) == 0 :
+        #     recommended_movie = None
+        
+        # recommended_movie = random.choice(movies_to_watch)
+        # print(recommended_movie)
+        group = groupSchema(
                 id = group_data[0].id_group ,
                 owner_id = group_name_owner.owner_id,
                 name = group_name_owner.name,
                 users = self.not_duplicated_users(group_data),
                 watch= movies_to_watch,
                 watched=movies_to_watched
+                # recommended_movie =  recommended_movie
         )
+        # print(group)
+        return group
+
+
+
     
     def get_all_groups_for_user(self,user_id,language):
         created_groups = self.GroupServiceRepository.get_groups(user_id)
@@ -153,6 +166,7 @@ class DataTransfer:
 
     def get_groups(self,user_id,language):
         grupos = self.GroupServiceRepository.get_groups(user_id)
+        print(f"Estamos en GET_GROUP DATA TRANSFER: {grupos}")
         return self.not_duplicated_groups(groups=grupos,language=language)
 
     def not_duplicated_groups(self,groups,language):

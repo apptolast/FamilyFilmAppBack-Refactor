@@ -54,7 +54,6 @@ async def init():
 # Init Firebase Admin SDK and get the app
 initialize_firebase()
 
-
 app.include_router(users_router)
 app.include_router(groups_router)
 app.include_router(genres_router)
