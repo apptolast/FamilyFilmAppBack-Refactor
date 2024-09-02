@@ -26,6 +26,7 @@ class groupSchema(BaseModel):
     users:list[usuarito]
     watch: list[MovieResponse] = []
     watched: list[MovieResponse] = []
+    recommended_movie: MovieResponse
 
 class groupSchemaDeleteUser(BaseModel):
     email: str

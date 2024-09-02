@@ -135,7 +135,8 @@ class DataTransfer:
                 name = group_name_owner.name,
                 users = self.not_duplicated_users(group_data),
                 watch= movies_to_watch,
-                watched=movies_to_watched
+                watched=movies_to_watched,
+                recommended_movie = self.get_recomendation_movie(group_id)
         )
     
     def get_all_groups_for_user(self,user_id,language):
