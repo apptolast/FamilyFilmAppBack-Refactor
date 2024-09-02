@@ -105,7 +105,7 @@ class GroupService:
 
             for movie_id in movie_ids:
                 if movie_id not in ids_in_groups:    
-                    self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,False)
+                    self.movie_user_group_repository.create_union_group_movie(group_id,movie_id,user_id,True)
 
         def delete_to_watched(self,user_id,group_id,movie_ids):
             for movie_id in movie_ids:
