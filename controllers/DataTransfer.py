@@ -25,18 +25,19 @@ class DataTransfer:
     session = session
 
 
-    def get_recomendation_movie(self,id_group):
-        users = self.get_group(id_group,"es").users
+    def get_recomendation_movie(self,group):
+        users = self.get_group(group.id,"es").users
 
         users_en = sum(1
                         for user in users
                         if user.language == "en")
         
         recommended_language = "en" if users_en >= (len(users) - users_en) else "es"
-        movies = self.get_group(id_group,recommended_language).to_Watch
+        movies = self.get_group(group.id,recommended_language).to_Watch
 
         if len(movies) > 0:
-            return random.choice(movies)
+            group.recommended_movie = random.choice(movies)
+            return group
         
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Movies not found, please add movies")
         
@@ -129,15 +130,17 @@ class DataTransfer:
                 if group.toWatch == True and group.id_movie != 0:
                     movies_to_watch.append(movie)
 
-        return groupSchema(
+        group = groupSchema(
                 id = group_data[0].id_group ,
                 owner_id = group_name_owner.owner_id,
                 name = group_name_owner.name,
                 users = self.not_duplicated_users(group_data),
                 watch= movies_to_watch,
                 watched=movies_to_watched,
-                recommended_movie = self.get_recomendation_movie(group_id)
+                recommended_movie = None
         )
+
+        return self.get_recomendation_movie(group.id)
     
     def get_all_groups_for_user(self,user_id,language):
         created_groups = self.GroupServiceRepository.get_groups(user_id)
