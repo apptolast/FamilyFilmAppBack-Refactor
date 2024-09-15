@@ -34,11 +34,6 @@ async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTes
 async def create_user_firebase_backend_test(user_request: UserFirebaseBackendTestRequest):
     return UserServiceRepository.login_with_custom_token(user_request)
 
-
-@router.post('/automated/token', status_code=200, response_model=UserTokenResponse)
-async def get_token(email_request: AutomaticUpdateTokenRequest):
-    return UserServiceRepository.refresh_automatic_token_logic(email=email_request.email)
-
 @router.get('', status_code=200)
 async def get_users(me = Depends(UserServiceRepository.auth_user)):
     return returns.get_users()

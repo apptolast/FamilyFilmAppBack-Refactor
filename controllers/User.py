@@ -182,30 +182,6 @@ class UserService:
         except requests.RequestException as e:
             # Manejo de excepciones durante la solicitud
             raise HTTPException(status_code=500, detail=f"Error al hacer la solicitud al backend: {str(e)}")
-    
-    def refresh_automatic_token_logic(self, email: str):
-        try:
-            # Obtener el UID del usuario
-            uid_user = self.firebase_auth_service.get_uid_user(email)
-        except Exception as e:
-            # Manejo de excepciones al obtener el UID del usuario
-            raise HTTPException(status_code=400, detail=f"Error al obtener el UID del usuario: {str(e)}")
-        
-        try:
-            # Generar un token personalizado
-            custom_token = self.firebase_auth_service.generate_custom_token(uid_user)
-            custom_token_decoded = custom_token.decode('utf-8')
-        except Exception as e:
-            # Manejo de excepciones al generar el token personalizado
-            raise HTTPException(status_code=500, detail=f"Error al generar el token personalizado: {str(e)}")
-        
-        try:
-            # Obtener el ID Token y Refresh Token usando el token personalizado
-            tokens = self.id_token_for_login(custom_token_decoded=custom_token_decoded)
-            return tokens
-        except Exception as e:
-            # Manejo de excepciones al obtener los tokens
-            raise HTTPException(status_code=500, detail=f"Error al obtener el ID Token y Refresh Token: {str(e)}")
 
     def login_with_custom_token(self, user_data: UserFirebaseBackendTestRequest):
         try:
