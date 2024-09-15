@@ -3,8 +3,6 @@ import logging
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from sqlalchemy import Column, Integer,JSON
-from config.checkAutomaticTokens import check_token_validation
-from config.downloadMoviesAuto import automated_download_movies
 from config.firebase import initialize_firebase
 from config.logging_config import config_loggin_system
 from models.Movie import Movie
